@@ -1,0 +1,7 @@
+decode_mode: greedy
+batch_size: 1
+beam_size: 1
+nbest: 1
+num_workers: 0
+max_new_tokens: 128
+expert_heatmap: auto

@@ -1,0 +1,6 @@
+decode_mode: greedy
+batch_size: 16
+beam_size: 8
+nbest: 1
+num_workers: 2
+expert_heatmap: auto

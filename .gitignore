@@ -1,0 +1,40 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info/
+
+# Virtual environments
+.venv/
+
+# Local data policy:
+# Keep data out of Git except jsonl metadata/message files.
+data/**
+!data/**/
+!data/**/*.jsonl
+
+# Large generated training/evaluation outputs
+dump/
+exp/
+lightning_logs/
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+*.onnx
+*.log
+events.out.tfevents.*
+
+# Machine-local binary wheels and caches
+*.whl
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local editor/OS noise
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,6 @@
+decode_mode: beam
+batch_size: 8
+beam_size: 10
+nbest: 5
+num_workers: 2
+expert_heatmap: auto

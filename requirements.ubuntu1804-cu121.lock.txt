@@ -1,0 +1,48 @@
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+# Legacy environment for Ubuntu 18.04 / glibc 2.27 servers.
+# Target GPU: RTX 3090. Target Python: 3.11.
+# This intentionally uses an older PyTorch/CUDA stack whose wheels are
+# friendlier to Ubuntu 18.04 than the main cu128 lock.
+
+accelerate==0.34.2
+aiohttp==3.9.5
+av==12.3.0
+einops==0.8.0
+GitPython==3.1.43
+huggingface-hub==0.25.2
+humanfriendly==10.0
+ipykernel==6.29.5
+ipython==8.29.0
+librosa==0.10.2.post1
+lightning==2.3.3
+loguru==0.7.2
+matplotlib==3.9.2
+numba==0.60.0
+numpy==1.26.4
+openai==1.52.2
+pillow==10.4.0
+protobuf==4.25.5
+pydantic==2.9.2
+pytorch-lightning==2.3.3
+PyYAML==6.0.2
+qwen-omni-utils==0.0.9
+requests==2.32.3
+rich==13.9.3
+safetensors==0.4.5
+scikit-learn==1.5.2
+scipy==1.13.1
+soundfile==0.12.1
+tensorboard==2.17.1
+tensorboardX==2.6.2.2
+tokenizers==0.20.1
+torch==2.3.1+cu121
+torchaudio==2.3.1+cu121
+torchmetrics==1.4.2
+torchvision==0.18.1+cu121
+tqdm==4.66.6
+transformers==4.45.2
+typeguard==4.4.1
+typing_extensions==4.12.2
+wandb==0.18.5
+webdataset==0.2.100

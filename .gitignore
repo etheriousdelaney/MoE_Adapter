@@ -10,10 +10,14 @@ wheels/
 .venv/
 
 # Local data policy:
-# Keep data out of Git except jsonl metadata/message files.
+# Keep data out of Git except lightweight metadata/message files.
 data/**
 !data/**/
 !data/**/*.jsonl
+!data/**/spk2utt
+!data/**/text
+!data/**/utt2spk
+!data/**/wav.scp
 
 # Large generated training/evaluation outputs
 dump/

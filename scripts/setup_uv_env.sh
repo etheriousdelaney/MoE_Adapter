@@ -37,7 +37,7 @@ log "creating virtualenv at $VENV_DIR with Python $PYTHON_VERSION"
 uv venv --python "$PYTHON_VERSION" "$VENV_DIR"
 
 log "syncing packages from $LOCK_FILE"
-uv pip sync --python "$VENV_PY" "$LOCK_FILE"
+uv pip sync --python "$VENV_PY" --index-strategy unsafe-best-match "$LOCK_FILE"
 
 log "checking flash_attn"
 if "$VENV_PY" -c "import flash_attn" >/dev/null 2>&1; then
@@ -48,7 +48,7 @@ else
   shopt -u nullglob
   if [ "${#wheels[@]}" -gt 0 ]; then
     log "trying local wheel: ${wheels[0]}"
-    if uv pip install --python "$VENV_PY" "${wheels[0]}"; then
+    if uv pip install --python "$VENV_PY" --index-strategy unsafe-best-match "${wheels[0]}"; then
       log "flash_attn installed from local wheel"
     else
       warn "flash_attn wheel install failed; check Python, torch, CUDA, and GPU compatibility."

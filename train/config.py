@@ -202,28 +202,30 @@ class TrainConfig:
 
     @classmethod
     def from_namespace(cls, args: Namespace) -> "TrainConfig":
-        exp_tag = args.exp_tag
-        output_dir = args.output_dir or f"exp/{exp_tag}"
+        defaults = cls()
+        exp_tag = getattr(args, "exp_tag", defaults.exp_tag)
+        output_dir = getattr(args, "output_dir", "") or f"exp/{exp_tag}"
         return cls(
-            ngpu=args.ngpu,
+            ngpu=getattr(args, "ngpu", defaults.ngpu),
             exp_tag=exp_tag,
             output_dir=output_dir,
-            model_name=args.model,
+            model_name=getattr(args, "model", defaults.model_name),
             token_type=getattr(args, "token_type", None),
             token_list=getattr(args, "token_list", ""),
             non_linguistic_symbols=getattr(args, "non_linguistic_symbols", None),
             model=ModelConfig.from_dict(getattr(args, "model_conf", None)),
             optimizer=OptimizerConfig.from_dict(getattr(args, "optimizer_conf", None)),
             dataset=DatasetConfig.from_dict(getattr(args, "dataset_conf", None)),
-            seed=args.seed,
-            epoch=args.epoch,
-            patience=args.patience,
-            log_every_n_steps=args.log_every_n_steps,
-            task=args.task,
-            use_tensorboard=getattr(args, "use_tensorboard", False),
-            use_wandb=getattr(args, "use_wandb", False),
-            wandb_project=getattr(args, "wandb_project", ""),
-            wandb_name=getattr(args, "wandb_name", ""),
+            seed=getattr(args, "seed", defaults.seed),
+            epoch=getattr(args, "epoch", defaults.epoch),
+            patience=getattr(args, "patience", defaults.patience),
+            log_every_n_steps=getattr(args, "log_every_n_steps", defaults.log_every_n_steps),
+            task=getattr(args, "task", defaults.task),
+            min_batch_size=getattr(args, "min_batch_size", defaults.min_batch_size),
+            use_tensorboard=getattr(args, "use_tensorboard", defaults.use_tensorboard),
+            use_wandb=getattr(args, "use_wandb", defaults.use_wandb),
+            wandb_project=getattr(args, "wandb_project", defaults.wandb_project),
+            wandb_name=getattr(args, "wandb_name", defaults.wandb_name),
             best_model_criterion=_normalize_best_model_criterion(
                 getattr(args, "best_model_criterion", None)
             ),

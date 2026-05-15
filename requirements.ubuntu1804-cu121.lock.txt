@@ -423,7 +423,7 @@ traitlets==5.15.0
     #   jupyter-client
     #   jupyter-core
     #   matplotlib-inline
-transformers==4.45.2
+transformers==4.46.3
     # via -r requirements.ubuntu1804-cu121.lock.txt
 triton==2.3.1
     # via torch

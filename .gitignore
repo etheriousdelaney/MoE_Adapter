@@ -17,7 +17,7 @@ data/**
 !data/**/spk2utt
 !data/**/text
 !data/**/utt2spk
-!data/**/wav.scp
+# !data/**/wav.scp
 
 # Large generated training/evaluation outputs
 dump/

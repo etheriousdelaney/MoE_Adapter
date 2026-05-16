@@ -19,9 +19,21 @@ data/**
 !data/**/utt2spk
 # !data/**/wav.scp
 
-# Large generated training/evaluation outputs
+# Large generated data outputs
 dump/
-exp/
+
+# Experiment outputs are synced except heavy model checkpoints and event files.
+exp/**/checkpoint/
+exp/**/checkpoints/
+exp/**/lightning_logs/**/events.out.tfevents.*
+exp/**/train*.log
+exp/**/*.ckpt
+exp/**/*.pt
+exp/**/*.pth
+exp/**/*.safetensors
+exp/**/*.onnx
+
+# Top-level logs remain machine-local.
 lightning_logs/
 *.ckpt
 *.pt

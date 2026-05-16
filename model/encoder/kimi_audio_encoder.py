@@ -1,4 +1,5 @@
 import os
+import json
 from dataclasses import dataclass
 from typing import Sequence
 
@@ -11,7 +12,7 @@ from huggingface_hub.utils import disable_progress_bars as hf_disable_progress_b
 from loguru import logger
 from torch import nn
 from torch.nn.utils.rnn import pad_sequence
-from transformers import AutoModelForCausalLM
+from transformers import AutoConfig, AutoModelForCausalLM
 from transformers.utils import logging as transformers_logging
 
 from model.tokenizer.gim4_tokenizer import Glm4Tokenizer
@@ -59,8 +60,14 @@ class KimiAudioFrontend(nn.Module):
 
         logger.info("loading kimi-audio frontend")
         cache_path = snapshot_download(model_repo)
+        kimi_config = AutoConfig.from_pretrained(cache_path, trust_remote_code=True)
+        if not hasattr(kimi_config, "rope_theta"):
+            with open(os.path.join(cache_path, "config.json"), encoding="utf-8") as f:
+                config_payload = json.load(f)
+            kimi_config.rope_theta = config_payload.get("rope_theta", 10000.0)
         alm = AutoModelForCausalLM.from_pretrained(
             cache_path,
+            config=kimi_config,
             torch_dtype=dtype,
             trust_remote_code=True,
         ).to(self.device)

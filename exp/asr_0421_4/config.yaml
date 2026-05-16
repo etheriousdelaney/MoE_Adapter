@@ -1,0 +1,70 @@
+model: asr_model
+model_conf:
+    num_classes: 4
+    aux_loss_weight: 0.0
+    model_repo: moonshotai/Kimi-Audio-7B-Instruct
+    tokenizer_repo: THUDM/glm-4-voice-tokenizer
+    sample_rate: 16000
+    adapter_conf:
+        expert_ffn_dim: 1280
+        num_experts: 5
+        top_k: 2
+    classfier_conf:
+        classifier_hidden_dim: 1280
+        dropout: 0.1
+    asr_decoder_conf:
+        dropout: 0.1
+optimizer_conf:
+    adam_beta1: 0.9
+    adam_beta2: 0.95
+    lr: 5.0e-05
+    warmup_steps: 500
+    stable_steps: 0
+    min_lr_ratio: 0.3
+dataset_conf:
+    train_data: chime4/tr05_all_noisy
+    train_shape_file:
+    - data/chime4/tr05_all_noisy/shape/fused_shape
+    valid_data: chime4/dt05_multi_isolated_1ch_track
+    valid_shape_file:
+    - data/chime4/dt05_multi_isolated_1ch_track/shape/fused_shape
+    batch_bins: 30000000
+    batch_size: 20
+    batch_type: numel
+    max_cache_size: 0.0
+    max_cache_fd: 32
+    num_iters_per_epoch: null
+    allow_multi_rates: false
+    iterator_type: sequence
+    fold_lengths:
+    - 80000
+    - 150
+    sort_in_batch: descending
+    sort_batch: descending
+    drop_last_iter: false
+    train_dtype: float32
+    shuffle_within_batch: false
+    num_workers: 4
+    data_type:
+    - fused
+    - text
+    - chime4_label
+token_type: char
+token_list: conf/chime4_char_tokens.txt
+non_linguistic_symbols: null
+seed: 314562
+epoch: 30
+patience: 10
+log_every_n_steps: 500
+task: asr
+ngpu: 1
+exp_tag: asr_0421_4
+output_dir: exp/asr_0421_4
+use_tensorboard: true
+use_wandb: false
+wandb_project: ''
+wandb_name: ''
+best_model_criterion:
+-   - valid/ctc_loss
+    - min
+    - 5

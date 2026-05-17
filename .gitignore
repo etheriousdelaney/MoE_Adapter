@@ -18,6 +18,9 @@ data/**
 !data/**/text
 !data/**/utt2spk
 # !data/**/wav.scp
+!data/desta/**
+data/desta/**/__pycache__/
+data/desta/**/*.py[oc]
 
 # Large generated data outputs
 dump/

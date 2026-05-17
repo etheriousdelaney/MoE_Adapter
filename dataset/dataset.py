@@ -1,5 +1,6 @@
 import collections
 import copy
+import json
 import logging
 import numbers
 from pathlib import Path
@@ -296,6 +297,23 @@ def response_loader(path, keys_to_load=None):
     return _load_instruction_jsonl(path, field_name="response", keys_to_load=keys_to_load)
 
 
+def audio_context_loader(path, keys_to_load=None):
+    message_jsonl_path = Path(path) / "message.jsonl"
+    if not message_jsonl_path.exists():
+        raise FileNotFoundError(f"message.jsonl not found: {message_jsonl_path}")
+
+    sample_map: dict[str, str] = {}
+    allowed_keys = None if keys_to_load is None else {str(key) for key in keys_to_load}
+    with message_jsonl_path.open("r", encoding="utf-8") as f:
+        for record, line in zip(iter_instruction_records(Path(path) / "response.jsonl"), f):
+            sample_id = record["sample_id"]
+            if allowed_keys is not None and sample_id not in allowed_keys:
+                continue
+            payload = json.loads(line)
+            sample_map[sample_id] = json.dumps(payload["messages"], ensure_ascii=False)
+    return AdapterForInstructionTextReader(sample_map)
+
+
 def fused_loader(path, float_dtype=None, keys_to_load=None):
     fused_scp_path = path + "/fused.scp"
     loader = read_2columns_text(
@@ -329,6 +347,10 @@ DATA_TYPES = {
     ),
     "response": dict(
         func=response_loader,
+        kwargs=["keys_to_load"],
+    ),
+    "audio_context": dict(
+        func=audio_context_loader,
         kwargs=["keys_to_load"],
     ),
     "fused": dict(

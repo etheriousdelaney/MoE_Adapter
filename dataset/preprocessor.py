@@ -1,3 +1,4 @@
+import json
 import logging
 from pathlib import Path
 from typing import Collection, Dict, Iterable, Optional, Union
@@ -11,6 +12,9 @@ from text.token_id_converter import TokenIDConverter
 
 
 class CommonPreprocessor:
+    start_audio_token = "<start_audio>"
+    end_audio_token = "<end_audio>"
+
     def __init__(
         self,
         train: bool,
@@ -88,6 +92,68 @@ class CommonPreprocessor:
         tokens = self.tokenizer.text2tokens(text)
         return self.token_id_converter.tokens2ids(tokens)
 
+    def _encode_context_text(self, text: str) -> list[int]:
+        if self.is_huggingface_tokenizer and hasattr(self.tokenizer, "encode"):
+            return self.tokenizer.encode(
+                text,
+                add_special_tokens=False,
+                max_length=None,
+            )
+
+        text = self.text_cleaner(text)
+        tokens = self.tokenizer.text2tokens(text)
+        return self.token_id_converter.tokens2ids(tokens)
+
+    def _apply_chat_template(self, messages) -> str:
+        hf_tokenizer = getattr(self.tokenizer, "tokenizer", self.tokenizer)
+        if not hasattr(hf_tokenizer, "apply_chat_template"):
+            raise RuntimeError("audio_context requires a tokenizer with apply_chat_template")
+        try:
+            return hf_tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+                enable_thinking=False,
+            )
+        except TypeError:
+            return hf_tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+            )
+
+    def _audio_context_process(
+        self, data: Dict[str, Union[str, np.ndarray]]
+    ) -> Dict[str, Union[str, np.ndarray]]:
+        if "audio_context" not in data or self.tokenizer is None:
+            return data
+
+        raw_context = data.pop("audio_context")
+        if isinstance(raw_context, np.ndarray):
+            raise RuntimeError("audio_context must be a JSON string before preprocessing")
+        messages = json.loads(str(raw_context))
+        chat_text = self._apply_chat_template(messages)
+
+        start_index = chat_text.rfind(self.start_audio_token)
+        end_index = chat_text.rfind(self.end_audio_token)
+        if start_index < 0 or end_index < 0 or end_index < start_index:
+            raise RuntimeError(
+                "audio_context chat text must contain <start_audio> before <end_audio>"
+            )
+
+        prefix_end = start_index + len(self.start_audio_token)
+        audio_prefix_text = chat_text[:prefix_end]
+        audio_suffix_text = chat_text[end_index:]
+        data["audio_prefix"] = np.array(
+            self._encode_context_text(audio_prefix_text),
+            dtype=np.int64,
+        )
+        data["audio_suffix"] = np.array(
+            self._encode_context_text(audio_suffix_text),
+            dtype=np.int64,
+        )
+        return data
+
     def _text_process(
         self, data: Dict[str, Union[str, np.ndarray]]
     ) -> Dict[str, np.ndarray]:
@@ -118,5 +184,6 @@ class CommonPreprocessor:
     ) -> Dict[str, np.ndarray]:
 
         data = self._speech_process(data)
+        data = self._audio_context_process(data)
         data = self._text_process(data)
         return data

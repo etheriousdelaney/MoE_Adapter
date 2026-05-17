@@ -79,6 +79,7 @@ class LitQwenAudioModel(L.LightningModule):
         raise ValueError(f"Unsupported decoder_type: {self.decoder_type}")
 
     def forward(self, batch) -> dict[str, torch.Tensor]:
+        breakpoint()
         audio_input = self._unwrap_batch(batch)
         hidden_states, padding_mask = self._encode_and_adapt(audio_input)
 
@@ -117,6 +118,7 @@ class LitQwenAudioModel(L.LightningModule):
                 prompt_lengths=prompt_lengths.to(self.device).long(),
                 response_input_ids=response_ids.to(self.device).long(),
                 response_lengths=response_lengths.to(self.device).long(),
+                **self._audio_context_decoder_kwargs(audio_input),
             )
         else:
             raise RuntimeError(f"Unsupported decoder_type during forward: {self.decoder_type}")
@@ -147,16 +149,22 @@ class LitQwenAudioModel(L.LightningModule):
                 max_new_tokens=max_new_tokens,
             )
         elif self.decoder_type == "frozen_ntp":
-            prompt_input_ids, prompt_lengths = self._build_inference_prompts(
-                batch_size=hidden_states.shape[0],
-                device=hidden_states.device,
-            )
+            context_kwargs = self._audio_context_decoder_kwargs(audio_input)
+            if context_kwargs:
+                prompt_input_ids = audio_input["prompt"].to(self.device).long()
+                prompt_lengths = audio_input["prompt_lengths"].to(self.device).long()
+            else:
+                prompt_input_ids, prompt_lengths = self._build_inference_prompts(
+                    batch_size=hidden_states.shape[0],
+                    device=hidden_states.device,
+                )
             token_ids, scores = self.decoder.greedy_generate(
                 audio_hidden_states=hidden_states,
                 audio_attention_mask=padding_mask,
                 prompt_input_ids=prompt_input_ids,
                 prompt_lengths=prompt_lengths,
                 max_new_tokens=max_new_tokens,
+                **context_kwargs,
             )
         else:
             raise RuntimeError(f"Unsupported decoder_type during inference: {self.decoder_type}")
@@ -238,6 +246,25 @@ class LitQwenAudioModel(L.LightningModule):
         fused_states = frontend_batch.fused_states.to(self.device, dtype=self.model_dtype)
         padding_mask = frontend_batch.padding_mask.to(self.device)
         return fused_states, padding_mask
+
+    def _audio_context_decoder_kwargs(
+        self,
+        audio_input: dict[str, torch.Tensor],
+    ) -> dict[str, torch.Tensor]:
+        required_names = (
+            "audio_prefix",
+            "audio_prefix_lengths",
+            "audio_suffix",
+            "audio_suffix_lengths",
+        )
+        if not all(name in audio_input for name in required_names):
+            return {}
+        return {
+            "audio_prefix_input_ids": audio_input["audio_prefix"].to(self.device).long(),
+            "audio_prefix_lengths": audio_input["audio_prefix_lengths"].to(self.device).long(),
+            "audio_suffix_input_ids": audio_input["audio_suffix"].to(self.device).long(),
+            "audio_suffix_lengths": audio_input["audio_suffix_lengths"].to(self.device).long(),
+        }
 
     def _should_allow_partial_frontend_load(
         self,

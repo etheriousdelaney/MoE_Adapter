@@ -78,6 +78,10 @@ class FrozenQwenNTPDecoder(nn.Module):
         prompt_lengths: torch.Tensor,
         response_input_ids: torch.Tensor,
         response_lengths: torch.Tensor,
+        audio_prefix_input_ids: torch.Tensor | None = None,
+        audio_prefix_lengths: torch.Tensor | None = None,
+        audio_suffix_input_ids: torch.Tensor | None = None,
+        audio_suffix_lengths: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor]:
         inputs_embeds, attention_mask, labels = self._build_training_inputs(
             audio_hidden_states=audio_hidden_states,
@@ -86,6 +90,10 @@ class FrozenQwenNTPDecoder(nn.Module):
             prompt_lengths=prompt_lengths,
             response_input_ids=response_input_ids,
             response_lengths=response_lengths,
+            audio_prefix_input_ids=audio_prefix_input_ids,
+            audio_prefix_lengths=audio_prefix_lengths,
+            audio_suffix_input_ids=audio_suffix_input_ids,
+            audio_suffix_lengths=audio_suffix_lengths,
         )
         outputs = self.llm(
             inputs_embeds=inputs_embeds,
@@ -104,12 +112,20 @@ class FrozenQwenNTPDecoder(nn.Module):
         prompt_input_ids: torch.Tensor,
         prompt_lengths: torch.Tensor,
         max_new_tokens: int = 128,
+        audio_prefix_input_ids: torch.Tensor | None = None,
+        audio_prefix_lengths: torch.Tensor | None = None,
+        audio_suffix_input_ids: torch.Tensor | None = None,
+        audio_suffix_lengths: torch.Tensor | None = None,
     ) -> tuple[list[list[int]], list[float]]:
         prefix_embeds, prefix_mask = self._build_prefix_inputs(
             audio_hidden_states=audio_hidden_states,
             audio_attention_mask=audio_attention_mask,
             prompt_input_ids=prompt_input_ids,
             prompt_lengths=prompt_lengths,
+            audio_prefix_input_ids=audio_prefix_input_ids,
+            audio_prefix_lengths=audio_prefix_lengths,
+            audio_suffix_input_ids=audio_suffix_input_ids,
+            audio_suffix_lengths=audio_suffix_lengths,
         )
         batch_size = prefix_embeds.shape[0]
         generated: list[list[int]] = [[] for _ in range(batch_size)]
@@ -184,8 +200,41 @@ class FrozenQwenNTPDecoder(nn.Module):
         audio_attention_mask: torch.Tensor,
         prompt_input_ids: torch.Tensor,
         prompt_lengths: torch.Tensor,
+        audio_prefix_input_ids: torch.Tensor | None = None,
+        audio_prefix_lengths: torch.Tensor | None = None,
+        audio_suffix_input_ids: torch.Tensor | None = None,
+        audio_suffix_lengths: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor]:
         projected_audio = self.dropout(self.projector(audio_hidden_states)).to(self.model_dtype)
+        audio_mask = audio_attention_mask.to(device=projected_audio.device, dtype=torch.long)
+        if (
+            audio_prefix_input_ids is not None
+            and audio_prefix_lengths is not None
+            and audio_suffix_input_ids is not None
+            and audio_suffix_lengths is not None
+        ):
+            prefix_ids, prefix_mask = self._build_prompt_ids(
+                audio_prefix_input_ids,
+                audio_prefix_lengths,
+            )
+            suffix_ids, suffix_mask = self._build_prompt_ids(
+                audio_suffix_input_ids,
+                audio_suffix_lengths,
+            )
+            prefix_embeds = self._prompt_embeds(prefix_ids).to(
+                device=projected_audio.device,
+                dtype=self.model_dtype,
+            )
+            suffix_embeds = self._prompt_embeds(suffix_ids).to(
+                device=projected_audio.device,
+                dtype=self.model_dtype,
+            )
+            prefix_mask = prefix_mask.to(device=projected_audio.device, dtype=torch.long)
+            suffix_mask = suffix_mask.to(device=projected_audio.device, dtype=torch.long)
+            prefix_embeds = torch.cat([prefix_embeds, projected_audio, suffix_embeds], dim=1)
+            attention_mask = torch.cat([prefix_mask, audio_mask, suffix_mask], dim=1)
+            return prefix_embeds, attention_mask
+
         prompt_ids, prompt_mask = self._build_prompt_ids(prompt_input_ids, prompt_lengths)
         prompt_embeds = self._prompt_embeds(prompt_ids).to(
             device=projected_audio.device,
@@ -193,10 +242,7 @@ class FrozenQwenNTPDecoder(nn.Module):
         )
         prompt_mask = prompt_mask.to(device=projected_audio.device, dtype=torch.long)
         prefix_embeds = torch.cat([prompt_embeds, projected_audio], dim=1)
-        attention_mask = torch.cat(
-            [prompt_mask, audio_attention_mask.to(device=projected_audio.device, dtype=torch.long)],
-            dim=1,
-        )
+        attention_mask = torch.cat([prompt_mask, audio_mask], dim=1)
         return prefix_embeds, attention_mask
 
     def _build_training_inputs(
@@ -207,12 +253,20 @@ class FrozenQwenNTPDecoder(nn.Module):
         prompt_lengths: torch.Tensor,
         response_input_ids: torch.Tensor,
         response_lengths: torch.Tensor,
+        audio_prefix_input_ids: torch.Tensor | None = None,
+        audio_prefix_lengths: torch.Tensor | None = None,
+        audio_suffix_input_ids: torch.Tensor | None = None,
+        audio_suffix_lengths: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         prefix_embeds, attention_mask = self._build_prefix_inputs(
             audio_hidden_states=audio_hidden_states,
             audio_attention_mask=audio_attention_mask,
             prompt_input_ids=prompt_input_ids,
             prompt_lengths=prompt_lengths,
+            audio_prefix_input_ids=audio_prefix_input_ids,
+            audio_prefix_lengths=audio_prefix_lengths,
+            audio_suffix_input_ids=audio_suffix_input_ids,
+            audio_suffix_lengths=audio_suffix_lengths,
         )
         target_ids, target_mask = self._build_target_ids(response_input_ids, response_lengths)
         target_embeddings = self.llm.get_input_embeddings()(target_ids).to(

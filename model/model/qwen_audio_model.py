@@ -79,7 +79,6 @@ class LitQwenAudioModel(L.LightningModule):
         raise ValueError(f"Unsupported decoder_type: {self.decoder_type}")
 
     def forward(self, batch) -> dict[str, torch.Tensor]:
-        breakpoint()
         audio_input = self._unwrap_batch(batch)
         hidden_states, padding_mask = self._encode_and_adapt(audio_input)
 

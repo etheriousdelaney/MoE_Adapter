@@ -3,10 +3,10 @@ set -e
 set -u
 set -o pipefail
 
-export CUDA_VISIBLE_DEVICES=2
+export CUDA_VISIBLE_DEVICES=0
 
 
-data_dir="/mnt/disk2/m11315045/MoE_Adapter/data/chime4/tr05_all_noisy"
+data_dir="/mnt/disk2/m11315045/MoE_Adapter/data/chime4/et05_real_isolated_1ch_track"
 prompt="/mnt/disk2/m11315045/MoE_Adapter/data/desta/prompt"
 system_prompt=""
 decoder="/mnt/disk2/m11315045/MoE_Adapter/model/decoder/qwen_ntp.py"
@@ -19,7 +19,7 @@ run_response=true
 resume=false
 limit=0
 python_bin="${PYTHON:-./.venv/bin/python}"
-batch_size=1
+batch_size=10000000000
 max_new_tokens=256
 device="auto"
 torch_dtype="auto"
@@ -132,19 +132,19 @@ log "Message output: ${message_output}"
 log "Response output: ${response_output}"
 log "Full response output: ${full_response_output}"
 
-if ${build_message}; then
-    log "Building message JSONL"
-    build_args=(
-        data/desta/build_messages.py
-        --data-dir "${data_dir}"
-        --prompt "${prompt}"
-        --output "${message_output}"
-    )
-    if [ -n "${system_prompt}" ]; then
-        build_args+=(--system-prompt "${system_prompt}")
-    fi
-    "${python_bin}" "${build_args[@]}"
-fi
+# if ${build_message}; then
+#     log "Building message JSONL"
+#     build_args=(
+#         data/desta/build_messages.py
+#         --data-dir "${data_dir}"
+#         --prompt "${prompt}"
+#         --output "${message_output}"
+#     )
+#     if [ -n "${system_prompt}" ]; then
+#         build_args+=(--system-prompt "${system_prompt}")
+#     fi
+#     "${python_bin}" "${build_args[@]}"
+# fi
 
 if ${run_response}; then
     log "Generating responses"

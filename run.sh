@@ -4,9 +4,9 @@ set -u
 set -o pipefail
 
 export PATH=/mnt/disk2/m11315045/espnet/tools/sctk/bin:$PATH
-export CUDA_VISIBLE_DEVICES=2
+export CUDA_VISIBLE_DEVICES=0
 
-tag="asr_qwen_moe_multitask_0513"
+tag="asr_qwen_moe_multitask_0518"
 train_config="conf/asr_qwen_audio_fused_frozen_instruction.yaml"
 inference_mode="instruction"  # asr | instruction
 decode_config="conf/decode_asr_qwen_greedy.yaml"
@@ -19,13 +19,13 @@ datasets=(
 )
 # init_model="/mnt/disk2/m11315045/MoE_Adapter/exp/asr_qwen_fused_frozen_adapter_instruction/checkpoint/last.ckpt"
 
-# ./run/collect_stats.sh
+./run/collect_stats.sh --config "${train_config}" --force --nj 32
 train_args=(
   --tag "${tag}"
   --config "${train_config}"
   # --init_model "${init_model}"
 )
-# ./run/train.sh "${train_args[@]}"
+./run/train.sh "${train_args[@]}"
 
 case "${inference_mode}" in
   asr)

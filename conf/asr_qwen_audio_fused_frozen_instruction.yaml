@@ -48,6 +48,6 @@ dataset_conf:
   valid_shape_file:
     - data/chime4/dt05_multi_isolated_1ch_track/shape/instruction_fused_shape
   batch_type: numel
-  batch_bins: 400000
+  batch_bins: 2000000
   data_type: [fused, audio_context, prompt, response]
   num_workers: 4

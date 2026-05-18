@@ -332,13 +332,18 @@ def main():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     args, _ = build_parser().parse_known_args()
     config = TrainConfig.from_namespace(args)
-    ensure_speech_shape_files(
-        config,
-        nj=args.nj,
-        log_dir=args.log_dir or None,
-        force=args.force,
-        progress_every=args.progress_every,
-    )
+    if any(name in config.dataset.data_type for name in ("audio_context", "prompt", "response")):
+        ensure_instruction_shape_files(config, force=args.force)
+    elif "sound" in config.dataset.data_type and "fused" not in config.dataset.data_type:
+        ensure_speech_shape_files(
+            config,
+            nj=args.nj,
+            log_dir=args.log_dir or None,
+            force=args.force,
+            progress_every=args.progress_every,
+        )
+    else:
+        logging.info("No shape generation needed for data_type=%s", config.dataset.data_type)
 
 
 if __name__ == "__main__":

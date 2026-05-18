@@ -8,12 +8,12 @@
 {"id": "F01_050C0103_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F01_050C0103_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_050C0103_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "CONSTRUCTION EMPLOYMENT FELL FORTY SEVEN THOUSAND AFTER A FIFTEEN THOUSAND JOB DECLINE THE MONTH BEFORE (environment: STREET, gender:female, Duration: 6.238125)"}
-{"id": "F01_050C0103_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
+{"id": "F01_050C0103_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CONSTRUCTION EMPLOYMENT FELL FORTY SEVEN THOUSAND AFTER A FIFTEEN THOUSAND JOB DECLINE THE MONTH BEFORE (environment: STREET, gender:female, Duration: 6.238125)"}
 {"id": "F01_050C0103_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_050C0105_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUS"}
 {"id": "F01_050C0105_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F01_050C0105_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_050C0105_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "R. L. R. said the brokerage unit generated substantially all of its revenue (environment: CAFE, gender:female, Duration: 6.319687)"}
+{"id": "F01_050C0105_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "CAFE"}
 {"id": "F01_050C0105_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F01_050C0105_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_050C0105_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "R. L. R."}
@@ -49,7 +49,7 @@
 {"id": "F01_050C010J_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "STOCKS ROSE IN AMSTERDAM AND WERE LOWER IN BRUSSELS AND MILAN"}
 {"id": "F01_050C010J_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F01_050C010J_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_050C010J_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "STOCKS ROSE IN AMSTERDAM AND WERE LOWER IN BRUSSELS AND MILAN"}
+{"id": "F01_050C010J_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "STOCKS ROSE IN AMSTERDAM AND WERE LOWER IN BRUSSELS AND MILAN (environment: CAFE, gender:female, Duration: 4.38375)"}
 {"id": "F01_050C010J_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F01_050C010J_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_050C010J_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "STOCKS ROSE IN AMSTERDAM AND WERE LOWER IN BRUSSELS AND MILAN"}
@@ -92,9 +92,9 @@
 {"id": "F01_050C010O_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F01_050C010O_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_050C010O_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "SUPERIOR INDUSTRIES INTERNATIONAL FELL THREE AND ONE QUARTER TO FIFTEEN AND ONE HALF"}
-{"id": "F01_050C010O_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
+{"id": "F01_050C010O_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "SUPERIOR INDUSTRIES INTERNATIONAL FELL THREE AND ONE QUARTER TO FIFTEEN AND ONE HALF"}
 {"id": "F01_050C010O_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_050C010P_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE COMPANY SAID IT ENDED TALKS ON A POSSIBLE BUSINESS COMBINATION"}
+{"id": "F01_050C010P_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUS"}
 {"id": "F01_050C010P_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F01_050C010P_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_050C010P_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE COMPANY SAID IT ENDED TALKS ON A POSSIBLE BUSINESS COMBINATION"}
@@ -187,7 +187,7 @@
 {"id": "F01_051C0105_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "IN THE BOND MARKET PRICES OF SOME LONG TERM TREASURY ISSUES FELL TO THEIR LOWEST LEVELS IN ABOUT THREE MONTHS"}
 {"id": "F01_051C0105_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F01_051C0105_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_051C0105_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "IN THE BOND MARKET PRICES OF SOME LONG TERM TREASURY ISSUES FELL TO THEIR LOWEST LEVELS IN ABOUT THREE MONTHS"}
+{"id": "F01_051C0105_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "IN THE BOND MARKET PRICES OF SOME LONG TERM TREASURY ISSUES FELL TO THEIR LOWEST LEVELS IN ABOUT THREE MONTHS (environment: STREET, gender:female, Duration: 7.439875)"}
 {"id": "F01_051C0105_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "F01_051C0105_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_051C010A_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE NEW DIVIDEND IS PAYABLE MARCH SIXTH TO STOCK OF RECORD FEBRUARY NINETEENTH"}
@@ -241,7 +241,7 @@
 {"id": "F01_051C010T_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUS"}
 {"id": "F01_051C010T_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F01_051C010T_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_051C010T_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:05.20] IN THE PREVIOUS FOUR YEARS ANNUAL INCREASES WERE WELL BELOW THREE PERCENT (environment: CAFE, gender:female, Duration: 5.199813)"}
+{"id": "F01_051C010T_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "CAFE"}
 {"id": "F01_051C010T_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F01_051C010T_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_051C010T_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "PEDESTRIAN"}
@@ -313,7 +313,7 @@
 {"id": "F01_052C0108_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "ALSO TWO BANKS BOOSTED FOREIGN LOAN LOSS RESERVES"}
 {"id": "F01_052C0108_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F01_052C0108_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_052C0108_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:04.76] ALSO TWO BANKS BOOSTED FOREIGN LOAN LOSS RESERVES (environment: CAFE, gender:female, Duration: 4.759875)"}
+{"id": "F01_052C0108_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "ALSO TWO BANKS BOOSTED FOREIGN LOAN LOSS RESERVES"}
 {"id": "F01_052C0108_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F01_052C0108_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_052C0108_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "ALSO TWO BANKS BOOSTED FOREIGN LOAN LOSS RESERVES"}
@@ -359,7 +359,7 @@
 {"id": "F01_052C010C_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F01_052C010C_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_052C010F_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "WESTERN UNION SAID IT MAY AGAIN EXTEND ITS DEADLINE"}
-{"id": "F01_052C010F_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
+{"id": "F01_052C010F_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "WESTERN UNION SAID IT MAY AGAIN EXTEND ITS DEADLINE"}
 {"id": "F01_052C010F_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_052C010F_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "WESTERN UNION SAID IT MAY AGAIN EXTEND ITS DEADLINE"}
 {"id": "F01_052C010F_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
@@ -433,7 +433,7 @@
 {"id": "F01_052C0113_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "HE HAS BEEN TOLD BY THE JUSTICE DEPARTMENT THAT BEFORE LONG HE MAY BE INDICTED ON CRIMINAL CHARGES"}
 {"id": "F01_052C0113_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F01_052C0113_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_052C0113_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "HE HAS BEEN TOLD BY THE JUSTICE DEPARTMENT THAT BEFORE LONG HE MAY BE INDICTED ON CRIMINAL CHARGES (environment: CAFE, gender:female, Duration: 6.24775)"}
+{"id": "F01_052C0113_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "HE HAS BEEN TOLD BY THE JUSTICE DEPARTMENT THAT BEFORE LONG HE MAY BE INDICTED ON CRIMINAL CHARGES"}
 {"id": "F01_052C0113_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F01_052C0113_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_052C0113_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "HE HAS BEEN TOLD BY THE JUSTICE DEPARTMENT THAT BEFORE LONG HE MAY BE INDICTED ON CRIMINAL CHARGES"}
@@ -460,7 +460,7 @@
 {"id": "F01_053C0102_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "UNDER THE LAW THE JUSTICE DEPARTMENT CAN ELECT TO TAKE OVER AS PLAINTIFF (environment: CAFE, gender:female, Duration: 5.527938)"}
 {"id": "F01_053C0102_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F01_053C0102_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_053C0102_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "UNDER THE LAW THE JUSTICE DEPARTMENT CAN ELECT TO TAKE OVER AS PLAINTIFF"}
+{"id": "F01_053C0102_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "UNDER THE LAW THE JUSTICE DEPARTMENT CAN ELECT TO TAKE OVER AS PLAINTIFF (environment: PEDESTRIAN, gender:female, Duration: 5.527938)"}
 {"id": "F01_053C0102_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F01_053C0102_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_053C0102_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "UNDER THE LAW THE JUSTICE DEPARTMENT CAN ELECT TO TAKE OVER AS PLAINTIFF (environment: STREET, gender:female, Duration: 5.527938)"}
@@ -488,7 +488,7 @@
 {"id": "F01_053C0106_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F01_053C0106_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_053C0106_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "ONE OF THE NEW P. C. S OFFERS ALMOST DOUBLE THE MEMORY AND SLIGHTLY MORE STORAGE FOR ELEVEN PERCENT LESS THAN THE COMPETING COMPAQ MACHINE (environment: STREET, gender:female, Duration: 8.663562)"}
-{"id": "F01_053C0106_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
+{"id": "F01_053C0106_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "F01_053C0106_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_053C0107_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "I. B. M. P. C.S TRADITIONALLY ARE PRICED HIGHER THAN RIVAL BRANDS WHICH TYPICALLY MUST UNDERCUT I. B. M. PRICES BY FIFTEEN PERCENT"}
 {"id": "F01_053C0107_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -511,7 +511,7 @@
 {"id": "F01_053C010C_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "PRICES WERE DOWN EVERY DAY BUT THURSDAY WHEN THEY ROSE ONLY SLIGHTLY"}
 {"id": "F01_053C010C_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F01_053C010C_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_053C010C_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "PRICES WERE DOWN EVERY DAY BUT THURSDAY WHEN THEY ROSE ONLY SLIGHTLY"}
+{"id": "F01_053C010C_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "PRICES WERE DOWN EVERY DAY BUT THURSDAY WHEN THEY ROSE ONLY SLIGHTLY (environment: STREET, gender:female, Duration: 4.992)"}
 {"id": "F01_053C010C_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F01_053C010C_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_053C010D_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE YIELD ON THE LATEST THIRTY YEAR TREASURY BONDS SURGED TO EIGHT POINT EIGHT THREE PERCENT FROM EIGHT POINT FIVE SIX PERCENT A WEEK EARLIER"}
@@ -538,7 +538,7 @@
 {"id": "F01_053C010E_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "SINCE THE EARLY NINETEEN EIGHTIES DATA GENERAL HAS TRIED TO COMPETE HEAD ON WITH INTERNATIONAL BUSINESS MACHINES CORPORATION AND DIGITAL EQUIPMENT CORPORATION FOR LARGE CUSTOMERS (environment: STREET, gender:female, Duration: 12.919438)"}
 {"id": "F01_053C010E_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "F01_053C010E_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_053C010Y_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE ONE HUNDRED SHARE INDEX WAS OFF FIVE POINT TWO POINTS AT ONE THOUSAND SEVEN HUNDRED EIGHTY NINE POINT FIVE (environment: BUS, gender:female, Duration: 7.727938)"}
+{"id": "F01_053C010Y_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE ONE HUNDRED SHARE INDEX WAS OFF FIVE POINT TWO POINTS AT ONE THOUSAND SEVEN HUNDRED EIGHTY NINE POINT FIVE"}
 {"id": "F01_053C010Y_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F01_053C010Y_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_053C010Y_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE ONE HUNDRED SHARE INDEX WAS OFF FIVE POINT TWO POINTS AT ONE THOUSAND SEVEN HUNDRED EIGHTY NINE POINT FIVE (environment: CAFE, gender:female, Duration: 7.727938)"}
@@ -548,7 +548,7 @@
 {"id": "F01_053C010Y_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F01_053C010Y_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_053C010Y_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE ONE HUNDRED SHARE INDEX WAS OFF FIVE POINT TWO POINTS AT ONE THOUSAND SEVEN HUNDRED EIGHTY NINE POINT FIVE"}
-{"id": "F01_053C010Y_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "THE ONE HUNDRED SHARE INDEX WAS OFF FIVE POINT TWO POINTS AT ONE THOUSAND SEVEN HUNDRED EIGHTY NINE POINT FIVE (environment: STREET, gender:female, Duration: 7.727938)"}
+{"id": "F01_053C010Y_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "F01_053C010Y_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_053C010Z_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "JOB SECURITY CLAUSES GIVE UNIONS SOMETHING POSITIVE TO TAKE BACK TO THEIR MEMBERS AT MODEST COST TO EMPLOYERS"}
 {"id": "F01_053C010Z_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -754,7 +754,7 @@
 {"id": "F01_22HC010P_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "HE POINTS OUT THAT SINCE THE OCTOBER NINETEENTH PLUNGE THE DOW JONES TRANSPORTATION AVERAGE HAS DROPPED BELOW THE LOW IT POSTED DURING THE CRASH (environment: STREET, gender:female, Duration: 9.127688)"}
 {"id": "F01_22HC010P_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F01_22HC010P_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_22HC010Q_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "IT HAS SINDED REBOUNDED TO SEVEN HUNDRED FORTY FIVE POINT FIVE SEVEN WHERE IT CLOSED FRIDAY LOSING FOUR POINT FIVE SEVEN POINTS IN THE SESSION (environment: BUS, gender:female, Duration: 10.055813)"}
+{"id": "F01_22HC010Q_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "IT HAS SINDED REBOUNDED TO SEVEN HUNDRED FORTY FIVE POINT FIVE SEVEN WHERE IT CLOSED FRIDAY LOSING FOUR POINT FIVE SEVEN POINTS IN THE SESSION"}
 {"id": "F01_22HC010Q_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F01_22HC010Q_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_22HC010Q_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "IT HAS SINCE REBOUNDED TO SEVEN HUNDRED FORTY FIVE POINT FIVE SEVEN WHERE IT CLOSED FRIDAY LOSING FOUR POINT FIVE SEVEN POINTS IN THE SESSION (environment: CAFE, gender:female, Duration: 10.055813)"}
@@ -832,7 +832,7 @@
 {"id": "F01_420C020F_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "PROCEEDS WILL BE USED FOR PRODUCT DEVELOPMENT WORKING CAPITAL AND GENERAL PURPOSES (environment: CAFE, gender:female, Duration: 5.11975)"}
 {"id": "F01_420C020F_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F01_420C020F_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_420C020F_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "PROCEEDS WILL BE USED FOR PRODUCT DEVELOPMENT WORKING CAPITAL AND GENERAL PURPOSES"}
+{"id": "F01_420C020F_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "PROCEEDS WILL BE USED FOR PRODUCT DEVELOPMENT WORKING CAPITAL AND GENERAL PURPOSES (environment: PEDESTRIAN, gender:female, Duration: 5.11975)"}
 {"id": "F01_420C020F_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F01_420C020F_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_420C020F_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "PROCEEDS WILL BE USED FOR PRODUCT DEVELOPMENT WORKING CAPITAL AND GENERAL PURPOSES (environment: STREET, gender:female, Duration: 5.11975)"}
@@ -970,16 +970,16 @@
 {"id": "F01_421C020R_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "TEXACO INCORPORATED WHICH HAS HAD ONE OF THE WORST RECORDS OF THE BIG INTEGRATED OIL COMPANIES REPLACED SEVENTY PERCENT OF ITS PRODUCTION LAST YEAR"}
 {"id": "F01_421C020R_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F01_421C020R_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_421C020S_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:07.06] ALTHOUGH THAT IS UP FROM FORTY SIX PERCENT IN NINETEEN EIGHTY SIX TEXACO'S PRODUCTION ALSO FELL LAST YEAR (environment: BUS, gender:female, Duration: 7.055813)"}
+{"id": "F01_421C020S_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "ALTHOUGH THAT IS UP FROM FORTY SIX PERCENT IN NINETEEN EIGHTY SIX TEXACO'S PRODUCTION ALSO FELL LAST YEAR (environment: BUS, gender:female, Duration: 7.055813)"}
 {"id": "F01_421C020S_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F01_421C020S_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_421C020S_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:07.06] ALTHOUGH THAT IS UP FROM FORTY SIX PERCENT IN NINETEEN EIGHTY SIX TEXACO'S PRODUCTION ALSO FELL LAST YEAR (environment: CAFE, gender:female, Duration: 7.055813)"}
+{"id": "F01_421C020S_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "ALTHOUGH THAT IS UP FROM FORTY SIX PERCENT IN NINETEEN EIGHTY SIX TEXACO'S PRODUCTION ALSO FELL LAST YEAR (environment: CAFE, gender:female, Duration: 7.055813)"}
 {"id": "F01_421C020S_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F01_421C020S_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_421C020S_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "ALTHOUGH THAT IS UP FROM FORTY SIX PERCENT IN NINETEEN EIGHTY SIX TEXACO'S PRODUCTION ALSO FELL LAST YEAR (environment: PEDESTRIAN, gender:female, Duration: 7.055813)"}
 {"id": "F01_421C020S_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F01_421C020S_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_421C020S_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:07.06] ALTHOUGH THAT IS UP FROM FORTY SIX PERCENT IN NINETEEN EIGHTY SIX TEXACO'S PRODUCTION ALSO FELL LAST YEAR (environment: STREET, gender:female, Duration: 7.055813)"}
+{"id": "F01_421C020S_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "ALTHOUGH THAT IS UP FROM FORTY SIX PERCENT IN NINETEEN EIGHTY SIX TEXACO'S PRODUCTION ALSO FELL LAST YEAR (environment: STREET, gender:female, Duration: 7.055813)"}
 {"id": "F01_421C020S_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "F01_421C020S_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_421C020U_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "STOCKS FELL IN NERVOUS TRADING WHILE BONDS WERE NARROWLY MIXED"}
@@ -991,7 +991,7 @@
 {"id": "F01_421C020U_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "STOCKS FELL IN NERVOUS TRADING WHILE BONDS WERE NARROWLY MIXED"}
 {"id": "F01_421C020U_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F01_421C020U_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_421C020U_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "STOCKS FELL IN NERVOUS TRADING WHILE BONDS WERE NARROWLY MIXED"}
+{"id": "F01_421C020U_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "STOCKS FELL IN NERVOUS TRADING WHILE BONDS WERE NARROWLY MIXED (environment: STREET, gender:female, Duration: 4.431625)"}
 {"id": "F01_421C020U_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F01_421C020U_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_421C020X_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE OFFERING SIZE WAS INCREASED FROM THE EIGHT MILLION SHARES ORIGINALLY PLANNED"}
@@ -1016,7 +1016,7 @@
 {"id": "F01_421C020Z_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F01_421C020Z_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_421C020Z_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "A CITICORP PORTFOLIO MANAGER SAYS THE UNIT'S NEW OWNER COULD LOSE QUITE A FEW CURRENT MANAGERS (environment: STREET, gender:female, Duration: 6.623687)"}
-{"id": "F01_421C020Z_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
+{"id": "F01_421C020Z_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F01_421C020Z_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_421C0210_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUT HE OFFERED THE OPINION THAT ROBERT WADE THE UNIT'S CHIEF AND HALF A DOZEN OTHER SENIOR PEOPLE WILL GO WITH U. S. F. AND G."}
 {"id": "F01_421C0210_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -1195,7 +1195,7 @@
 {"id": "F01_423C020L_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "BUT THE PLAN WON'T BE FILED WITH THE BANKRUPTCY COURT UNTIL THE CREDITORS AND L. T. V. AGREE ON HOW THE DEBT WILL BE PAID"}
 {"id": "F01_423C020L_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F01_423C020L_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F01_423C020L_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:07.57] BUT THE PLAN WON'T BE FILED WITH THE BANKRUPTCY COURT UNTIL THE CREDITORS AND L. T. V. AGREE ON HOW THE DEBT WILL BE PAID (environment: STREET, gender:female, Duration: 7.567625)"}
+{"id": "F01_423C020L_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "BUT THE PLAN WON'T BE FILED WITH THE BANKRUPTCY COURT UNTIL THE CREDITORS AND L. T. V. AGREE ON HOW THE DEBT WILL BE PAID (environment: STREET, gender:female, Duration: 7.567625)"}
 {"id": "F01_423C020L_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "street"}
 {"id": "F01_423C020L_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F01_423C020M_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:02.58] THAT COULD TAKE YEARS (environment: BUS, gender:female, Duration: 2.575875)"}
@@ -1309,13 +1309,13 @@
 {"id": "F04_050C010Y_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "B. C. C. I. OFFICIALS AND INDUSTRY ANALYSTS"}
 {"id": "F04_050C010Y_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_050C010Y_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_050C010Y_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "MOREOVER B. C. C. I. OFFICIALS AND INDUSTRY ANALYSTS STRESSED THAT AS MUCH AS SEVENTY FIVE PERCENT OF THE BANK'S DEPOSIT BASE IS MADE UP OF RETAIL DEPOSITS"}
+{"id": "F04_050C010Y_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "MOREOVER B. C. C. I. OFFICIALS AND INDUSTRY ANALYSTS STRESSED THAT AS MUCH AS SEVENTY FIVE PERCENT OF THE BANK'S DEPOSIT BASE IS MADE UP OF RETAIL DEPOSITS (environment: CAFE, gender:female, Duration: 9.811375)"}
 {"id": "F04_050C010Y_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_050C010Y_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_050C010Y_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "MOREOVER B. C. C. I. OFFICIALS AND INDUSTRY ANALYSTS STRESSED THAT AS MUCH AS SEVENTY FIVE PERCENT OF THE BANK'S DEPOSIT BASE IS MADE UP OF RETAIL DEPOSITS (environment: PEDESTRIAN, gender:female, Duration: 9.811375)"}
 {"id": "F04_050C010Y_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F04_050C010Y_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_050C010Y_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "MOREOVER B. C. C. I. OFFICIALS AND INDUSTRY ANALYSTS STRESSED THAT AS MUCH AS SEVENTY FIVE PERCENT OF THE BANK'S DEPOSIT BASE IS MADE UP OF RETAIL DEPOSITS"}
+{"id": "F04_050C010Y_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "MOREOVER B. C. C. I. OFFICIALS AND INDUSTRY ANALYSTS STRESSED THAT AS MUCH AS SEVENTY FIVE PERCENT OF THE BANK'S DEPOSIT BASE IS MADE UP OF RETAIL DEPOSITS (environment: STREET, gender:female, Duration: 9.811375)"}
 {"id": "F04_050C010Y_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "F04_050C010Y_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_050C0111_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "YET WHEN WE DISCUSS SOCIAL POLICY WE TALK AS IF MONEY THE POVERTY RATE WAS ALL THAT MATTERS (environment: BUS, gender:female, Duration: 5.763625)"}
@@ -1462,7 +1462,7 @@
 {"id": "F04_051C0110_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "WE LOOK FOR HIGHER THAN STANDARD RETURNS MR. SPERLING SAYS (environment: STREET, gender:female, Duration: 3.899812)"}
 {"id": "F04_051C0110_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F04_051C0110_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_051C0112_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:05.09] THERE ARE TOO MANY FOREIGN AND INSTITUTIONAL PLAYERS WILLING TO PAY HIGHER PRICES THAN WE ARE (environment: BUS, gender:female, Duration: 5.091938)"}
+{"id": "F04_051C0112_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THERE ARE TOO MANY FOREIGN AND INSTITUTIONAL PLAYERS WILLING TO PAY HIGHER PRICES THAN WE ARE"}
 {"id": "F04_051C0112_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_051C0112_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_051C0112_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "CAFE"}
@@ -1573,7 +1573,7 @@
 {"id": "F04_053C0109_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "IT DOES CALL FOR ELIMINATING SOME GOVERNMENT OBSTACLES TO THE DEVELOPMENT OF A HEALTHY LONG TERM CARE INSURANCE MARKET"}
 {"id": "F04_053C0109_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_053C0109_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_053C0109_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:06.75] IT DOES CALL FOR ELIMINATING SOME GOVERNMENT OBSTACLES TO THE DEVELOPMENT OF A HEALTHY LONG TERM CARE INSURANCE MARKET (environment: CAFE, gender:female, Duration: 6.74775)"}
+{"id": "F04_053C0109_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "IT DOES CALL FOR ELIMINATING SOME GOVERNMENT OBSTACLES TO THE DEVELOPMENT OF A HEALTHY LONG TERM CARE INSURANCE MARKET"}
 {"id": "F04_053C0109_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_053C0109_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_053C0109_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "IT DOES CALL FOR ELIMINATING SOME GOVERNMENT OBSTACLES TO THE DEVELOPMENT OF A HEALTHY LONG TERM CARE INSURANCE MARKET"}
@@ -1609,13 +1609,13 @@
 {"id": "F04_053C010K_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUS"}
 {"id": "F04_053C010K_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_053C010K_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_053C010K_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "R. L. R. said the brokerage unit generated substantially all of its revenue (environment: CAFE, gender:female, Duration: 6.188562)"}
+{"id": "F04_053C010K_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "CAFE"}
 {"id": "F04_053C010K_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_053C010K_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_053C010K_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "R. L. R."}
 {"id": "F04_053C010K_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F04_053C010K_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_053C010K_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "R. L. R. said the brokerage unit generated substantially all of its revenue"}
+{"id": "F04_053C010K_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "R. L. R. said the brokerage unit generated substantially all of its revenue (environment: STREET, gender:female, Duration: 6.188562)"}
 {"id": "F04_053C010K_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F04_053C010K_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_053C010N_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "STOCK AND BOND PRICES FELL FRIDAY AMID CONCERN ABOUT LACK OF PROGRESS IN THE BUDGET TALKS (environment: BUS, gender:female, Duration: 5.795813)"}
@@ -1801,7 +1801,7 @@
 {"id": "F04_22HC0108_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUS"}
 {"id": "F04_22HC0108_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_22HC0108_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_22HC0108_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "COMPANIES ARE LISTED WHERE TRANSACTIONS GENERALLY AGGREGATE TEN THOUSAND SHARES OR ONE HUNDRED THOUSAND DOLLARS"}
+{"id": "F04_22HC0108_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "COMPANIES ARE LISTED WHERE TRANSACTIONS GENERALLY AGGREGATE TEN THOUSAND SHARES OR ONE HUNDRED THOUSAND DOLLARS (environment: CAFE, gender:female, Duration: 6.539875)"}
 {"id": "F04_22HC0108_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_22HC0108_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_22HC0108_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "COMPANIES ARE LISTED WHERE TRANSACTIONS GENERALLY AGGREGATE TEN THOUSAND SHARES OR ONE HUNDRED THOUSAND DOLLARS"}
@@ -1813,7 +1813,7 @@
 {"id": "F04_22HC0109_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE PANEL MADE SEVERAL OTHER RECOMMENDATIONS CONCERNING PROGRAM TRADING INCLUDING CONSOLIDATING REGULATORY AUTHORITY OVER ALL U. S. FINANCIAL MARKETS UNDER ONE GOVERNMENT AGENCY (environment: BUS, gender:female, Duration: 10.163375)"}
 {"id": "F04_22HC0109_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_22HC0109_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_22HC0109_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE PANEL MADE SEVERAL OTHER RECOMMENDATIONS CONCERNING PROGRAM TRADING INCLUDING CONSOLIDATING REGULATORY AUTHORITY OVER ALL U. S. FINANCIAL MARKETS UNDER ONE GOVERNMENT AGENCY (environment: CAFE, gender:female, Duration: 10.163375)"}
+{"id": "F04_22HC0109_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE PANEL MADE SEVERAL OTHER RECOMMENDATIONS CONCERNING PROGRAM TRADING INCLUDING CONSOLIDATING REGULATORY AUTHORITY OVER ALL U. S. FINANCIAL MARKETS UNDER ONE GOVERNMENT AGENCY"}
 {"id": "F04_22HC0109_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_22HC0109_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_22HC0109_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE PANEL MADE SEVERAL OTHER RECOMMENDATIONS CONCERNING PROGRAM TRADING INCLUDING CONSOLIDATING REGULATORY AUTHORITY OVER ALL U. S. FINANCIAL MARKETS UNDER ONE GOVERNMENT AGENCY (environment: PEDESTRIAN, gender:female, Duration: 10.163375)"}
@@ -1870,7 +1870,7 @@
 {"id": "F04_22HC010T_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "WORST OF ALL HE SAYS SOMEBODY MIGHT HAVE BOUGHT THE COMPANY WITH THE INTENTION OF BREAKING IT UP (environment: STREET, gender:female, Duration: 5.13175)"}
 {"id": "F04_22HC010T_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F04_22HC010T_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_22HC010U_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE NIKKEI INDEX ADDED EIGHTY POINT OH SIX POINTS TO FINISH AT TWENTY EIGHT THOUSAND TWO HUNDRED NINE POINT FOUR TWO"}
+{"id": "F04_22HC010U_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE NIKKEI INDEX ADDED EIGHTY POINT OH SIX POINTS TO FINISH AT TWENTY EIGHT THOUSAND TWO HUNDRED NINE POINT FOUR TWO (environment: BUS, gender:female, Duration: 7.483688)"}
 {"id": "F04_22HC010U_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_22HC010U_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_22HC010U_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE NIKKEI INDEX ADDED EIGHTY POINT OH SIX POINTS TO FINISH AT TWENTY EIGHT THOUSAND TWO HUNDRED NINE POINT FOUR TWO (environment: CAFE, gender:female, Duration: 7.483688)"}
@@ -1888,7 +1888,7 @@
 {"id": "F04_22HC0110_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE QUESTION IS WHETHER U. S. BANKS WILL BE ALLOWED TO COMPETE (environment: CAFE, gender:female, Duration: 4.003813)"}
 {"id": "F04_22HC0110_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_22HC0110_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_22HC0110_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE QUESTION IS WHETHER U. S. BANKS WILL BE ALLOWED TO COMPETE (environment: PEDESTRIAN, gender:female, Duration: 4.003813)"}
+{"id": "F04_22HC0110_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE QUESTION IS WHETHER U. S. BANKS WILL BE ALLOWED TO COMPETE"}
 {"id": "F04_22HC0110_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F04_22HC0110_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_22HC0110_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE QUESTION IS WHETHER U. S. BANKS WILL BE ALLOWED TO COMPETE (environment: STREET, gender:female, Duration: 4.003813)"}
@@ -1939,7 +1939,7 @@
 {"id": "F04_420C0209_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE DEPARTMENT SAID THE DECLINE IN FACTORY JOBS WAS CONCENTRATED IN MOTOR VEHICLES AND ELECTRICAL AND ELECTRONIC EQUIPMENT (environment: PEDESTRIAN, gender:female, Duration: 7.18775)"}
 {"id": "F04_420C0209_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F04_420C0209_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_420C0209_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE DEPARTMENT SAID THE DECLINE IN FACTORY JOBS WAS CONCENTRATED IN MOTOR VEHICLES AND ELECTRICAL AND ELECTRONIC EQUIPMENT (environment: STREET, gender:female)"}
+{"id": "F04_420C0209_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE DEPARTMENT SAID THE DECLINE IN FACTORY JOBS WAS CONCENTRATED IN MOTOR VEHICLES AND ELECTRICAL AND ELECTRONIC EQUIPMENT (environment: STREET, gender:female, Duration: 7.18775)"}
 {"id": "F04_420C0209_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "F04_420C0209_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_420C020B_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "MINING EMPLOYMENT WHICH INCLUDES THE OIL AND GAS EXTRACTION INDUSTRY ROSE THREE THOUSAND AFTER A ONE THOUSAND JOB RISE"}
@@ -1981,7 +1981,7 @@
 {"id": "F04_420C020I_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "STOCK PRICES ALSO WERE MIXED IN PARIS ZURICH AND STOCKHOLM (environment: BUS, gender:female, Duration: 4.531813)"}
 {"id": "F04_420C020I_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_420C020I_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_420C020I_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "STOCK PRICES ALSO WERE MIXED IN PARIS ZURICH AND STOCKHOLM (environment: CAFE, gender:female, Duration: 4.531813)"}
+{"id": "F04_420C020I_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "CAFE"}
 {"id": "F04_420C020I_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_420C020I_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_420C020I_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "STOCK PRICES ALSO WERE MIXED IN PARIS ZURICH AND STOCKHOLM (environment: PEDESTRIAN, gender:female)"}
@@ -2050,7 +2050,7 @@
 {"id": "F04_420C020Z_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "DEAN WITTER REYNOLDS INCORPORATED GOLDMAN SACHS AND COMPANY AND MORGAN STANLEY AND COMPANY ARE HANDLING THE SALE (environment: STREET, gender:female, Duration: 7.59575)"}
 {"id": "F04_420C020Z_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F04_420C020Z_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_421C0207_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "(environment: BUS, gender:female, Duration: 1.859875)"}
+{"id": "F04_421C0207_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:01.86] THAT'S ANOTHER STORY (environment: BUS, gender:female, Duration: 1.859875)"}
 {"id": "F04_421C0207_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_421C0207_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_421C0207_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:01.86] THAT'S ANOTHER STORY (environment: CAFE, gender:female, Duration: 1.859875)"}
@@ -2080,7 +2080,7 @@
 {"id": "F04_421C0209_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "ONE INVESTOR OFFICER SAYS MR. SMITH WAS ASKED LAST WEEK WHAT IT WOULD TAKE TO CUT THE DIVIDEND (environment: CAFE, gender:female, Duration: 5.515937)"}
 {"id": "F04_421C0209_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_421C0209_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_421C0209_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "ONE INVESTOR OFFICER SAYS MR. SMITH WAS ASKED LAST WEEK WHAT IT WOULD TAKE TO CUT THE DIVIDEND"}
+{"id": "F04_421C0209_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:05.52] ONE INVESTMENT OFFICER SAYS MR. SMITH WAS ASKED LAST WEEK WHAT IT WOULD TAKE TO CUT THE DIVIDEND (environment: PEDESTRIAN, gender:female, Duration: 5.515937)"}
 {"id": "F04_421C0209_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F04_421C0209_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_421C0209_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "ONE INVESTOR OFFICER SAYS MR. SMITH WAS ASKED LAST WEEK WHAT IT WOULD TAKE TO CUT THE DIVIDEND (environment: STREET, gender:female, Duration: 5.515937)"}
@@ -2116,13 +2116,13 @@
 {"id": "F04_421C0212_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "CRITICS SAY THE FEDERAL APPROACH WAS WRONG FROM THE START (environment: CAFE, gender:female, Duration: 3.379812)"}
 {"id": "F04_421C0212_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_421C0212_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_421C0212_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "CRITICS SAY THE FEDERAL APPROACH WAS WRONG FROM THE START"}
+{"id": "F04_421C0212_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "CRITICS SAY THE FEDERAL APPROACH WAS WRONG FROM THE START (environment: PEDESTRIAN, gender:female)"}
 {"id": "F04_421C0212_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F04_421C0212_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_421C0212_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "CRITICS SAY THE FEDERAL APPROACH WAS WRONG FROM THE START (environment: STREET, gender:female, Duration: 3.379812)"}
 {"id": "F04_421C0212_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F04_421C0212_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_421C0214_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "DOCTOR WOLFE"}
+{"id": "F04_421C0214_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "IT SHOULD BE GOVERNMENT REGULATED SAYS DOCTOR WOLFE (environment: BUS, gender:female, Duration: 3.51225)"}
 {"id": "F04_421C0214_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_421C0214_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_421C0214_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "DOCTOR WOLFE"}
@@ -2131,13 +2131,13 @@
 {"id": "F04_421C0214_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "DOCTOR WOLFE"}
 {"id": "F04_421C0214_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F04_421C0214_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_421C0214_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "DOCTOR WOLFE"}
+{"id": "F04_421C0214_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "DOCTOR WOLFE (environment: STREET, gender:female, Duration: 3.51225)"}
 {"id": "F04_421C0214_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "F04_421C0214_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_422C0201_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE N. A. S. D. RELEASED SHORT INTEREST FIGURES FOR THE FIRST TIME NOVEMBER TWENTY FIFTH FOR ALL STOCKS CARRIED ON ITS NASDAQ AUTOMATED QUOTATION SYSTEM (environment: BUS, gender:female, Duration: 8.63525)"}
 {"id": "F04_422C0201_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_422C0201_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_422C0201_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE N. A. S. D. RELEASED SHORT INTEREST FIGURES FOR THE FIRST TIME NOVEMBER TWENTY FIFTH FOR ALL STOCKS CARRIED ON ITS NASDAQ AUTOMATED QUOTATION SYSTEM"}
+{"id": "F04_422C0201_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE N. A. S. D. RELEASED SHORT INTEREST FIGURES FOR THE FIRST TIME NOVEMBER TWENTY FIFTH FOR ALL STOCKS CARRIED ON ITS NASDAQ AUTOMATED QUOTATION SYSTEM (environment: CAFE, gender:female, Duration: 8.63525)"}
 {"id": "F04_422C0201_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_422C0201_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_422C0201_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE N. A. S. D. RELEASED SHORT INTEREST FIGURES FOR THE FIRST TIME NOVEMBER TWENTY FIFTH FOR ALL STOCKS CARRIED ON ITS NASDAQ AUTOMATED QUOTATION SYSTEM"}
@@ -2182,7 +2182,7 @@
 {"id": "F04_422C020G_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "WHAT IS IMPORTANT IS WE SAVED THIS COMPANY AND ARE REBUILDING IT (environment: STREET, gender:female, Duration: 3.868063)"}
 {"id": "F04_422C020G_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F04_422C020G_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_422C020H_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "FOR ITS EFFORTS DREXEL WILL GET ACCORDING TO WESTERN UNION'S PROXY STATEMENT A TWENTY FIVE POINT FOUR MILLION DOLLAR FEE"}
+{"id": "F04_422C020H_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "FOR ITS EFFORTS DREXEL WILL GET ACCORDING TO WESTERN UNION'S PROXY STATEMENT A TWENTY FIVE POINT FOUR MILLION DOLLAR FEE (environment: BUS, gender:female, Duration: 7.767812)"}
 {"id": "F04_422C020H_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_422C020H_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_422C020H_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "FOR ITS EFFORTS DREXEL WILL GET ACCORDING TO WESTERN UNION'S PROXY STATEMENT A TWENTY FIVE POINT FOUR MILLION DOLLAR FEE"}
@@ -2191,7 +2191,7 @@
 {"id": "F04_422C020H_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "FOR ITS EFFORTS DREXEL WILL GET ACCORDING TO WESTERN UNION'S PROXY STATEMENT A TWENTY FIVE POINT FOUR MILLION DOLLAR FEE"}
 {"id": "F04_422C020H_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F04_422C020H_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_422C020H_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "FOR ITS EFFORTS DREXEL WILL GET ACCORDING TO WESTERN UNION'S PROXY STATEMENT A TWENTY FIVE POINT FOUR MILLION DOLLAR FEE"}
+{"id": "F04_422C020H_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "FOR ITS EFFORTS DREXEL WILL GET ACCORDING TO WESTERN UNION'S PROXY STATEMENT A TWENTY FIVE POINT FOUR MILLION DOLLAR FEE (environment: STREET, gender:female, Duration: 7.767812)"}
 {"id": "F04_422C020H_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "WESTERN"}
 {"id": "F04_422C020H_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_422C020I_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "TRADERS SAID THE REASON BEHIND THE FIRST HOUR FOCUS IS THE ACTION IN THE DOLLAR"}
@@ -2221,7 +2221,7 @@
 {"id": "F04_422C020M_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "ALSO TWO BANKS BOOSTED FOREIGN LOAN LOSS RESERVES"}
 {"id": "F04_422C020M_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_422C020M_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_422C020M_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:03.62] ALSO TWO BANKS BOOSTED FOREIGN LOAN LOSS RESERVES (environment: CAFE, gender:female, Duration: 3.619813)"}
+{"id": "F04_422C020M_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "ALSO TWO BANKS BOOSTED FOREIGN LOAN LOSS RESERVES"}
 {"id": "F04_422C020M_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_422C020M_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_422C020M_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "ALSO TWO BANKS BOOSTED FOREIGN LOAN LOSS RESERVES"}
@@ -2245,13 +2245,13 @@
 {"id": "F04_422C020U_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "DOMESTIC CARS ACCOUNTED FOR SEVENTY THREE POINT FIVE PERCENT OF APRIL AUTO SALES WHILE THE IMPORT SHARE GREW ONE POINT FIVE PERCENT TO TWENTY SIX POINT FIVE PERCENT (environment: BUS, gender:female, Duration: 10.3235)"}
 {"id": "F04_422C020U_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "DOMESTIC CARS"}
 {"id": "F04_422C020U_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_422C020U_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "DOMESTIC CARS ACCOUNTED FOR SEVENTY THREE POINT FIVE PERCENT OF APRIL AUTO SALES WHILE THE IMPORT SHARE GREW ONE POINT FIVE PERCENT TO TWENTY SIX POINT FIVE PERCENT"}
+{"id": "F04_422C020U_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "DOMESTIC CARS ACCOUNTED FOR SEVENTY THREE POINT FIVE PERCENT OF APRIL AUTO SALES WHILE THE IMPORT SHARE GREW ONE POINT FIVE PERCENT TO TWENTY SIX POINT FIVE PERCENT (environment: CAFE, gender:female, Duration: 10.3235)"}
 {"id": "F04_422C020U_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_422C020U_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_422C020U_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "DOMESTIC CARS ACCOUNTED FOR SEVENTY THREE POINT FIVE PERCENT OF APRIL AUTO SALES WHILE THE IMPORT SHARE GREW ONE POINT FIVE PERCENT TO TWENTY SIX POINT FIVE PERCENT"}
 {"id": "F04_422C020U_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "DOMESTIC CARS"}
 {"id": "F04_422C020U_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_422C020U_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "DOMESTIC CARS ACCOUNTED FOR SEVENTY THREE POINT FIVE PERCENT OF APRIL AUTO SALES WHILE THE IMPORT SHARE GREW ONE POINT FIVE PERCENT TO TWENTY SIX POINT FIVE PERCENT"}
+{"id": "F04_422C020U_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "DOMESTIC CARS ACCOUNTED FOR SEVENTY THREE POINT FIVE PERCENT OF APRIL AUTO SALES WHILE THE IMPORT SHARE GREW ONE POINT FIVE PERCENT TO TWENTY SIX POINT FIVE PERCENT (environment: STREET, gender:female, Duration: 10.3235)"}
 {"id": "F04_422C020U_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "DOMESTIC CARS"}
 {"id": "F04_422C020U_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_422C020V_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "G. M.'S SHARE OF THE TOTAL CAR MARKET FELL TO THIRTY FIVE POINT SIX PERCENT FROM THIRTY NINE POINT TWO PERCENT"}
@@ -2264,7 +2264,7 @@
 {"id": "F04_422C020V_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F04_422C020V_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_422C020V_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "G. M.'S SHARE OF THE TOTAL CAR MARKET FELL TO THIRTY FIVE POINT SIX PERCENT FROM THIRTY NINE POINT TWO PERCENT"}
-{"id": "F04_422C020V_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
+{"id": "F04_422C020V_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "F04_422C020V_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_422C020Y_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "DOFASCO HAMILTON ONTARIO SAID ABOUT THREE POINT THREE MILLION CONVERTIBLE PREFERRED SHARES ABOUT EIGHTY SIX PERCENT OF THE TOTAL OUTSTANDING WERE TENDERED"}
 {"id": "F04_422C020Y_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -2300,7 +2300,7 @@
 {"id": "F04_422C0216_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F04_422C0216_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_422C0216_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "SOMETIME NEXT YEAR HE SAID LAST WEEK WE'LL KNOW WHETHER THE FED'S PLAN HAS BEEN SUCCESSFUL"}
-{"id": "F04_422C0216_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
+{"id": "F04_422C0216_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "F04_422C0216_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_423C0203_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUT CONSUMERS GENERALLY WOULD HAVE ANOTHER MONTH UNTIL CREDIT CARD BILLS CAME DUE AND CONSIDERABLY MORE TIME IF THEY WERE WILLING TO PAY INTEREST (environment: BUS, gender:female, Duration: 7.939625)"}
 {"id": "F04_423C0203_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -2360,7 +2360,7 @@
 {"id": "F04_423C020E_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "F04_423C020E_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_423C020E_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE COMPANY SAID IT HASN'T BEEN ABLE TO OBTAIN THE BANK FINANCING FOR THE CONTINUING OPERATIONS"}
-{"id": "F04_423C020E_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
+{"id": "F04_423C020E_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "F04_423C020E_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_423C020N_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE PRICE FOR THE CITICORP UNIT WAS ABOUT ONE HUNDRED MILLION DOLLARS THE SOURCES ADD IN LINE WITH EARLIER ESTIMATES"}
 {"id": "F04_423C020N_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -2422,10 +2422,10 @@
 {"id": "F04_423C020W_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "AND HIGHER INTEREST RATES ATTRACT FOREIGN INVESTORS PUSHING UP THE DOLLAR"}
 {"id": "F04_423C020W_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "F04_423C020W_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_423C020Z_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "OUR EARNINGS ARE GOOD AND WE WANT THE PAYOUT RATE TO INCREASE OVER TIME"}
+{"id": "F04_423C020Z_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "OUR EARNINGS ARE GOOD AND WE WANT THE PAYOUT RATE TO INCREASE OVER TIME A SPOKESWOMAN FOR THE DETROIT BANK HOLDING COMPANY SAID (environment: BUS, gender:female, Duration: 7.38)"}
 {"id": "F04_423C020Z_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "F04_423C020Z_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
-{"id": "F04_423C020Z_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "OUR EARNINGS ARE GOOD AND WE WANT THE PAYOUT RATE TO INCREASE OVER TIME"}
+{"id": "F04_423C020Z_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "OUR EARNINGS ARE GOOD AND WE WANT THE PAYOUT RATE TO INCREASE OVER TIME A SPOKESWOMAN FOR THE DETROIT BANK HOLDING COMPANY SAID (environment: CAFE, gender:female, Duration: 7.38)"}
 {"id": "F04_423C020Z_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "F04_423C020Z_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "female"}
 {"id": "F04_423C020Z_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "OUR EARNINGS ARE GOOD AND WE WANT THE PAYOUT RATE TO INCREASE OVER TIME"}
@@ -2533,7 +2533,7 @@
 {"id": "M03_050C010B_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "L. T. V. THE NATION'S NUMBER TWO STEELMAKER SAID THE SALE IS AMONG A NUMBER OF OPTIONS UNDER STUDY FOR THE PLANT (environment: BUS, gender:male, Duration: 7.171312)"}
 {"id": "M03_050C010B_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "M03_050C010B_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M03_050C010B_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "L. T. V. THE NATION'S NUMBER TWO STEELMAKER SAID THE SALE IS AMONG A NUMBER OF OPTIONS UNDER STUDY FOR THE PLANT"}
+{"id": "M03_050C010B_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "L. T. V. THE NATION'S NUMBER TWO STEELMAKER SAID THE SALE IS AMONG A NUMBER OF OPTIONS UNDER STUDY FOR THE PLANT (environment: CAFE, gender:male, Duration: 7.171312)"}
 {"id": "M03_050C010B_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "M03_050C010B_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_050C010B_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "L. T. V. THE NATION'S NUMBER TWO STEELMAKER SAID THE SALE IS AMONG A NUMBER OF OPTIONS UNDER STUDY FOR THE PLANT"}
@@ -2602,7 +2602,7 @@
 {"id": "M03_050C010X_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE THIRD PARTY WASN'T IDENTIFIED"}
 {"id": "M03_050C010X_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M03_050C010X_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M03_050C010Z_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THESE GENERALLY REACT MUCH LESS THAN LARGE DEPOSITORS TO REPORTS OF A SCANDAL"}
+{"id": "M03_050C010Z_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUS"}
 {"id": "M03_050C010Z_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "M03_050C010Z_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_050C010Z_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THESE GENERALLY REACT MUCH LESS THAN LARGE DEPOSITORS TO REPORTS OF A SCANDAL"}
@@ -2623,7 +2623,7 @@
 {"id": "M03_050C0110_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "IN ADDITION THE BANK HAS ALWAYS PURSUED A POLICY OF KEEPING ITS BALANCE SHEET RELATIVELY LIQUID INSIDERS AND COMPETITORS SAID (environment: PEDESTRIAN, gender:male, Duration: 6.908188)"}
 {"id": "M03_050C0110_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M03_050C0110_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M03_050C0110_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "INSIDERS"}
+{"id": "M03_050C0110_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "IN ADDITION THE BANK HAS ALWAYS PURSUED A POLICY OF KEEPING ITS BALANCE SHEET RELATIVELY LIQUID INSIDERS AND COMPETITORS SAID (environment: STREET, gender:male, Duration: 6.908188)"}
 {"id": "M03_050C0110_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "M03_050C0110_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_051C0101_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "SO CLEARLY THE ADVOCATES OF SANCTIONS WERE THE FOREIGN POLICY VICTORS"}
@@ -2770,7 +2770,7 @@
 {"id": "M03_051C010Q_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:04.24] THAT GIVES HIM VOTING CONTROL OVER SEVENTY FIVE PERCENT OF THE COMPANY'S COMMON (environment: STREET, gender:male, Duration: 4.244063)"}
 {"id": "M03_051C010Q_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "street"}
 {"id": "M03_051C010Q_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M03_051C010U_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUS"}
+{"id": "M03_051C010U_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "PRICES OF MUNICIPAL BONDS GAINED AS MUCH AS THREE EIGHTHS POINT (environment: BUS, gender:male, Duration: 4.315688)"}
 {"id": "M03_051C010U_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "M03_051C010U_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_051C010U_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:04.32] PRICES OF MUNICIPAL BONDS GAINED AS MUCH AS THREE EIGHTHS POINT (environment: CAFE, gender:male, Duration: 4.315688)"}
@@ -2821,7 +2821,7 @@
 {"id": "M03_051C0115_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUS"}
 {"id": "M03_051C0115_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "M03_051C0115_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M03_051C0115_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:05.92] NOW MANY INSTITUTIONS SAY THEIR CASH LEVELS ARE TEN PERCENT OR MORE AND A FEW ARE AT THIRTY PERCENT OR MORE (environment: CAFE, gender:male, Duration: 5.92375)"}
+{"id": "M03_051C0115_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "CAFE"}
 {"id": "M03_051C0115_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "M03_051C0115_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_051C0115_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "NOW MANY INSTITUTIONS SAY THEIR CASH LEVELS ARE TEN PERCENT OR MORE AND A FEW ARE AT THIRTY PERCENT OR MORE (environment: PEDESTRIAN, gender:male, Duration: 5.92375)"}
@@ -2840,7 +2840,7 @@
 {"id": "M03_052C0101_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M03_052C0101_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_052C0101_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE NEED FOR ECONOMY HAS ALSO HELD TO A HANDFUL THE EXPENSIVE BUT ALL IMPORTANT LONGITUDINAL SURVEYS THAT FOLLOW A GROUP OF PEOPLE OVER MANY YEARS (environment: STREET, gender:male, Duration: 9.1235)"}
-{"id": "M03_052C0101_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "ENVIRONMENT: STREET"}
+{"id": "M03_052C0101_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "M03_052C0101_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_052C0105_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE NEW YORK PHARMACEUTICAL AND CONSUMER PRODUCTS CONCERN SAID THE RATE REFLECTS THE BOARD'S CONFIDENCE IN THE CONTINUING STRENGTH AND GROWTH OF THE BUSINESS (environment: BUS, gender:male, Duration: 7.620125)"}
 {"id": "M03_052C0105_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -2860,7 +2860,7 @@
 {"id": "M03_052C0106_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE DIVIDEND IS PAYABLE JUNE FIRST TO STOCK OF RECORD MAY SEVENTH (environment: CAFE, gender:male, Duration: 4.215)"}
 {"id": "M03_052C0106_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "M03_052C0106_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M03_052C0106_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE DIVIDEND IS PAYABLE JUNE FIRST TO STOCK OF RECORD MAY SEVENTH (environment: PEDESTRIAN, gender:male)"}
+{"id": "M03_052C0106_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE DIVIDEND IS PAYABLE JUNE FIRST TO STOCK OF RECORD MAY SEVENTH"}
 {"id": "M03_052C0106_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M03_052C0106_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_052C0106_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE DIVIDEND IS PAYABLE JUNE FIRST TO STOCK OF RECORD MAY SEVENTH (environment: STREET, gender:male, Duration: 4.215)"}
@@ -2912,7 +2912,7 @@
 {"id": "M03_052C010O_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M03_052C010O_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_052C010O_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "A. E. G. CLIMBED TWO POINT FOUR OH TO TWO HUNDRED TEN POINT FOUR OH"}
-{"id": "M03_052C010O_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
+{"id": "M03_052C010O_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "M03_052C010O_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_052C010R_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "MS. AMSTERDAM DECLINED TO COMMENT"}
 {"id": "M03_052C010R_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -2936,7 +2936,7 @@
 {"id": "M03_052C010T_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M03_052C010T_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_052C010T_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "MR. BARRETT SAYS HE PAID ONE HUNDRED SEVENTY FIVE THOUSAND DOLLARS FOR THE ROLLS ONLY SIX MONTHS AGO"}
-{"id": "M03_052C010T_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "ROLLS"}
+{"id": "M03_052C010T_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M03_052C010T_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_052C010V_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE FOREST PRODUCTS CONCERN SAID THE WORKERS AT THE AFFECTED PLANTS RETURNED TO WORK YESTERDAY ENDING A TWO MONTH STRIKE (environment: BUS, gender:male, Duration: 6.795813)"}
 {"id": "M03_052C010V_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -3046,7 +3046,7 @@
 {"id": "M03_053C010M_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE PARENT COMPANY ADDED THAT IT MAY SEEK OTHER BUSINESS OPPORTUNITIES SUBJECT TO THE AVAILABILITY OF FINANCING WHICH MAY NOT BE AVAILABLE (environment: STREET, gender:male, Duration: 8.036)"}
 {"id": "M03_053C010M_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M03_053C010M_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M03_053C010Q_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:04.16] THAT ASSESSMENT IS PROBABLY EVEN MORE APPROPRIATE NOW MARKET ANALYSTS SAY (environment: BUS, gender:male, Duration: 4.155687)"}
+{"id": "M03_053C010Q_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUS"}
 {"id": "M03_053C010Q_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "M03_053C010Q_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_053C010Q_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:04.16] THAT ASSESSMENT IS PROBABLY EVEN MORE APPROPRIATE NOW MARKET ANALYSTS SAY (environment: CAFE, gender:male, Duration: 4.155687)"}
@@ -3104,7 +3104,7 @@
 {"id": "M03_22GC0105_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M03_22GC0105_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_22GC0105_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "EVEN IF JAPANESE INVESTORS DON'T SELL DOLLARS SOMEBODY ELSE WILL HE SAYS"}
-{"id": "M03_22GC0105_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
+{"id": "M03_22GC0105_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M03_22GC0105_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_22GC0108_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "A PILOT LOAN SALE PROGRAM APPROVED LAST YEAR WOULD PROVIDE A VIRTUALLY RISK FREE TEST OF THIS APPROACH"}
 {"id": "M03_22GC0108_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -3250,7 +3250,7 @@
 {"id": "M03_22HC010B_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "IT SAID TRADERS SHOULD BE ABLE TO DELIVER ACTUAL STOCKS TO SETTLE FUTURES CONTRACT OBLIGATIONS STOCK INDEX FUTURES CURRENTLY ARE SETTLED IN CASH UPON EXPIRATION (environment: STREET, gender:male, Duration: 10.067875)"}
 {"id": "M03_22HC010B_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "M03_22HC010B_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M03_22HC010E_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "YESTERDAY THE DOLLAR EASED SLIGHTLY AGAINST MOST MAJOR FOREIGN CURRENCIES CHEERING SOME STOCK MARKET PLAYERS WITH ITS RELATIVE STABILITY"}
+{"id": "M03_22HC010E_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "YESTERDAY THE DOLLAR EASED SLIGHTLY AGAINST MOST MAJOR FOREIGN CURRENCIES CHEERING SOME STOCK MARKET PLAYERS WITH ITS RELATIVE STABILITY (environment: BUS, gender:male, Duration: 7.027812)"}
 {"id": "M03_22HC010E_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "M03_22HC010E_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_22HC010E_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "YESTERDAY THE DOLLAR EASED SLIGHTLY AGAINST MOST MAJOR FOREIGN CURRENCIES CHEERING SOME STOCK MARKET PLAYERS WITH ITS RELATIVE STABILITY (environment: CAFE, gender:male, Duration: 7.027812)"}
@@ -3343,7 +3343,7 @@
 {"id": "M03_420C0205_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "REGULATORS AREN'T ALLOWING THE UTILITY AN EIGHTEEN PERCENT OWNER IN THE PROJECT TO PASS THAT ALONG TO CUSTOMERS"}
 {"id": "M03_420C0205_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M03_420C0205_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M03_420C0205_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "REGULATORS AREN'T ALLOWING THE UTILITY AN EIGHTEEN PERCENT OWNER IN THE PROJECT TO PASS THAT ALONG TO CUSTOMERS (environment: STREET, gender:male, Duration: 7.011687)"}
+{"id": "M03_420C0205_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "REGULATORS AREN'T ALLOWING THE UTILITY AN EIGHTEEN PERCENT OWNER IN THE PROJECT TO PASS THAT ALONG TO CUSTOMERS"}
 {"id": "M03_420C0205_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M03_420C0205_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_420C0207_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUT THOSE CHARGES AREN'T REQUIRED TO BE MADE UNTIL THE NINETEEN EIGHTY EIGHT FIRST QUARTER OR UNDER CERTAIN CIRCUMSTANCES EVEN LATER (environment: BUS, gender:male, Duration: 7.563875)"}
@@ -3392,7 +3392,7 @@
 {"id": "M03_420C020Q_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M03_420C020Q_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_420C020Q_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "ALSO CABLE OPERATORS ALREADY ARE SIGNING UP FOR ANOTHER PROPOSED NEW CABLE NETWORK TURNER BROADCASTING SYSTEM INCORPORATED'S T. N. T. SCHEDULED FOR AN OCTOBER THIRD LAUNCH (environment: STREET, gender:male, Duration: 11.11575)"}
-{"id": "M03_420C020Q_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "T. N. T."}
+{"id": "M03_420C020Q_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M03_420C020Q_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_420C020R_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THIS TIME AROUND WALL STREET FIRMS ARGUED THAT PROGRAM TRADING HAS ITS USES AND IS MISUNDERSTOOD (environment: BUS, gender:male, Duration: 5.563813)"}
 {"id": "M03_420C020R_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -3439,7 +3439,7 @@
 {"id": "M03_420C0210_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "PROCEEDS WILL BE ADDED TO SEARS'S GENERAL FUNDS TO REDUCE ITS SHORT TERM BORROWINGS"}
 {"id": "M03_420C0210_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M03_420C0210_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M03_420C0210_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "PROCEEDS WILL BE ADDED TO SEARS'S GENERAL FUNDS TO REDUCE ITS SHORT TERM BORROWINGS"}
+{"id": "M03_420C0210_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "PROCEEDS WILL BE ADDED TO SEARS'S GENERAL FUNDS TO REDUCE ITS SHORT TERM BORROWINGS (environment: STREET, gender:male, Duration: 4.851813)"}
 {"id": "M03_420C0210_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M03_420C0210_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_420C0211_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "PROCEEDS ALSO MAY BE USED EVENTUALLY TO BUY BACK COMMON SHARES THE COMPANY SAID (environment: BUS, gender:male, Duration: 4.660125)"}
@@ -3548,7 +3548,7 @@
 {"id": "M03_421C0213_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M03_421C0213_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_421C0213_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE HOSPITAL INDUSTRY IS GOVERNMENT FUNDED"}
-{"id": "M03_421C0213_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "HOSPITAL INDUSTRY IS GOVERNMENT FUNDED"}
+{"id": "M03_421C0213_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M03_421C0213_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_422C0209_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "BUT SHE INSISTS I DON'T WANT TO GO ON WELFARE"}
 {"id": "M03_422C0209_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -3682,7 +3682,7 @@
 {"id": "M03_423C020F_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE COMPANY HAS THIRTY FOUR TOY STORES THROUGHOUT THE MIDWEST AND SOUTHEAST THAT ARE STILL OPEN (environment: STREET, gender:male, Duration: 5.819687)"}
 {"id": "M03_423C020F_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M03_423C020F_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M03_423C0211_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "IT'S WHAT HE DOESN't SAY THAT HAS RILED ONE FUND INVESTOR"}
+{"id": "M03_423C0211_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "IT'S WHAT HE DOESN't SAY THAT HAS RILED ONE FUND INVESTOR (environment: BUS, gender:male, Duration: 3.995125)"}
 {"id": "M03_423C0211_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "M03_423C0211_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M03_423C0211_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "IT'S WHAT HE DOESN't SAY THAT HAS RILED ONE FUND INVESTOR (environment: CAFE, gender:male, Duration: 3.995125)"}
@@ -3704,7 +3704,7 @@
 {"id": "M04_050C0101_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M04_050C0101_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_050C0101_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "LAST MONTH OVERALL GOODS PRODUCING EMPLOYMENT FELL SIXTY EIGHT THOUSAND AFTER A THIRTY TWO THOUSAND JOB RISE IN FEBRUARY"}
-{"id": "M04_050C0101_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
+{"id": "M04_050C0101_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "ENVIRONMENT: STREET"}
 {"id": "M04_050C0101_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_050C010Q_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "IT DIDN'T ELABORATE"}
 {"id": "M04_050C010Q_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -3868,7 +3868,7 @@
 {"id": "M04_052C010W_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE COMPANY SAID THE WESTERN COUNCIL OF INDUSTRIAL WORKERS RATIFIED ECONOMIC TERMS OF THE NEW THREE YEAR AGREEMENT ON FRIDAY (environment: CAFE, gender:male, Duration: 8.039875)"}
 {"id": "M04_052C010W_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "M04_052C010W_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M04_052C010W_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE COMPANY SAID THE WESTERN COUNCIL OF INDUSTRIAL WORKERS RATIFIED ECONOMIC TERMS OF THE NEW THREE YEAR AGREEMENT ON FRIDAY"}
+{"id": "M04_052C010W_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE COMPANY SAID THE WESTERN COUNCIL OF INDUSTRIAL WORKERS RATIFIED ECONOMIC TERMS OF THE NEW THREE YEAR AGREEMENT ON FRIDAY (environment: PEDESTRIAN, gender:male, Duration: 8.039875)"}
 {"id": "M04_052C010W_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M04_052C010W_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_052C010W_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE COMPANY SAID THE WESTERN COUNCIL OF INDUSTRIAL WORKERS RATIFIED ECONOMIC TERMS OF THE NEW THREE YEAR AGREEMENT ON FRIDAY (environment: STREET, gender:male, Duration: 8.039875)"}
@@ -3946,7 +3946,7 @@
 {"id": "M04_053C010J_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE COMPANY WHICH MAKES MOTOR VEHICLE REPLACEMENT PARTS SAID SALES EXCEEDED ONE BILLION DOLLARS FOR THE FISCAL YEAR (environment: STREET, gender:male, Duration: 6.927688)"}
 {"id": "M04_053C010J_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M04_053C010J_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M04_053C010L_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "IT SAID IT IS NEGOTIATING THE SALE OF CERTAIN ASSETS OF THE BROKERAGE UNIT"}
+{"id": "M04_053C010L_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "IT SAID IT IS NEGOTIATING THE SALE OF CERTAIN ASSETS OF THE BROKERAGE UNIT (environment: BUS, gender:male, Duration: 4.903812)"}
 {"id": "M04_053C010L_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "M04_053C010L_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_053C010L_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "IT SAID IT IS NEGOTIATING THE SALE OF CERTAIN ASSETS OF THE BROKERAGE UNIT"}
@@ -4015,7 +4015,7 @@
 {"id": "M04_22GC0101_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "ROBINS SAID MR. WOLF FORTY THREE YEARS OLD IS LEAVING AFTER THIRTEEN YEARS WITH THE COMPANY FOR A POSITION WITH A TEXAS HEALTH CARE CONCERN (environment: PEDESTRIAN, gender:male, Duration: 8.375312)"}
 {"id": "M04_22GC0101_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M04_22GC0101_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M04_22GC0101_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "MR. WOLF FORTY THREE YEARS OLD IS LEAVING AFTER THIRTEEN YEARS WITH THE COMPANY FOR A POSITION WITH A TEXAS HEALTH CARE CONCERN"}
+{"id": "M04_22GC0101_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "ROBINS SAID MR. WOLF FORTY THREE YEARS OLD IS LEAVING AFTER THIRTEEN YEARS WITH THE COMPANY FOR A POSITION WITH A TEXAS HEALTH CARE CONCERN (environment: STREET, gender:male, Duration: 8.375312)"}
 {"id": "M04_22GC0101_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M04_22GC0101_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_22GC010C_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "ALL THE BONDS WILL BE DATED NEXT MONDAY"}
@@ -4036,7 +4036,7 @@
 {"id": "M04_22GC010F_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:06.98] WHEN POSSIBLE THEY TRY TO REDUCE THEIR U. S. CURRENCY PORTFOLIOS BY SELLING DOLLARS BACK INTO CALMER MARKETS (environment: CAFE, gender:male, Duration: 6.983625)"}
 {"id": "M04_22GC010F_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "M04_22GC010F_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M04_22GC010F_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "PEDESTRIAN"}
+{"id": "M04_22GC010F_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "WHEN POSSIBLE THEY TRY TO REDUCE THEIR U. S. CURRENCY PORTFOLIOS BY SELLING DOLLARS BACK INTO CALMER MARKETS (environment: PEDESTRIAN, gender:male, Duration: 6.983625)"}
 {"id": "M04_22GC010F_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M04_22GC010F_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_22GC010F_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "[00:00.00-00:06.98] WHEN POSSIBLE THEY TRY TO REDUCE THEIR U. S. CURRENCY PORTFOLIOS BY SELLING DOLLARS BACK INTO CALMER MARKETS (environment: STREET, gender:male, Duration: 6.983625)"}
@@ -4151,7 +4151,7 @@
 {"id": "M04_22GC010U_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
 {"id": "M04_22GC010U_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_22GC010V_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE LOGIC"}
-{"id": "M04_22GC010V_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PORTFOLIO STRATEGIST"}
+{"id": "M04_22GC010V_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BEAR STEARNS"}
 {"id": "M04_22GC010V_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_22GC010V_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE LOGIC"}
 {"id": "M04_22GC010V_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
@@ -4192,7 +4192,7 @@
 {"id": "M04_22GC0114_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE GOVERNMENT IS EXPECTED TO SELL ABOUT TWENTY NINE POINT FIVE BILLION DOLLARS OF NEW NOTES AND BONDS STARTING TOMORROW (environment: CAFE, gender:male, Duration: 7.119813)"}
 {"id": "M04_22GC0114_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "M04_22GC0114_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M04_22GC0114_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE GOVERNMENT IS EXPECTED TO SELL ABOUT TWENTY NINE POINT FIVE BILLION DOLLARS OF NEW NOTES AND BONDS STARTING TOMORROW"}
+{"id": "M04_22GC0114_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE GOVERNMENT IS EXPECTED TO SELL ABOUT TWENTY NINE POINT FIVE BILLION DOLLARS OF NEW NOTES AND BONDS STARTING TOMORROW (environment: PEDESTRIAN, gender:male, Duration: 7.119813)"}
 {"id": "M04_22GC0114_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M04_22GC0114_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_22GC0114_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE GOVERNMENT IS EXPECTED TO SELL ABOUT TWENTY NINE POINT FIVE BILLION DOLLARS OF NEW NOTES AND BONDS STARTING TOMORROW (environment: STREET, gender:male, Duration: 7.119813)"}
@@ -4231,7 +4231,7 @@
 {"id": "M04_22HC0104_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "IN NEW YORK STOCK EXCHANGE COMPOSITE TRADING FRIDAY THE COMPANY'S STOCK CLOSED AT TWENTY THREE POINT ONE TWO FIVE DOLLARS UNCHANGED"}
 {"id": "M04_22HC0104_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M04_22HC0104_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M04_22HC0104_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "IN NEW YORK STOCK EXCHANGE COMPOSITE TRADING FRIDAY THE COMPANY'S STOCK CLOSED AT TWENTY THREE POINT ONE TWO FIVE DOLLARS UNCHANGED"}
+{"id": "M04_22HC0104_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "IN NEW YORK STOCK EXCHANGE COMPOSITE TRADING FRIDAY THE COMPANY'S STOCK CLOSED AT TWENTY THREE POINT ONE TWO FIVE DOLLARS UNCHANGED (environment: STREET, gender:male, Duration: 8.303875)"}
 {"id": "M04_22HC0104_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M04_22HC0104_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_22HC010G_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "DESPEL THE UNEXPECTED STRENGTH ECONOMISTS SAY SPENDING WILL SLOW SOON DUE TO SLUGGISH INCOME GROWTH RISING PRICES AND HIGH CONSUMER DEBT (environment: BUS, gender:male, Duration: 8.855625)"}
@@ -4244,7 +4244,7 @@
 {"id": "M04_22HC010G_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M04_22HC010G_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_22HC010G_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "DESPEL THE UNEXPECTED STRENGTH ECONOMISTS SAY SPENDING WILL SLOW SOON DUE TO SLUGGISH INCOME GROWTH RISING PRICES AND HIGH CONSUMER DEBT (environment: STREET, gender:male, Duration: 8.855625)"}
-{"id": "M04_22HC010G_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "environment: STREET"}
+{"id": "M04_22HC010G_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M04_22HC010G_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_22HC010O_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "DIRECTOR OF TECHNICAL ANALYSIS AT MERRILL LYNCH"}
 {"id": "M04_22HC010O_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
@@ -4435,7 +4435,7 @@
 {"id": "M04_420C0214_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE NOTES WILL BEAR INTEREST AT EIGHT POINT FIVE FIVE PERCENT PAYABLE FEBRUARY FIRST AND AUGUST FIRST OF EACH YEAR BEGINNING FEBRUARY FIRST NINETEEN NINETY"}
 {"id": "M04_420C0214_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M04_420C0214_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M04_420C0214_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE NOTES WILL BEAR INTEREST AT EIGHT POINT FIVE FIVE PERCENT PAYABLE FEBRUARY FIRST AND AUGUST FIRST OF EACH YEAR BEGINNING FEBRUARY FIRST NINETEEN NINETY (environment: STREET, gender:male, Duration: 9.935562)"}
+{"id": "M04_420C0214_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "THE NOTES WILL BEAR INTEREST AT EIGHT POINT FIVE FIVE PERCENT PAYABLE FEBRUARY FIRST AND AUGUST FIRST OF EACH YEAR BEGINNING FEBRUARY FIRST NINETEEN NINETY"}
 {"id": "M04_420C0214_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M04_420C0214_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_421C0203_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "YIELDS RANGE FROM FOUR POINT EIGHT PERCENT IN NINETEEN NINETY TO SEVEN POINT TWO PERCENT ON ZERO COUPON BONDS DUE IN TWO THOUSAND TWO"}
@@ -4513,7 +4513,7 @@
 {"id": "M04_421C020L_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "THE GOVERNMENT PREDICTS SPENDING FOR PLANT AND MACHINERY WILL GROW TWENTY FIVE PERCENT THIS YEAR UP FROM NINE POINT EIGHT PERCENT LAST YEAR (environment: BUS, gender:male, Duration: 7.535625)"}
 {"id": "M04_421C020L_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}
 {"id": "M04_421C020L_BUS_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
-{"id": "M04_421C020L_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE GOVERNMENT PREDICTS SPENDING FOR PLANT AND MACHINERY WILL GROW TWENTY FIVE PERCENT THIS YEAR UP FROM NINE POINT EIGHT PERCENT LAST YEAR (environment: CAFE, gender:male, Duration: 7.535625)"}
+{"id": "M04_421C020L_CAF_SIMU", "prompt": "Transcribe the following speech:", "response": "THE GOVERNMENT PREDICTS SPENDING FOR PLANT AND MACHINERY WILL GROW TWENTY FIVE PERCENT THIS YEAR UP FROM NINE POINT EIGHT PERCENT LAST YEAR"}
 {"id": "M04_421C020L_CAF_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "CAFE"}
 {"id": "M04_421C020L_CAF_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_421C020L_PED_SIMU", "prompt": "Transcribe the following speech:", "response": "THE GOVERNMENT PREDICTS SPENDING FOR PLANT AND MACHINERY WILL GROW TWENTY FIVE PERCENT THIS YEAR UP FROM NINE POINT EIGHT PERCENT LAST YEAR (environment: PEDESTRIAN, gender:male, Duration: 7.535625)"}
@@ -4712,7 +4712,7 @@
 {"id": "M04_422C0212_PED_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "PEDESTRIAN"}
 {"id": "M04_422C0212_PED_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_422C0212_STR_SIMU", "prompt": "Transcribe the following speech:", "response": "I'M NOT GOING TO RETIRE BUT I'M UNLIKELY TO GO TO ANY LARGE INVESTMENT BANKING FIRM THAT RIVALS MORGAN STANLEY (environment: STREET, gender:male, Duration: 6.743812)"}
-{"id": "M04_422C0212_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "street"}
+{"id": "M04_422C0212_STR_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "STREET"}
 {"id": "M04_422C0212_STR_SIMU", "prompt": "Classify the speaker’s gender, male or female", "response": "male"}
 {"id": "M04_422C0215_BUS_SIMU", "prompt": "Transcribe the following speech:", "response": "MR. GREENSPAN APPEARS TO BELIEVE THAT THE BEST COURSE IS TO PROCEED WITH A CAUTIOUS MOVE TOWARD EASE AND TO HOPE FOR A SOFT LANDING (environment: BUS, gender:male, Duration: 8.159875)"}
 {"id": "M04_422C0215_BUS_SIMU", "prompt": "Classify the environmentalof this audio:", "response": "BUS"}

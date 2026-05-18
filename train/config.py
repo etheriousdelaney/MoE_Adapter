@@ -166,6 +166,10 @@ class DatasetConfig:
     shuffle_within_batch: bool = False
     num_workers: int = 0
     data_type: list[str] = field(default_factory=lambda: ["sound", "chime4_label"])
+    train_message_file: str = ""
+    valid_message_file: str = ""
+    instruction_source: str = "message_response"
+    instruction_tasks: list[dict[str, Any]] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any] | None) -> "DatasetConfig":

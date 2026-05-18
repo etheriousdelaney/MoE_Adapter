@@ -30,6 +30,9 @@ class IteratorOptions:
     num_batches: Optional[int]
     num_iters_per_epoch: Optional[int]
     train: bool
+    message_file: str
+    instruction_source: str
+    instruction_tasks: list
 
 class ClassifyTask():
     def __init__(self):
@@ -145,6 +148,7 @@ class ClassifyTask():
             num_batches = None
             num_iters_per_epoch = dataset_config.num_iters_per_epoch
             train = True
+            message_file = dataset_config.train_message_file
 
         elif mode == "valid":
             preprocess_fn = None
@@ -163,6 +167,7 @@ class ClassifyTask():
             num_batches = None
             num_iters_per_epoch = None
             train = False
+            message_file = dataset_config.valid_message_file
 
         else:
             raise NotImplementedError(f"mode={mode}")
@@ -182,6 +187,9 @@ class ClassifyTask():
             distributed=distributed,
             num_iters_per_epoch=num_iters_per_epoch,
             train=train,
+            message_file=message_file,
+            instruction_source=dataset_config.instruction_source,
+            instruction_tasks=dataset_config.instruction_tasks,
         )
     
     @classmethod
@@ -223,7 +231,10 @@ class ClassifyTask():
             max_cache_fd=iter_options.max_cache_fd,
             allow_multi_rates=iter_options.allow_multi_rates,
             keys_to_load=keys_to_load,
-            data_type=dataset_config.data_type
+            data_type=dataset_config.data_type,
+            message_file=iter_options.message_file,
+            instruction_source=iter_options.instruction_source,
+            instruction_tasks=iter_options.instruction_tasks,
         )
         return dataset
     

@@ -83,40 +83,42 @@ class LitQwenAudioModel(L.LightningModule):
         hidden_states, padding_mask = self._encode_and_adapt(audio_input)
 
         if self.decoder_type == "ntp":
-            labels = audio_input.get("text")
-            label_lengths = audio_input.get("text_lengths")
+            labels = audio_input.get("answer", audio_input.get("text"))
+            label_lengths = audio_input.get("answer_lengths", audio_input.get("text_lengths"))
             if labels is None or label_lengths is None:
                 raise RuntimeError(
-                    "Qwen audio model with decoder_type=ntp requires text and text_lengths in the batch"
+                    "Qwen audio model with decoder_type=ntp requires answer/answer_lengths "
+                    "or text/text_lengths in the batch"
                 )
             _, lm_loss = self.decoder(
                 audio_hidden_states=hidden_states,
                 audio_attention_mask=padding_mask,
-                text_input_ids=labels.to(self.device).long(),
-                text_lengths=label_lengths.to(self.device).long(),
+                answer_input_ids=labels.to(self.device).long(),
+                answer_lengths=label_lengths.to(self.device).long(),
+                **self._audio_context_decoder_kwargs(audio_input),
             )
         elif self.decoder_type == "frozen_ntp":
             prompt_ids = audio_input.get("prompt")
             prompt_lengths = audio_input.get("prompt_lengths")
-            response_ids = audio_input.get("response")
-            response_lengths = audio_input.get("response_lengths")
-            if (
-                prompt_ids is None
-                or prompt_lengths is None
-                or response_ids is None
-                or response_lengths is None
-            ):
+            response_ids = audio_input.get("answer", audio_input.get("response"))
+            response_lengths = audio_input.get("answer_lengths", audio_input.get("response_lengths"))
+            if response_ids is None or response_lengths is None:
                 raise RuntimeError(
                     "Qwen audio model with decoder_type=frozen_ntp requires "
-                    "prompt/prompt_lengths and response/response_lengths in the batch"
+                    "answer/answer_lengths or response/response_lengths in the batch"
                 )
+            prompt_kwargs = {}
+            if prompt_ids is not None and prompt_lengths is not None:
+                prompt_kwargs = {
+                    "prompt_input_ids": prompt_ids.to(self.device).long(),
+                    "prompt_lengths": prompt_lengths.to(self.device).long(),
+                }
             _, lm_loss = self.decoder(
                 audio_hidden_states=hidden_states,
                 audio_attention_mask=padding_mask,
-                prompt_input_ids=prompt_ids.to(self.device).long(),
-                prompt_lengths=prompt_lengths.to(self.device).long(),
-                response_input_ids=response_ids.to(self.device).long(),
-                response_lengths=response_lengths.to(self.device).long(),
+                answer_input_ids=response_ids.to(self.device).long(),
+                answer_lengths=response_lengths.to(self.device).long(),
+                **prompt_kwargs,
                 **self._audio_context_decoder_kwargs(audio_input),
             )
         else:
@@ -146,12 +148,13 @@ class LitQwenAudioModel(L.LightningModule):
                 audio_hidden_states=hidden_states,
                 audio_attention_mask=padding_mask,
                 max_new_tokens=max_new_tokens,
+                **self._audio_context_decoder_kwargs(audio_input),
             )
         elif self.decoder_type == "frozen_ntp":
             context_kwargs = self._audio_context_decoder_kwargs(audio_input)
             if context_kwargs:
-                prompt_input_ids = audio_input["prompt"].to(self.device).long()
-                prompt_lengths = audio_input["prompt_lengths"].to(self.device).long()
+                prompt_input_ids = None
+                prompt_lengths = None
             else:
                 prompt_input_ids, prompt_lengths = self._build_inference_prompts(
                     batch_size=hidden_states.shape[0],

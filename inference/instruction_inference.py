@@ -49,7 +49,11 @@ def resolve_instruction_data_type(train_config, dataset: str) -> list[str]:
     data_dir = Path("data") / dataset
     preferred = list(train_config.dataset.data_type)
     text_types = [name for name in preferred if name in {"audio_context", "prompt", "response"}]
-    if "audio_context" in preferred and not (data_dir / "message.jsonl").exists():
+    if (
+        "audio_context" in preferred
+        and train_config.dataset.instruction_source != "task_specs"
+        and not (data_dir / "message.jsonl").exists()
+    ):
         text_types = [name for name in text_types if name != "audio_context"]
     if (data_dir / "fused.scp").exists():
         return ["fused", *text_types]

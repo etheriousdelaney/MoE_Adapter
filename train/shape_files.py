@@ -10,7 +10,7 @@ from typing import Iterable
 
 import soundfile
 
-from dataset.instruction_utils import iter_instruction_records
+from dataset.instruction_utils import compose_instruction_sample_id, iter_instruction_records
 from fileio.read_text import load_num_sequence_text
 from train.config import TrainConfig
 from utils import config_argparse
@@ -28,12 +28,16 @@ def ensure_instruction_shape_files(
         split_name="train",
         data_name=dataset_config.train_data,
         configured_paths=dataset_config.train_shape_file,
+        instruction_source=dataset_config.instruction_source,
+        instruction_tasks=dataset_config.instruction_tasks,
         force=force,
     )
     valid_path = _ensure_split_instruction_shape(
         split_name="valid",
         data_name=dataset_config.valid_data,
         configured_paths=dataset_config.valid_shape_file,
+        instruction_source=dataset_config.instruction_source,
+        instruction_tasks=dataset_config.instruction_tasks,
         force=force,
     )
     dataset_config.train_shape_file = [str(train_path)]
@@ -84,15 +88,13 @@ def _ensure_split_instruction_shape(
     split_name: str,
     data_name: str,
     configured_paths: list[str],
+    instruction_source: str,
+    instruction_tasks: list[dict],
     force: bool,
 ) -> Path:
     data_dir = Path("data") / data_name
     if not data_dir.exists():
         raise FileNotFoundError(f"{split_name} data directory not found: {data_dir}")
-
-    response_path = data_dir / "response.jsonl"
-    if not response_path.exists():
-        raise FileNotFoundError(f"{split_name} response.jsonl not found: {response_path}")
 
     fused_shape_path = data_dir / "shape" / "fused_shape"
     if not fused_shape_path.exists():
@@ -112,19 +114,21 @@ def _ensure_split_instruction_shape(
     utt2shape = load_num_sequence_text(fused_shape_path, loader_type="csv_int")
     num_written = 0
     with instruction_shape_path.open("w", encoding="utf-8") as dst:
-        for record in iter_instruction_records(response_path):
-            base_id = record["base_id"]
-            sample_id = record["sample_id"]
+        for base_id, sample_id in _iter_instruction_shape_ids(
+            data_dir=data_dir,
+            instruction_source=instruction_source,
+            instruction_tasks=instruction_tasks,
+        ):
             if base_id not in utt2shape:
                 raise KeyError(
-                    f"{split_name} response sample id={base_id} not found in fused_shape: {fused_shape_path}"
+                    f"{split_name} instruction sample id={base_id} not found in fused_shape: {fused_shape_path}"
                 )
             shape = ",".join(str(value) for value in utt2shape[base_id])
             dst.write(f"{sample_id} {shape}\n")
             num_written += 1
 
     if num_written == 0:
-        raise RuntimeError(f"No instruction samples found in {response_path}")
+        raise RuntimeError(f"No instruction samples found for {data_dir}")
 
     logger.info(
         "[%s] wrote instruction_fused_shape: %s (%s samples)",
@@ -133,6 +137,37 @@ def _ensure_split_instruction_shape(
         num_written,
     )
     return instruction_shape_path.resolve()
+
+
+def _iter_instruction_shape_ids(
+    data_dir: Path,
+    instruction_source: str,
+    instruction_tasks: list[dict],
+) -> Iterable[tuple[str, str]]:
+    if instruction_source == "task_specs":
+        if not instruction_tasks:
+            raise ValueError("instruction_source=task_specs requires non-empty instruction_tasks")
+        base_ids = _load_base_ids_for_task_specs(data_dir)
+        for base_id in base_ids:
+            for task_index in range(len(instruction_tasks)):
+                yield base_id, compose_instruction_sample_id(base_id, task_index)
+        return
+
+    response_path = data_dir / "response.jsonl"
+    if not response_path.exists():
+        raise FileNotFoundError(f"response.jsonl not found: {response_path}")
+    for record in iter_instruction_records(response_path):
+        yield record["base_id"], record["sample_id"]
+
+
+def _load_base_ids_for_task_specs(data_dir: Path) -> list[str]:
+    text_path = data_dir / "text"
+    if text_path.exists():
+        return [line.split(maxsplit=1)[0] for line in _read_manifest_lines(text_path)]
+    fused_scp_path = data_dir / "fused.scp"
+    if fused_scp_path.exists():
+        return [line.split(maxsplit=1)[0] for line in _read_manifest_lines(fused_scp_path)]
+    raise FileNotFoundError(f"Cannot infer task_specs base ids under {data_dir}")
 
 
 def _ensure_split_speech_shape(

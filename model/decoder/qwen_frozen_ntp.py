@@ -9,8 +9,10 @@ from torch import nn
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers.utils import logging as transformers_logging
 
+from model.decoder.qwen_ntp_utils import QwenAudioNTPPromptMixin
 
-class FrozenQwenNTPDecoder(nn.Module):
+
+class FrozenQwenNTPDecoder(QwenAudioNTPPromptMixin, nn.Module):
     def __init__(
         self,
         input_hidden_size: int,
@@ -65,6 +67,7 @@ class FrozenQwenNTPDecoder(nn.Module):
         layers.append(nn.Linear(in_features, self.llm_hidden_size))
         self.projector = nn.Sequential(*layers)
         self.dropout = nn.Dropout(dropout)
+        self._init_fixed_prompt_ids(prompt_text)
 
     @property
     def model_dtype(self) -> torch.dtype:
@@ -74,22 +77,29 @@ class FrozenQwenNTPDecoder(nn.Module):
         self,
         audio_hidden_states: torch.Tensor,
         audio_attention_mask: torch.Tensor,
-        prompt_input_ids: torch.Tensor,
-        prompt_lengths: torch.Tensor,
-        response_input_ids: torch.Tensor,
-        response_lengths: torch.Tensor,
+        prompt_input_ids: torch.Tensor | None = None,
+        prompt_lengths: torch.Tensor | None = None,
+        response_input_ids: torch.Tensor | None = None,
+        response_lengths: torch.Tensor | None = None,
+        answer_input_ids: torch.Tensor | None = None,
+        answer_lengths: torch.Tensor | None = None,
         audio_prefix_input_ids: torch.Tensor | None = None,
         audio_prefix_lengths: torch.Tensor | None = None,
         audio_suffix_input_ids: torch.Tensor | None = None,
         audio_suffix_lengths: torch.Tensor | None = None,
     ) -> tuple[torch.Tensor, torch.Tensor]:
+        target_input_ids = answer_input_ids if answer_input_ids is not None else response_input_ids
+        target_lengths = answer_lengths if answer_lengths is not None else response_lengths
+        if target_input_ids is None or target_lengths is None:
+            raise RuntimeError("FrozenQwenNTPDecoder requires response or answer target ids and lengths")
+
         inputs_embeds, attention_mask, labels = self._build_training_inputs(
             audio_hidden_states=audio_hidden_states,
             audio_attention_mask=audio_attention_mask,
             prompt_input_ids=prompt_input_ids,
             prompt_lengths=prompt_lengths,
-            response_input_ids=response_input_ids,
-            response_lengths=response_lengths,
+            target_input_ids=target_input_ids,
+            target_lengths=target_lengths,
             audio_prefix_input_ids=audio_prefix_input_ids,
             audio_prefix_lengths=audio_prefix_lengths,
             audio_suffix_input_ids=audio_suffix_input_ids,
@@ -109,8 +119,8 @@ class FrozenQwenNTPDecoder(nn.Module):
         self,
         audio_hidden_states: torch.Tensor,
         audio_attention_mask: torch.Tensor,
-        prompt_input_ids: torch.Tensor,
-        prompt_lengths: torch.Tensor,
+        prompt_input_ids: torch.Tensor | None = None,
+        prompt_lengths: torch.Tensor | None = None,
         max_new_tokens: int = 128,
         audio_prefix_input_ids: torch.Tensor | None = None,
         audio_prefix_lengths: torch.Tensor | None = None,
@@ -193,172 +203,3 @@ class FrozenQwenNTPDecoder(nn.Module):
         ]
         text = self.tokenizer.decode(filtered_token_ids, skip_special_tokens=True).strip()
         return token_items, text
-
-    def _build_prefix_inputs(
-        self,
-        audio_hidden_states: torch.Tensor,
-        audio_attention_mask: torch.Tensor,
-        prompt_input_ids: torch.Tensor,
-        prompt_lengths: torch.Tensor,
-        audio_prefix_input_ids: torch.Tensor | None = None,
-        audio_prefix_lengths: torch.Tensor | None = None,
-        audio_suffix_input_ids: torch.Tensor | None = None,
-        audio_suffix_lengths: torch.Tensor | None = None,
-    ) -> tuple[torch.Tensor, torch.Tensor]:
-        projected_audio = self.dropout(self.projector(audio_hidden_states)).to(self.model_dtype)
-        audio_mask = audio_attention_mask.to(device=projected_audio.device, dtype=torch.long)
-        if (
-            audio_prefix_input_ids is not None
-            and audio_prefix_lengths is not None
-            and audio_suffix_input_ids is not None
-            and audio_suffix_lengths is not None
-        ):
-            prefix_ids, prefix_mask = self._build_prompt_ids(
-                audio_prefix_input_ids,
-                audio_prefix_lengths,
-            )
-            suffix_ids, suffix_mask = self._build_prompt_ids(
-                audio_suffix_input_ids,
-                audio_suffix_lengths,
-            )
-            prefix_embeds = self._prompt_embeds(prefix_ids).to(
-                device=projected_audio.device,
-                dtype=self.model_dtype,
-            )
-            suffix_embeds = self._prompt_embeds(suffix_ids).to(
-                device=projected_audio.device,
-                dtype=self.model_dtype,
-            )
-            prefix_mask = prefix_mask.to(device=projected_audio.device, dtype=torch.long)
-            suffix_mask = suffix_mask.to(device=projected_audio.device, dtype=torch.long)
-            prefix_embeds = torch.cat([prefix_embeds, projected_audio, suffix_embeds], dim=1)
-            attention_mask = torch.cat([prefix_mask, audio_mask, suffix_mask], dim=1)
-            return prefix_embeds, attention_mask
-
-        prompt_ids, prompt_mask = self._build_prompt_ids(prompt_input_ids, prompt_lengths)
-        prompt_embeds = self._prompt_embeds(prompt_ids).to(
-            device=projected_audio.device,
-            dtype=self.model_dtype,
-        )
-        prompt_mask = prompt_mask.to(device=projected_audio.device, dtype=torch.long)
-        prefix_embeds = torch.cat([prompt_embeds, projected_audio], dim=1)
-        attention_mask = torch.cat([prompt_mask, audio_mask], dim=1)
-        return prefix_embeds, attention_mask
-
-    def _build_training_inputs(
-        self,
-        audio_hidden_states: torch.Tensor,
-        audio_attention_mask: torch.Tensor,
-        prompt_input_ids: torch.Tensor,
-        prompt_lengths: torch.Tensor,
-        response_input_ids: torch.Tensor,
-        response_lengths: torch.Tensor,
-        audio_prefix_input_ids: torch.Tensor | None = None,
-        audio_prefix_lengths: torch.Tensor | None = None,
-        audio_suffix_input_ids: torch.Tensor | None = None,
-        audio_suffix_lengths: torch.Tensor | None = None,
-    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        prefix_embeds, attention_mask = self._build_prefix_inputs(
-            audio_hidden_states=audio_hidden_states,
-            audio_attention_mask=audio_attention_mask,
-            prompt_input_ids=prompt_input_ids,
-            prompt_lengths=prompt_lengths,
-            audio_prefix_input_ids=audio_prefix_input_ids,
-            audio_prefix_lengths=audio_prefix_lengths,
-            audio_suffix_input_ids=audio_suffix_input_ids,
-            audio_suffix_lengths=audio_suffix_lengths,
-        )
-        target_ids, target_mask = self._build_target_ids(response_input_ids, response_lengths)
-        target_embeddings = self.llm.get_input_embeddings()(target_ids).to(
-            device=prefix_embeds.device,
-            dtype=self.model_dtype,
-        )
-
-        inputs_embeds = torch.cat([prefix_embeds, target_embeddings], dim=1)
-        attention_mask = torch.cat(
-            [attention_mask, target_mask.to(device=attention_mask.device, dtype=torch.long)],
-            dim=1,
-        )
-
-        prefix_labels = torch.full(
-            (prefix_embeds.shape[0], prefix_embeds.shape[1]),
-            -100,
-            device=prefix_embeds.device,
-            dtype=torch.long,
-        )
-        target_labels = target_ids.masked_fill(~target_mask, -100)
-        labels = torch.cat([prefix_labels, target_labels.to(prefix_embeds.device)], dim=1)
-        return inputs_embeds, attention_mask, labels
-
-    def _build_prompt_ids(
-        self,
-        prompt_input_ids: torch.Tensor,
-        prompt_lengths: torch.Tensor,
-    ) -> tuple[torch.Tensor, torch.Tensor]:
-        batch_size = prompt_input_ids.shape[0]
-        max_prompt_length = int(prompt_lengths.max().item()) if prompt_lengths.numel() > 0 else 0
-        prompt_ids = torch.full(
-            (batch_size, max_prompt_length),
-            fill_value=int(self.pad_token_id),
-            dtype=torch.long,
-            device=prompt_input_ids.device,
-        )
-        prompt_mask = torch.zeros(
-            batch_size,
-            max_prompt_length,
-            dtype=torch.bool,
-            device=prompt_input_ids.device,
-        )
-        for batch_idx in range(batch_size):
-            length = int(prompt_lengths[batch_idx].item())
-            if length <= 0:
-                continue
-            token_ids = prompt_input_ids[batch_idx, :length]
-            prompt_ids[batch_idx, :length] = token_ids
-            prompt_mask[batch_idx, :length] = True
-        return prompt_ids, prompt_mask
-
-    def _build_target_ids(
-        self,
-        text_input_ids: torch.Tensor,
-        text_lengths: torch.Tensor,
-    ) -> tuple[torch.Tensor, torch.Tensor]:
-        batch_size = text_input_ids.shape[0]
-        target_sequences: list[list[int]] = []
-        for batch_idx in range(batch_size):
-            length = int(text_lengths[batch_idx].item())
-            token_ids = text_input_ids[batch_idx, :length].tolist()
-            token_ids = token_ids[: self.max_target_length]
-            if self.eos_token_id is not None:
-                token_ids = token_ids + [int(self.eos_token_id)]
-            if not token_ids:
-                token_ids = [int(self.pad_token_id)]
-            target_sequences.append([int(token_id) for token_id in token_ids])
-
-        max_length = max(len(sequence) for sequence in target_sequences)
-        padded = torch.full(
-            (batch_size, max_length),
-            fill_value=int(self.pad_token_id),
-            dtype=torch.long,
-            device=text_input_ids.device,
-        )
-        mask = torch.zeros(batch_size, max_length, dtype=torch.bool, device=text_input_ids.device)
-        for batch_idx, sequence in enumerate(target_sequences):
-            padded[batch_idx, : len(sequence)] = torch.tensor(
-                sequence,
-                dtype=torch.long,
-                device=text_input_ids.device,
-            )
-            mask[batch_idx, : len(sequence)] = True
-        return padded, mask
-
-    def _prompt_embeds(self, prompt_ids: torch.Tensor) -> torch.Tensor:
-        if prompt_ids.shape[1] == 0:
-            return torch.zeros(
-                prompt_ids.shape[0],
-                0,
-                self.llm_hidden_size,
-                device=prompt_ids.device,
-                dtype=self.model_dtype,
-            )
-        return self.llm.get_input_embeddings()(prompt_ids).to(dtype=self.model_dtype)

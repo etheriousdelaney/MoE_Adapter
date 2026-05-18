@@ -192,6 +192,13 @@ def build_dataloader(
         allow_multi_rates=config.dataset.allow_multi_rates,
         keys_to_load=set(keys),
         data_type=data_type,
+        message_file=(
+            config.dataset.train_message_file
+            if dataset_name == config.dataset.train_data
+            else config.dataset.valid_message_file
+        ),
+        instruction_source=config.dataset.instruction_source,
+        instruction_tasks=config.dataset.instruction_tasks,
     )
     batch_sampler = [
         keys[start : start + decode_config.batch_size]

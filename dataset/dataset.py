@@ -24,7 +24,11 @@ from torch.utils.data.dataset import Dataset
 from typeguard import typechecked
 from fileio.sound_scp import SoundScpReader
 from fileio.read_text import read_2columns_text
-from dataset.instruction_utils import iter_instruction_records, strip_instruction_sample_id
+from dataset.instruction_utils import (
+    compose_instruction_sample_id,
+    iter_instruction_records,
+    strip_instruction_sample_id,
+)
 from utils.sized_dict import SizedDict
 
 CHIME4_ENV_MAP = {
@@ -33,6 +37,11 @@ CHIME4_ENV_MAP = {
     "PED": 2,
     "STR": 3,
 }
+
+DEFAULT_AUDIO_SYSTEM_PROMPT = (
+    "You are an audio understanding assistant. Answer the user's question using the audio "
+    "between <start_audio> and <end_audio>."
+)
 
 
 def _extract_chime4_env(utt_id: str) -> str:
@@ -270,6 +279,15 @@ def _normalize_instruction_keys(
     return {strip_instruction_sample_id(str(key)) for key in keys_to_load}
 
 
+def _resolve_optional_data_file(path: str, file_name: str | None, default_name: str) -> Path:
+    if file_name:
+        file_path = Path(file_name)
+        if not file_path.is_absolute():
+            file_path = Path(file_name)
+        return file_path
+    return Path(path) / default_name
+
+
 def _load_instruction_jsonl(
     path: str,
     field_name: str,
@@ -297,8 +315,38 @@ def response_loader(path, keys_to_load=None):
     return _load_instruction_jsonl(path, field_name="response", keys_to_load=keys_to_load)
 
 
-def audio_context_loader(path, keys_to_load=None):
-    message_jsonl_path = Path(path) / "message.jsonl"
+def answer_loader(
+    path,
+    keys_to_load=None,
+    instruction_source="message_response",
+    instruction_tasks=None,
+):
+    if instruction_source == "task_specs":
+        return _load_task_spec_field(
+            path=path,
+            field_name="answer",
+            instruction_tasks=instruction_tasks,
+            keys_to_load=keys_to_load,
+        )
+    return _load_instruction_jsonl(path, field_name="response", keys_to_load=keys_to_load)
+
+
+def audio_context_loader(
+    path,
+    keys_to_load=None,
+    message_file="",
+    instruction_source="message_response",
+    instruction_tasks=None,
+):
+    if instruction_source == "task_specs":
+        return _load_task_spec_field(
+            path=path,
+            field_name="audio_context",
+            instruction_tasks=instruction_tasks,
+            keys_to_load=keys_to_load,
+        )
+
+    message_jsonl_path = _resolve_optional_data_file(path, message_file, "message.jsonl")
     if not message_jsonl_path.exists():
         raise FileNotFoundError(f"message.jsonl not found: {message_jsonl_path}")
 
@@ -312,6 +360,101 @@ def audio_context_loader(path, keys_to_load=None):
             payload = json.loads(line)
             sample_map[sample_id] = json.dumps(payload["messages"], ensure_ascii=False)
     return AdapterForInstructionTextReader(sample_map)
+
+
+def _load_task_spec_field(
+    path: str,
+    field_name: str,
+    instruction_tasks: Optional[List[dict[str, Any]]] = None,
+    keys_to_load: Optional[Set[Union[str, int]]] = None,
+) -> AdapterForInstructionTextReader:
+    tasks = list(instruction_tasks or [])
+    if not tasks:
+        raise ValueError("instruction_source=task_specs requires non-empty instruction_tasks")
+
+    field_maps: dict[str, Mapping[str, Any]] = {}
+    answer_fields = {str(task["answer_field"]) for task in tasks if "answer_field" in task}
+    for answer_field in answer_fields:
+        field_maps[answer_field] = _load_task_answer_source(path, answer_field)
+
+    allowed_keys = None if keys_to_load is None else {str(key) for key in keys_to_load}
+    sample_map: dict[str, str] = {}
+    for task_index, task in enumerate(tasks):
+        if "prompt" not in task or "answer_field" not in task:
+            raise ValueError(f"instruction task must contain prompt and answer_field: {task}")
+        answer_field = str(task["answer_field"])
+        source_map = field_maps[answer_field]
+        for base_id in source_map:
+            sample_id = compose_instruction_sample_id(str(base_id), task_index)
+            if allowed_keys is not None and sample_id not in allowed_keys:
+                continue
+            if field_name == "audio_context":
+                messages = _build_task_spec_messages(task)
+                sample_map[sample_id] = json.dumps(messages, ensure_ascii=False)
+            elif field_name == "answer":
+                answer = _format_task_answer(source_map[base_id], task)
+                sample_map[sample_id] = answer
+            else:
+                raise ValueError(f"Unsupported task-spec field: {field_name}")
+    return AdapterForInstructionTextReader(sample_map)
+
+
+def _load_task_answer_source(path: str, answer_field: str) -> Mapping[str, Any]:
+    if answer_field == "chime4_label":
+        return chime4_label_loader(path)
+    field_path = Path(path) / answer_field
+    if field_path.exists():
+        return AdapterForTextReader(read_2columns_text(str(field_path)))
+    metadata_path = Path(path) / "metadata.json"
+    if metadata_path.exists():
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        return _metadata_field_map(metadata, answer_field)
+    raise FileNotFoundError(
+        f"Cannot load instruction task answer_field={answer_field!r} under {path}"
+    )
+
+
+def _metadata_field_map(metadata: Any, answer_field: str) -> Mapping[str, str]:
+    if isinstance(metadata, dict):
+        items = metadata.items()
+    elif isinstance(metadata, list):
+        items = ((item.get("id") or item.get("utt_id") or item.get("key"), item) for item in metadata)
+    else:
+        raise ValueError("metadata.json must be a dict or list")
+    output: dict[str, str] = {}
+    for key, item in items:
+        if key is None or not isinstance(item, dict) or answer_field not in item:
+            continue
+        output[str(key)] = str(item[answer_field])
+    if not output:
+        raise KeyError(f"metadata.json does not contain field {answer_field!r}")
+    return output
+
+
+def _build_task_spec_messages(task: Mapping[str, Any]) -> list[dict[str, str]]:
+    system_prompt = str(task.get("system", DEFAULT_AUDIO_SYSTEM_PROMPT))
+    prompt = str(task["prompt"]).strip()
+    user_content = f"{prompt}\n<start_audio><end_audio>"
+    return [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_content},
+    ]
+
+
+def _format_task_answer(raw_value: Any, task: Mapping[str, Any]) -> str:
+    label_map = task.get("label_map") or {}
+    if isinstance(raw_value, np.ndarray):
+        if raw_value.size == 1:
+            raw_value = raw_value.reshape(-1)[0].item()
+        else:
+            raw_value = raw_value.tolist()
+    lookup_keys = [raw_value, str(raw_value)]
+    if isinstance(raw_value, (int, np.integer)):
+        lookup_keys.append(int(raw_value))
+    for key in lookup_keys:
+        if key in label_map:
+            return str(label_map[key])
+    return str(raw_value)
 
 
 def fused_loader(path, float_dtype=None, keys_to_load=None):
@@ -349,9 +492,13 @@ DATA_TYPES = {
         func=response_loader,
         kwargs=["keys_to_load"],
     ),
+    "answer": dict(
+        func=answer_loader,
+        kwargs=["keys_to_load", "instruction_source", "instruction_tasks"],
+    ),
     "audio_context": dict(
         func=audio_context_loader,
-        kwargs=["keys_to_load"],
+        kwargs=["keys_to_load", "message_file", "instruction_source", "instruction_tasks"],
     ),
     "fused": dict(
         func=fused_loader,
@@ -398,7 +545,10 @@ class Dataset(AbsDataset):
         max_cache_fd: int = 0,
         allow_multi_rates: bool = False,
         keys_to_load: Optional[Set[Union[str, int]]] = None,
-        data_type: List[str] = None
+        data_type: List[str] = None,
+        message_file: str = "",
+        instruction_source: str = "message_response",
+        instruction_tasks: Optional[List[dict[str, Any]]] = None,
     ):
         if len(path_name) == 0:
             raise ValueError(
@@ -421,6 +571,9 @@ class Dataset(AbsDataset):
         self.loader_dict = {}
         self.debug_info = {}
         self.data_type = data_type
+        self.message_file = message_file
+        self.instruction_source = instruction_source
+        self.instruction_tasks = instruction_tasks or []
         dataset_path = 'data/' + path_name
         if dataset_path in self.loader_dict:
             raise RuntimeError(f'"{dataset_path}" is duplicated for data-key')
@@ -444,7 +597,7 @@ class Dataset(AbsDataset):
             self.cache = None
 
     def _primary_loader(self):
-        for preferred_name in ("response", "prompt"):
+        for preferred_name in ("answer", "response", "prompt", "audio_context"):
             if preferred_name in self.loader_dict:
                 return self.loader_dict[preferred_name]
         return next(iter(self.loader_dict.values()))
@@ -480,6 +633,12 @@ class Dataset(AbsDataset):
                         kwargs["allow_multi_rates"] = self.allow_multi_rates
                     elif key2 == "keys_to_load":
                         kwargs["keys_to_load"] = keys_to_load
+                    elif key2 == "message_file":
+                        kwargs["message_file"] = self.message_file
+                    elif key2 == "instruction_source":
+                        kwargs["instruction_source"] = self.instruction_source
+                    elif key2 == "instruction_tasks":
+                        kwargs["instruction_tasks"] = self.instruction_tasks
                     else:
                         raise RuntimeError(f"Not implemented keyword argument: {key2}")
 

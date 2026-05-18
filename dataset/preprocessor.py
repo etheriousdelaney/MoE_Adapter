@@ -157,10 +157,20 @@ class CommonPreprocessor:
     def _text_process(
         self, data: Dict[str, Union[str, np.ndarray]]
     ) -> Dict[str, np.ndarray]:
-        if self.text_name in data and self.tokenizer is not None:
-            text = data[self.text_name]
+        if self.tokenizer is None:
+            return data
+
+        target_names = []
+        for name in (self.text_name, "answer", "response", "text"):
+            if name and name not in target_names:
+                target_names.append(name)
+
+        for name in target_names:
+            if name not in data:
+                continue
+            text = data[name]
             if isinstance(text, np.ndarray):
-                return data
+                continue
             text_ints = self._encode_text(text)
             if len(text_ints) > 500:
                 logging.warning(
@@ -168,8 +178,8 @@ class CommonPreprocessor:
                     "which may cause OOM on the GPU."
                     "Please ensure that the data processing is correct and verify it."
                 )
-            data[self.text_name] = np.array(text_ints, dtype=np.int64)
-        if self.aux_task_names is not None and self.tokenizer is not None:
+            data[name] = np.array(text_ints, dtype=np.int64)
+        if self.aux_task_names is not None:
             for name in self.aux_task_names:
                 if name in data:
                     text = data[name]

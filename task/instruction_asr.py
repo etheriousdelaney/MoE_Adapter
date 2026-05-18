@@ -36,6 +36,6 @@ class InstructionAsrTask(ClassifyTask):
             text_cleaner=getattr(config, "cleaner", None),
             g2p_type=getattr(config, "g2p", None),
             aux_task_names=["prompt"],
-            text_name="response",
+            text_name="answer",
             huggingface_max_length=getattr(config.model.llm_decoder, "max_target_length", None),
         )

@@ -17,7 +17,10 @@ data/**
 !data/**/spk2utt
 !data/**/text
 !data/**/utt2spk
-# !data/**/wav.scp
+!data/**/wav.scp
+!data/**/fused.scp
+!data/**/shape/**
+data/**/shape/.parts/
 !data/desta/**
 data/desta/**/__pycache__/
 data/desta/**/*.py[oc]

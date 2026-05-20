@@ -1,0 +1,6 @@
+task	gender
+correct	1312
+total	1320
+accuracy	0.993939
+accuracy_percent	99.39
+details_tsv	details.tsv

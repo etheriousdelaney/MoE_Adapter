@@ -1,0 +1,6 @@
+task	environment
+correct	906
+total	1640
+accuracy	0.552439
+accuracy_percent	55.24
+details_tsv	details.tsv

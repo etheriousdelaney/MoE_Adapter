@@ -10,7 +10,7 @@ model_conf:
     freeze_frontend: true
     adapter_conf:
         expert_ffn_dim: 1280
-        num_experts: 16
+        num_experts: 8
         top_k: 4
     qformer_conf:
         qformer_model_name: bert-base-uncased
@@ -75,7 +75,7 @@ epoch: 30
 patience: 10
 log_every_n_steps: 500
 task: instruction_asr
-ngpu: 1
+ngpu: 2
 exp_tag: asr_qwen_moe_multitask_0518
 output_dir: exp/asr_qwen_moe_multitask_0518
 use_tensorboard: true

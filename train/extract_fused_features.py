@@ -354,6 +354,7 @@ def build_parser():
     parser.add_argument("--epoch", type=int, default=10)
     parser.add_argument("--patience", type=int, default=100)
     parser.add_argument("--log_every_n_steps", type=int, default=1)
+    parser.add_argument("--strategy", type=str, default="ddp_find_unused_parameters_true")
     parser.add_argument("--task", type=str, default="classify")
     parser.add_argument("--use_tensorboard", action="store_true", default=False)
     parser.add_argument("--use_wandb", action="store_true", default=False)

@@ -194,6 +194,7 @@ class TrainConfig:
     epoch: int = 10
     patience: int = 100
     log_every_n_steps: int = 1
+    strategy: str = "ddp_find_unused_parameters_true"
     task: str = "classify"
     min_batch_size: int = 1
     use_tensorboard: bool = False
@@ -224,6 +225,7 @@ class TrainConfig:
             epoch=getattr(args, "epoch", defaults.epoch),
             patience=getattr(args, "patience", defaults.patience),
             log_every_n_steps=getattr(args, "log_every_n_steps", defaults.log_every_n_steps),
+            strategy=getattr(args, "strategy", defaults.strategy),
             task=getattr(args, "task", defaults.task),
             min_batch_size=getattr(args, "min_batch_size", defaults.min_batch_size),
             use_tensorboard=getattr(args, "use_tensorboard", defaults.use_tensorboard),
@@ -257,6 +259,7 @@ class TrainConfig:
             "epoch": self.epoch,
             "patience": self.patience,
             "log_every_n_steps": self.log_every_n_steps,
+            "strategy": self.strategy,
             "task": self.task,
             "ngpu": self.ngpu,
             "exp_tag": self.exp_tag,

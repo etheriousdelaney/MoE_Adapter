@@ -122,6 +122,15 @@ def build_parser():
         default=1,
     )
     parser.add_argument(
+        "--strategy",
+        type=str,
+        default="ddp_find_unused_parameters_true",
+        help=(
+            "Lightning distributed strategy, e.g. "
+            "ddp_find_unused_parameters_true, ddp, fsdp, deepspeed_stage_2, deepspeed_stage_3."
+        ),
+    )
+    parser.add_argument(
         "--task",
         type=str, 
         default=None
@@ -273,10 +282,7 @@ def main():
     trainer = L.Trainer(
         reload_dataloaders_every_n_epochs=1,
         use_distributed_sampler=False,
-        # MoE routing can leave some experts unused on a given step.
-        # Enable unused-parameter detection so DDP does not fail on sparse expert usage.
-        strategy="ddp_find_unused_parameters_true",
-        # strategy="ddp",
+        strategy=config.strategy,
         accelerator="auto",
         devices="auto",
         max_epochs=config.epoch,

@@ -169,7 +169,7 @@ model_path="${exp_dir}/checkpoint/${model}"
 if [ ! -f "${model_path}" ]; then
     model_path="${exp_dir}/${model}"
 fi
-if [ ! -f "${model_path}" ]; then
+if ${decode} && [ ! -f "${model_path}" ]; then
     echo "model file not found under ${exp_dir}: ${model}" >&2
     exit 1
 fi

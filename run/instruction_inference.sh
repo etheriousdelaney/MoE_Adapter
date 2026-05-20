@@ -225,18 +225,22 @@ if ${decode}; then
             sort -k1 "${dataset_dir}/${name}" -o "${dataset_dir}/${name}"
         done
 
-        stats_files=()
-        for output_dir in "${logdir}"/output.*; do
-            if [ -f "${output_dir}/expert_heatmap_stats.pt" ]; then
-                stats_files+=("${output_dir}/expert_heatmap_stats.pt")
-            fi
-        done
-        if [ "${expert_heatmap}" != "false" ] && [ ${#stats_files[@]} -gt 0 ]; then
-            "${python_bin}" -m inference.merge_expert_heatmap \
-                --stats "${stats_files[@]}" \
-                --output "${dataset_dir}/expert_heatmap.png" \
-                --title "Instruction Inference Expert Usage: ${dataset}"
-            log "Write expert heatmap in ${dataset_dir}/expert_heatmap.png"
+        if [ "${expert_heatmap}" != "false" ]; then
+            for heatmap_name in task environment gender; do
+                stats_files=()
+                for output_dir in "${logdir}"/output.*; do
+                    if [ -f "${output_dir}/expert_heatmap_${heatmap_name}_stats.pt" ]; then
+                        stats_files+=("${output_dir}/expert_heatmap_${heatmap_name}_stats.pt")
+                    fi
+                done
+                if [ ${#stats_files[@]} -gt 0 ]; then
+                    "${python_bin}" -m inference.merge_expert_heatmap \
+                        --stats "${stats_files[@]}" \
+                        --output "${dataset_dir}/expert_heatmap_${heatmap_name}.png" \
+                        --title "Instruction Inference ${heatmap_name} Expert Usage: ${dataset}"
+                    log "Write ${heatmap_name} expert heatmap in ${dataset_dir}/expert_heatmap_${heatmap_name}.png"
+                fi
+            done
         fi
     done
 fi
@@ -249,10 +253,14 @@ if ${scoring}; then
             --dataset "${dataset}" \
             --decode_dir "${dataset_dir}" \
             --score_opts "${score_opts}"
-        log "Write CER result in ${dataset_dir}/score_cer/result.txt"
-        grep -e Avg -m 1 "${dataset_dir}/score_cer/result.txt" || true
-        log "Write WER result in ${dataset_dir}/score_wer/result.txt"
-        grep -e Avg -m 1 "${dataset_dir}/score_wer/result.txt" || true
+        log "Write ASR CER result in ${dataset_dir}/score_asr_cer/result.txt"
+        grep -e Avg -m 1 "${dataset_dir}/score_asr_cer/result.txt" || true
+        log "Write ASR WER result in ${dataset_dir}/score_asr_wer/result.txt"
+        grep -e Avg -m 1 "${dataset_dir}/score_asr_wer/result.txt" || true
+        log "Write environment accuracy result in ${dataset_dir}/score_environment_accuracy/result.txt"
+        grep -e accuracy_percent -m 1 "${dataset_dir}/score_environment_accuracy/result.txt" || true
+        log "Write gender accuracy result in ${dataset_dir}/score_gender_accuracy/result.txt"
+        grep -e accuracy_percent -m 1 "${dataset_dir}/score_gender_accuracy/result.txt" || true
     done
 
     "${python_bin}" -m inference.show_asr_result "${decode_root}" > "${decode_root}/RESULTS.md"

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "F05_440C0202_BUS_SIMU",
+    "text": "THE COMPANY HAS FIVE HUNDRED JAPANESE MANAGERS OVERSEAS MOST OF THEM IN KEY POSITIONS AND EXPECTS THE NUMBER TO RISE SIXTY PERCENT IN THE NEXT FIVE YEARS",
+    "environment": "BUS",
+    "speaker": "F05",
+    "Gender": "female",
+    "Duration": 7.700563
+  },
+  {
+    "id": "F05_440C0202_CAF_SIMU",
+    "text": "THE COMPANY HAS FIVE HUNDRED JAPANESE MANAGERS OVERSEAS MOST OF THEM IN KEY POSITIONS AND EXPECTS THE NUMBER TO RISE SIXTY PERCENT IN THE NEXT FIVE YEARS",
+    "environment": "CAF",
+    "speaker": "F05",
+    "Gender": "female",
+    "Duration": 7.700563
+  }
+]

@@ -70,6 +70,53 @@ def format_result_table(exp_dir: Path, score_type: str) -> list[str]:
     return lines
 
 
+def parse_accuracy_result(result_path: Path) -> dict[str, str]:
+    values: dict[str, str] = {}
+    for line in result_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip() or "\t" not in line:
+            continue
+        key, value = line.split("\t", 1)
+        values[key] = value
+    return values
+
+
+def format_accuracy_table(exp_dir: Path, task_name: str) -> list[str]:
+    result_paths = sorted(exp_dir.glob(f"**/score_{task_name}_accuracy/result.txt"))
+    if not result_paths:
+        return []
+
+    lines = [
+        f"### {task_name.capitalize()} Accuracy",
+        "",
+        "|dataset|correct|total|accuracy %|",
+        "|---|---|---|---|",
+    ]
+    for result_path in result_paths:
+        values = parse_accuracy_result(result_path)
+        dataset = result_path.parent.parent.relative_to(exp_dir).as_posix()
+        lines.append(
+            "|{}|{}|{}|{}|".format(
+                dataset,
+                values.get("correct", ""),
+                values.get("total", ""),
+                values.get("accuracy_percent", ""),
+            )
+        )
+    lines.append("")
+    return lines
+
+
+def format_heatmap_paths(exp_dir: Path) -> list[str]:
+    heatmaps = sorted(exp_dir.glob("**/expert_heatmap_*.png"))
+    if not heatmaps:
+        return []
+    lines = ["### Expert Heatmaps", ""]
+    for heatmap in heatmaps:
+        lines.append(f"- `{heatmap.relative_to(exp_dir).as_posix()}`")
+    lines.append("")
+    return lines
+
+
 def render_results(exp_dir: Path) -> str:
     pyversion = sys.version.replace("\n", " ")
     git_hash = safe_command_output(["git", "rev-parse", "HEAD"])
@@ -88,8 +135,13 @@ def render_results(exp_dir: Path) -> str:
         f"## {exp_dir}",
         "",
     ]
-    for score_type in ("wer", "cer"):
+    has_multitask_asr = bool(find_result_files(exp_dir, "asr_wer") or find_result_files(exp_dir, "asr_cer"))
+    score_types = ("asr_wer", "asr_cer") if has_multitask_asr else ("wer", "cer")
+    for score_type in score_types:
         lines.extend(format_result_table(exp_dir, score_type))
+    for task_name in ("environment", "gender"):
+        lines.extend(format_accuracy_table(exp_dir, task_name))
+    lines.extend(format_heatmap_paths(exp_dir))
     return "\n".join(lines).rstrip() + "\n"
 
 

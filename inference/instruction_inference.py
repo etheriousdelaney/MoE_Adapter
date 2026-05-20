@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
+import re
 
 import torch
 from loguru import logger
 
+from dataset.instruction_utils import strip_instruction_sample_id
 from task.instruction_asr import InstructionAsrTask
 from inference.asr_inference import (
     DecodeConfig,
@@ -22,6 +25,19 @@ from inference.asr_inference import (
     accumulate_expert_usage,
     write_results,
 )
+
+TASK_HEATMAP_ORDER = ["ASR", "environment", "gender"]
+ENV_HEATMAP_ORDER = ["BUS", "CAFE", "PEDESTRIAN", "STREET"]
+GENDER_HEATMAP_ORDER = ["female", "male"]
+ENV_ALIASES = {
+    "BUS": "BUS",
+    "CAFE": "CAFE",
+    "CAF": "CAFE",
+    "PEDESTRIAN": "PEDESTRIAN",
+    "PED": "PEDESTRIAN",
+    "STREET": "STREET",
+    "STR": "STREET",
+}
 
 
 def build_argparser() -> argparse.ArgumentParser:
@@ -65,6 +81,149 @@ def resolve_instruction_data_type(train_config, dataset: str) -> list[str]:
     )
 
 
+def sample_index(sample_id: str) -> int:
+    match = re.search(r"__sample__(\d+)$", sample_id)
+    if not match:
+        return 0
+    return int(match.group(1))
+
+
+def task_name_from_sample_id(sample_id: str) -> str:
+    index = sample_index(sample_id)
+    if index == 0:
+        return "ASR"
+    if index == 1:
+        return "environment"
+    if index == 2:
+        return "gender"
+    return "ASR"
+
+
+def normalize_environment(text: str) -> str:
+    normalized = text.strip().upper()
+    for key, value in ENV_ALIASES.items():
+        if normalized == key or key in normalized:
+            return value
+    return normalized
+
+
+def normalize_gender(text: str) -> str:
+    normalized = text.strip().lower()
+    if "female" in normalized:
+        return "female"
+    if "male" in normalized:
+        return "male"
+    return normalized
+
+
+def read_metadata(dataset: str) -> dict[str, dict[str, str]]:
+    path = Path("data") / dataset / "metadata.json"
+    if not path.exists():
+        return {}
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(payload, dict):
+        items = payload.items()
+    elif isinstance(payload, list):
+        items = ((item.get("id"), item) for item in payload if isinstance(item, dict))
+    else:
+        raise ValueError(f"Unsupported metadata format: {path}")
+    metadata: dict[str, dict[str, str]] = {}
+    for key, item in items:
+        if key is None or not isinstance(item, dict):
+            continue
+        metadata[str(key)] = {str(k): str(v) for k, v in item.items()}
+    return metadata
+
+
+def environment_from_sample_id(sample_id: str, metadata: dict[str, dict[str, str]]) -> str:
+    base_id = strip_instruction_sample_id(sample_id)
+    if base_id in metadata and metadata[base_id].get("environment"):
+        return normalize_environment(metadata[base_id]["environment"])
+    return normalize_environment(base_id)
+
+
+def gender_from_sample_id(sample_id: str, metadata: dict[str, dict[str, str]]) -> str:
+    base_id = strip_instruction_sample_id(sample_id)
+    if base_id in metadata:
+        for key in ("Gender", "gender"):
+            if metadata[base_id].get(key):
+                return normalize_gender(metadata[base_id][key])
+    return ""
+
+
+def label_ids_from_names(names: list[str], row_order: list[str]) -> torch.Tensor:
+    name_to_idx = {name: idx for idx, name in enumerate(row_order)}
+    return torch.tensor([name_to_idx[name] for name in names], dtype=torch.long)
+
+
+def ensure_accumulator(
+    accumulators: dict[str, tuple[torch.Tensor, torch.Tensor]],
+    name: str,
+    row_order: list[str],
+    num_experts: int,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    if name not in accumulators:
+        accumulators[name] = create_accumulator(
+            num_experts=num_experts,
+            device="cpu",
+            row_order=row_order,
+        )
+    return accumulators[name]
+
+
+def accumulate_named_usage(
+    accumulators: dict[str, tuple[torch.Tensor, torch.Tensor]],
+    name: str,
+    row_order: list[str],
+    expert_usage: torch.Tensor,
+    label_names: list[str],
+) -> None:
+    if not label_names:
+        return
+    sums, counts = ensure_accumulator(accumulators, name, row_order, expert_usage.shape[-1])
+    label_ids = label_ids_from_names(label_names, row_order)
+    accumulate_expert_usage(
+        sums=sums,
+        counts=counts,
+        expert_usage=expert_usage,
+        label_ids=label_ids,
+        row_order=row_order,
+    )
+
+
+def save_heatmaps(
+    output_dir: Path,
+    accumulators: dict[str, tuple[torch.Tensor, torch.Tensor]],
+    adapter_top_k: int,
+    dataset: str,
+) -> None:
+    specs = {
+        "task": (TASK_HEATMAP_ORDER, "Instruction Task Expert Usage"),
+        "environment": (ENV_HEATMAP_ORDER, "Environment Expert Usage"),
+        "gender": (GENDER_HEATMAP_ORDER, "Gender Expert Usage"),
+    }
+    for name, (row_order, title) in specs.items():
+        if name not in accumulators:
+            continue
+        sums, counts = accumulators[name]
+        if not torch.sum(counts).item() > 0:
+            continue
+        save_accumulator(
+            output_dir / f"expert_heatmap_{name}_stats.pt",
+            sums,
+            counts,
+            row_order=row_order,
+            highlight_top_k=adapter_top_k,
+        )
+        render_heatmap(
+            matrix=finalize_heatmap_matrix(sums, counts),
+            output_path=output_dir / f"expert_heatmap_{name}.png",
+            title=f"{title}: {dataset}",
+            row_order=row_order,
+            highlight_top_k=adapter_top_k,
+        )
+
+
 def main() -> None:
     args = build_argparser().parse_args()
     train_config = load_train_config(args.train_config)
@@ -76,6 +235,7 @@ def main() -> None:
     data_type = resolve_instruction_data_type(train_config, args.dataset)
     device = torch.device("cuda" if args.ngpu > 0 and torch.cuda.is_available() else "cpu")
     preprocess = InstructionAsrTask.build_preprocess_fn(train_config, train=False)
+    metadata = read_metadata(args.dataset)
 
     dataloader = build_dataloader(
         config=train_config,
@@ -93,6 +253,10 @@ def main() -> None:
     )
     supports_expert_heatmap = bool(getattr(model, "supports_expert_heatmap", False))
     collect_expert_heatmap = decode_config.expert_heatmap != "false" and supports_expert_heatmap
+    if decode_config.expert_heatmap == "true" and not supports_expert_heatmap:
+        raise ValueError(
+            f"expert_heatmap=true was requested, but {type(model).__name__} does not support expert heatmap"
+        )
 
     logger.info(
         "Start instruction inference dataset={} num_utts={} data_type={} decode_mode={} batch_size={} max_new_tokens={} expert_heatmap={} collect_expert_heatmap={} device={}",
@@ -109,10 +273,10 @@ def main() -> None:
 
     results: list[dict[str, str]] = []
     processed_count = 0
-    heatmap_sums = None
-    heatmap_counts = None
+    heatmap_accumulators: dict[str, tuple[torch.Tensor, torch.Tensor]] = {}
     with torch.inference_mode():
         for batch in dataloader:
+            uttids = list(batch[0]) if isinstance(batch, (tuple, list)) and len(batch) >= 1 else []
             batch_results, expert_usage = decode_batch(
                 model=model,
                 batch=batch,
@@ -129,36 +293,65 @@ def main() -> None:
                 and isinstance(batch, (tuple, list))
                 and len(batch) >= 2
             ):
-                batch_data = batch[1]
-                labels = batch_data.get("chime4_label")
-                if labels is not None:
-                    if heatmap_sums is None or heatmap_counts is None:
-                        heatmap_sums, heatmap_counts = create_accumulator(
-                            num_experts=expert_usage.shape[-1],
-                            device="cpu",
+                expert_usage = expert_usage.detach().cpu()
+                task_names = [task_name_from_sample_id(uttid) for uttid in uttids]
+                accumulate_named_usage(
+                    heatmap_accumulators,
+                    name="task",
+                    row_order=TASK_HEATMAP_ORDER,
+                    expert_usage=expert_usage,
+                    label_names=task_names,
+                )
+
+                env_indices = [idx for idx, task_name in enumerate(task_names) if task_name == "environment"]
+                if env_indices:
+                    env_pairs = [
+                        (idx, environment_from_sample_id(uttids[idx], metadata))
+                        for idx in env_indices
+                    ]
+                    env_pairs = [(idx, name) for idx, name in env_pairs if name in ENV_HEATMAP_ORDER]
+                    if env_pairs:
+                        env_usage = expert_usage[[idx for idx, _ in env_pairs]]
+                        accumulate_named_usage(
+                            heatmap_accumulators,
+                            name="environment",
+                            row_order=ENV_HEATMAP_ORDER,
+                            expert_usage=env_usage,
+                            label_names=[name for _, name in env_pairs],
                         )
-                    accumulate_expert_usage(
-                        sums=heatmap_sums,
-                        counts=heatmap_counts,
-                        expert_usage=expert_usage,
-                        label_ids=labels.detach().cpu(),
-                    )
+
+                gender_indices = [idx for idx, task_name in enumerate(task_names) if task_name == "gender"]
+                if gender_indices:
+                    gender_pairs = [
+                        (idx, gender_from_sample_id(uttids[idx], metadata))
+                        for idx in gender_indices
+                    ]
+                    gender_pairs = [
+                        (idx, name) for idx, name in gender_pairs if name in GENDER_HEATMAP_ORDER
+                    ]
+                    if gender_pairs:
+                        gender_usage = expert_usage[[idx for idx, _ in gender_pairs]]
+                        accumulate_named_usage(
+                            heatmap_accumulators,
+                            name="gender",
+                            row_order=GENDER_HEATMAP_ORDER,
+                            expert_usage=gender_usage,
+                            label_names=[name for _, name in gender_pairs],
+                        )
 
     write_results(args.output_dir, results)
-    if heatmap_sums is not None and heatmap_counts is not None and torch.sum(heatmap_counts).item() > 0:
-        stats_path = Path(args.output_dir) / "expert_heatmap_stats.pt"
+    if heatmap_accumulators:
         adapter_top_k = max(1, int(getattr(getattr(model, "adapter", None), "top_k", 2)))
-        save_accumulator(
-            stats_path,
-            heatmap_sums,
-            heatmap_counts,
-            highlight_top_k=adapter_top_k,
+        save_heatmaps(
+            output_dir=Path(args.output_dir),
+            accumulators=heatmap_accumulators,
+            adapter_top_k=adapter_top_k,
+            dataset=args.dataset,
         )
-        render_heatmap(
-            matrix=finalize_heatmap_matrix(heatmap_sums, heatmap_counts),
-            output_path=Path(args.output_dir) / "expert_heatmap.png",
-            title=f"Instruction Inference Expert Usage: {args.dataset}",
-            highlight_top_k=adapter_top_k,
+    elif decode_config.expert_heatmap == "true":
+        raise ValueError(
+            "expert_heatmap=true was requested, but no heatmap stats were collected. "
+            "Check that the model returns expert_usage and instruction ids are available."
         )
 
     logger.info(

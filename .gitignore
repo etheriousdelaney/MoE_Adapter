@@ -14,6 +14,7 @@ wheels/
 data/**
 !data/**/
 !data/**/*.jsonl
+!data/**/metadata.json
 !data/**/spk2utt
 !data/**/text
 !data/**/utt2spk

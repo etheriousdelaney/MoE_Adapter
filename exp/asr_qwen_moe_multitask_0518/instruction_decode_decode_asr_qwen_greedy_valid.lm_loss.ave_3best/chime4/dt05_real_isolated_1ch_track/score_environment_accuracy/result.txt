@@ -1,6 +1,6 @@
 task	environment
-correct	1052
+correct	1054
 total	1640
-accuracy	0.641463
-accuracy_percent	64.15
+accuracy	0.642683
+accuracy_percent	64.27
 details_tsv	details.tsv

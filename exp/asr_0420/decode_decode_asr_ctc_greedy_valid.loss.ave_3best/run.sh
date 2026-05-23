@@ -1,1 +1,0 @@
-./asr_inference.sh --tag asr_0420 --model valid.loss.ave_3best.pth --decode_config conf/decode_asr_ctc_greedy.yaml --datasets chime4/dt05_real_isolated_1ch_track chime4/dt05_simu_isolated_1ch_track chime4/et05_real_isolated_1ch_track chime4/et05_simu_isolated_1ch_track --decode false --scoring true "$@"; exit $?

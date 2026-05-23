@@ -19,7 +19,7 @@ model_conf:
         projector_hidden_dim: 2048
         projector_num_layers: 2
         dropout: 0.1
-        max_target_length: 64
+        max_target_length: 32
         prompt_text: 'Transcribe the following speech:'
 optimizer_conf:
     adam_beta1: 0.9
@@ -35,7 +35,7 @@ dataset_conf:
     valid_data: chime4/dt05_multi_isolated_1ch_track
     valid_shape_file:
     - data/chime4/dt05_multi_isolated_1ch_track/shape/fused_shape
-    batch_bins: 150000
+    batch_bins: 1
     batch_size: 20
     batch_type: numel
     max_cache_size: 0.0
@@ -65,8 +65,8 @@ patience: 5
 log_every_n_steps: 500
 task: asr
 ngpu: 2
-exp_tag: asr_qwen_dense
-output_dir: exp/asr_qwen_dense
+exp_tag: asr_qwen_dense_test
+output_dir: exp/asr_qwen_dense_test
 use_tensorboard: true
 use_wandb: false
 wandb_project: ''

@@ -100,7 +100,7 @@ F01_052C0102_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BU
 F01_052C0103_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 F01_052C0104_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 F01_052C0105_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
-F01_052C0106_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	BUS	0
+F01_052C0106_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
 F01_052C0107_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 F01_052C0108_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 F01_052C0108_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
@@ -124,7 +124,7 @@ F01_052C010L_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDEST
 F01_052C010M_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 F01_052C010N_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 F01_052C010O_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	OTHER	0
-F01_052C010P_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
+F01_052C010P_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 F01_052C010Q_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
 F01_052C010R_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	OTHER	0
 F01_052C010S_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
@@ -305,7 +305,7 @@ F01_421C020A_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET
 F01_421C020B_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 F01_421C020C_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 F01_421C020D_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
-F01_421C020E_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	PEDESTRIAN	0
+F01_421C020E_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	BUS	0
 F01_421C020F_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 F01_421C020G_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 F01_421C020H_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
@@ -437,7 +437,7 @@ F04_050C010T_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET
 F04_050C010U_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 F04_050C010V_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	BUS	0
 F04_050C010W_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
-F04_050C010X_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
+F04_050C010X_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
 F04_050C010Y_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 F04_050C010Z_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 F04_050C0110_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
@@ -497,7 +497,7 @@ F04_052C010B_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	O
 F04_052C010C_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	CAFE	0
 F04_052C010D_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	OTHER	0
 F04_052C010E_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
-F04_052C010F_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	OTHER	0
+F04_052C010F_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 F04_052C010G_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	BUS	0
 F04_052C010H_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	OTHER	0
 F04_052C010I_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
@@ -507,7 +507,7 @@ F04_052C010L_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BU
 F04_052C010L_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	BUS	0
 F04_052C010M_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 F04_052C010N_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
-F04_052C010O_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	OTHER	0
+F04_052C010O_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 F04_052C010P_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 F04_052C010Q_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 F04_052C010R_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
@@ -667,7 +667,7 @@ F04_420C020H_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET
 F04_420C020I_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 F04_420C020I_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 F04_420C020J_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
-F04_420C020J_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
+F04_420C020J_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	OTHER	0
 F04_420C020K_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 F04_420C020L_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	CAFE	0
 F04_420C020M_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
@@ -810,7 +810,7 @@ F04_423C020U_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDEST
 F04_423C020V_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	STREET	0
 F04_423C020W_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 F04_423C020X_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	BUS	0
-F04_423C020Y_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	BUS	0
+F04_423C020Y_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
 F04_423C020Z_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 F04_423C0210_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 F04_423C0211_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
@@ -845,7 +845,7 @@ M03_050C010J_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET
 M03_050C010K_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
 M03_050C010L_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	OTHER	0
 M03_050C010M_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	OTHER	0
-M03_050C010N_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	STREET	0
+M03_050C010N_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 M03_050C010O_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
 M03_050C010P_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	BUS	0
 M03_050C010Q_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
@@ -926,7 +926,7 @@ M03_052C010C_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET
 M03_052C010D_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M03_052C010E_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 M03_052C010F_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	OTHER	0
-M03_052C010G_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
+M03_052C010G_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 M03_052C010H_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
 M03_052C010I_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M03_052C010J_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
@@ -953,7 +953,7 @@ M03_052C0114_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	C
 M03_052C0115_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M03_052C0116_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
 M03_053C0101_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
-M03_053C0102_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	BUS	0
+M03_053C0102_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
 M03_053C0103_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
 M03_053C0104_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	CAFE	0
 M03_053C0105_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
@@ -977,7 +977,7 @@ M03_053C010O_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	C
 M03_053C010P_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 M03_053C010Q_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M03_053C010R_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
-M03_053C010S_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
+M03_053C010S_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	CAFE	0
 M03_053C010T_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 M03_053C010U_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 M03_053C010V_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	CAFE	0
@@ -987,7 +987,7 @@ M03_053C010Y_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET
 M03_053C010Z_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	OTHER	0
 M03_053C0110_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
 M03_053C0111_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	OTHER	0
-M03_053C0112_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
+M03_053C0112_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	OTHER	0
 M03_053C0115_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M03_053C0115_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 M03_22GC0101_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
@@ -1007,7 +1007,7 @@ M03_22GC010D_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDEST
 M03_22GC010E_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 M03_22GC010F_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 M03_22GC010G_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	OTHER	0
-M03_22GC010H_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
+M03_22GC010H_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
 M03_22GC010I_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 M03_22GC010J_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
 M03_22GC010K_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
@@ -1148,7 +1148,7 @@ M03_421C0210_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	C
 M03_421C0210_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
 M03_421C0211_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 M03_421C0211_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
-M03_421C0212_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
+M03_421C0212_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	OTHER	0
 M03_421C0213_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M03_421C0214_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	CAFE	0
 M03_422C0201_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	CAFE	0
@@ -1249,7 +1249,7 @@ M04_050C010N_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET
 M04_050C010O_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
 M04_050C010P_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 M04_050C010Q_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
-M04_050C010R_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
+M04_050C010R_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 M04_050C010S_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 M04_050C010T_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M04_050C010U_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
@@ -1388,7 +1388,7 @@ M04_22GC010A_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	C
 M04_22GC010B_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
 M04_22GC010C_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M04_22GC010D_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	OTHER	0
-M04_22GC010E_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
+M04_22GC010E_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	OTHER	0
 M04_22GC010F_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M04_22GC010G_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M04_22GC010H_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
@@ -1403,7 +1403,7 @@ M04_22GC010N_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BU
 M04_22GC010N_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
 M04_22GC010O_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M04_22GC010P_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	BUS	0
-M04_22GC010Q_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	OTHER	0
+M04_22GC010Q_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M04_22GC010R_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M04_22GC010S_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	BUS	0
 M04_22GC010T_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
@@ -1425,7 +1425,7 @@ M04_22HC0101_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BU
 M04_22HC0102_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M04_22HC0103_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	BUS	0
 M04_22HC0104_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
-M04_22HC0105_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
+M04_22HC0105_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 M04_22HC0106_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	PEDESTRIAN	0
 M04_22HC0107_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 M04_22HC0108_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	BUS	0
@@ -1579,7 +1579,7 @@ M04_422C020P_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	C
 M04_422C020Q_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
 M04_422C020R_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M04_422C020S_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	BUS	0
-M04_422C020T_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	PEDESTRIAN	1
+M04_422C020T_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	STREET	0
 M04_422C020U_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	BUS	0
 M04_422C020V_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	OTHER	0
 M04_422C020W_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	BUS	0
@@ -1595,7 +1595,7 @@ M04_422C0214_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	P
 M04_422C0215_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M04_422C0216_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
 M04_423C0201_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
-M04_423C0202_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	OTHER	0
+M04_423C0202_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	BUS	0
 M04_423C0203_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
 M04_423C0204_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M04_423C0205_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
@@ -1636,6 +1636,6 @@ M04_423C0210_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET
 M04_423C0211_PED_REAL__sample__1	Classify the environmentalof this audio:	PEDESTRIAN	BUS	0
 M04_423C0212_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1
 M04_423C0213_CAF_REAL__sample__1	Classify the environmentalof this audio:	CAFE	CAFE	1
-M04_423C0214_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
+M04_423C0214_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	OTHER	0
 M04_423C0215_STR_REAL__sample__1	Classify the environmentalof this audio:	STREET	STREET	1
 M04_423C0216_BUS_REAL__sample__1	Classify the environmentalof this audio:	BUS	BUS	1

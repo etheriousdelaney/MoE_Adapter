@@ -19,7 +19,7 @@ datasets=(
 )
 # init_model="/mnt/disk2/m11315045/MoE_Adapter/exp/asr_qwen_fused_frozen_adapter_instruction/checkpoint/last.ckpt"
 
-# ./run/collect_stats.sh --config "${train_config}" --force --nj 32
+./run/collect_stats.sh --config "${train_config}" --force --nj 32
 train_args=(
   --tag "${tag}"
   --config "${train_config}"
@@ -40,11 +40,11 @@ case "${inference_mode}" in
     ;;
 esac
 
-"${inference_runner}" \
-  --tag "${tag}" \
-  --model "${decode_model}" \
-  --decode_config "${decode_config}" \
-  --datasets "${datasets[@]}" \
-  --inference_nj 1 \
-  --decode false \
-  --scoring true
+# "${inference_runner}" \
+#   --tag "${tag}" \
+#   --model "${decode_model}" \
+#   --decode_config "${decode_config}" \
+#   --datasets "${datasets[@]}" \
+#   --inference_nj 1 \
+#   --decode false \
+#   --scoring true

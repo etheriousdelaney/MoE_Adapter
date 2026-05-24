@@ -3,17 +3,14 @@ import yaml
 from pathlib import Path
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import LambdaLR
-from task.asr import AsrTask
-from task.classify import ClassifyTask
-from task.instruction_asr import InstructionAsrTask
+from task.instruction_asr import InstructionTask
 from train.config import TrainConfig
 from dataset.distributed_utils import DistributedOption
 from train.model_factory import build_model_from_config, model_choices
 
 task_choices = {
-    "classify": ClassifyTask,
-    "asr": AsrTask,
-    "instruction_asr": InstructionAsrTask,
+    "instruction": InstructionTask,
+    "instruction_asr": InstructionTask,
 }
 
 class LitModel(L.LightningModule):

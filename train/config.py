@@ -58,29 +58,6 @@ class QFormerConfig:
 
 
 @dataclass
-class ClassifierConfig:
-    classifier_hidden_dim: int = 1280
-    dropout: float = 0.1
-
-    @classmethod
-    def from_dict(cls, data: dict[str, Any] | None) -> "ClassifierConfig":
-        payload = dict(data or {})
-        _check_unknown_keys(payload, set(cls.__dataclass_fields__), "model_conf.classfier_conf")
-        return cls(**payload)
-
-
-@dataclass
-class AsrDecoderConfig:
-    dropout: float = 0.1
-
-    @classmethod
-    def from_dict(cls, data: dict[str, Any] | None) -> "AsrDecoderConfig":
-        payload = dict(data or {})
-        _check_unknown_keys(payload, set(cls.__dataclass_fields__), "model_conf.asr_decoder_conf")
-        return cls(**payload)
-
-
-@dataclass
 class LlmDecoderConfig:
     llm_repo: str = "Qwen/Qwen3-1.7B"
     projector_hidden_dim: int = 2048
@@ -98,18 +75,15 @@ class LlmDecoderConfig:
 
 @dataclass
 class ModelConfig:
-    num_classes: int = 4
     aux_loss_weight: float = 0.5
     model_repo: str = "moonshotai/Kimi-Audio-7B-Instruct"
     tokenizer_repo: str = "THUDM/glm-4-voice-tokenizer"
     sample_rate: int = 16000
     adapter_type: str = "moe"
-    decoder_type: str = "ntp"
+    decoder_type: str = "qwen"
     freeze_frontend: bool = False
     adapter: AdapterConfig = field(default_factory=AdapterConfig)
     qformer: QFormerConfig = field(default_factory=QFormerConfig)
-    classifier: ClassifierConfig = field(default_factory=ClassifierConfig)
-    asr_decoder: AsrDecoderConfig = field(default_factory=AsrDecoderConfig)
     llm_decoder: LlmDecoderConfig = field(default_factory=LlmDecoderConfig)
 
     @classmethod
@@ -117,13 +91,10 @@ class ModelConfig:
         payload = dict(data or {})
         adapter_conf = payload.pop("adapter_conf", None)
         qformer_conf = payload.pop("qformer_conf", None)
-        classifier_conf = payload.pop("classfier_conf", payload.pop("classifier_conf", None))
-        asr_decoder_conf = payload.pop("asr_decoder_conf", None)
         llm_decoder_conf = payload.pop("llm_decoder_conf", None)
         _check_unknown_keys(
             payload,
             {
-                "num_classes",
                 "aux_loss_weight",
                 "model_repo",
                 "tokenizer_repo",
@@ -138,8 +109,6 @@ class ModelConfig:
             **payload,
             adapter=AdapterConfig.from_dict(adapter_conf),
             qformer=QFormerConfig.from_dict(qformer_conf),
-            classifier=ClassifierConfig.from_dict(classifier_conf),
-            asr_decoder=AsrDecoderConfig.from_dict(asr_decoder_conf),
             llm_decoder=LlmDecoderConfig.from_dict(llm_decoder_conf),
         )
 
@@ -165,7 +134,7 @@ class DatasetConfig:
     train_dtype: str = "float32"
     shuffle_within_batch: bool = False
     num_workers: int = 0
-    data_type: list[str] = field(default_factory=lambda: ["sound", "chime4_label"])
+    data_type: list[str] = field(default_factory=lambda: ["fused", "audio_context", "answer"])
     train_message_file: str = ""
     valid_message_file: str = ""
     instruction_source: str = "message_response"
@@ -183,7 +152,7 @@ class TrainConfig:
     ngpu: int = 1
     exp_tag: str = ""
     output_dir: str = ""
-    model_name: str = "moeclassifier"
+    model_name: str = "qwen_audio_model"
     token_type: str | None = None
     token_list: str = ""
     non_linguistic_symbols: str | None = None
@@ -195,7 +164,7 @@ class TrainConfig:
     patience: int = 100
     log_every_n_steps: int = 1
     strategy: str = "ddp_find_unused_parameters_true"
-    task: str = "classify"
+    task: str = "instruction"
     min_batch_size: int = 1
     use_tensorboard: bool = False
     use_wandb: bool = False
@@ -244,8 +213,6 @@ class TrainConfig:
         model_dict = asdict(self.model)
         model_dict["adapter_conf"] = model_dict.pop("adapter")
         model_dict["qformer_conf"] = model_dict.pop("qformer")
-        model_dict["classfier_conf"] = model_dict.pop("classifier")
-        model_dict["asr_decoder_conf"] = model_dict.pop("asr_decoder")
         model_dict["llm_decoder_conf"] = model_dict.pop("llm_decoder")
         return {
             "model": self.model_name,

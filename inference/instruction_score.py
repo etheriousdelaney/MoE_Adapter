@@ -4,12 +4,13 @@ import argparse
 import csv
 import json
 import re
+import subprocess
 from pathlib import Path
 
 from loguru import logger
 
 from dataset.instruction_utils import iter_instruction_records, strip_instruction_sample_id
-from inference.asr_score import read_text, read_utt2spk, run_sclite, write_trn
+from inference.instruction_inference import load_train_config
 
 
 ENV_ALIASES = {
@@ -25,6 +26,90 @@ ENV_ORDER = ["BUS", "CAFE", "PEDESTRIAN", "STREET"]
 GENDER_ORDER = ["female", "male"]
 
 
+def read_text(path: Path) -> dict[str, str]:
+    items: dict[str, str] = {}
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
+            line = line.rstrip("\n")
+            if not line.strip():
+                continue
+            parts = line.split(maxsplit=1)
+            uttid = parts[0]
+            items[uttid] = parts[1] if len(parts) > 1 else ""
+    return items
+
+
+def read_utt2spk(path: Path) -> dict[str, str]:
+    if not path.exists():
+        return {}
+    speakers: dict[str, str] = {}
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
+            parts = line.strip().split(maxsplit=1)
+            if len(parts) == 2:
+                speakers[parts[0]] = parts[1]
+    return speakers
+
+
+def normalize_cer_text(text: str) -> list[str]:
+    return list(text.replace(" ", ""))
+
+
+def normalize_wer_text(text: str) -> list[str]:
+    return text.split()
+
+
+def write_trn(
+    ref_text: dict[str, str],
+    hyp_text: dict[str, str],
+    utt2spk: dict[str, str],
+    output_dir: Path,
+    unit: str,
+) -> tuple[Path, Path]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    ref_path = output_dir / "ref.trn"
+    hyp_path = output_dir / "hyp.trn"
+    normalizer = normalize_cer_text if unit == "cer" else normalize_wer_text
+
+    with ref_path.open("w", encoding="utf-8") as ref_f, hyp_path.open(
+        "w", encoding="utf-8"
+    ) as hyp_f:
+        for uttid in sorted(ref_text):
+            speaker = utt2spk.get(uttid, uttid)
+            suffix = f"({speaker}-{uttid})"
+            ref_units = " ".join(normalizer(ref_text[uttid]))
+            hyp_units = " ".join(normalizer(hyp_text.get(uttid, "")))
+            ref_f.write(f"{ref_units} {suffix}\n" if ref_units else f"{suffix}\n")
+            hyp_f.write(f"{hyp_units} {suffix}\n" if hyp_units else f"{suffix}\n")
+
+    return ref_path, hyp_path
+
+
+def run_sclite(ref_path: Path, hyp_path: Path, result_path: Path, score_opts: str) -> None:
+    cmd = ["sclite"]
+    if score_opts:
+        cmd.extend(score_opts.split())
+    cmd.extend(
+        [
+            "-r",
+            str(ref_path),
+            "trn",
+            "-h",
+            str(hyp_path),
+            "trn",
+            "-i",
+            "rm",
+            "-o",
+            "all",
+            "stdout",
+        ]
+    )
+    proc = subprocess.run(cmd, check=False, capture_output=True, text=True)
+    result_path.write_text(proc.stdout + proc.stderr, encoding="utf-8")
+    if proc.returncode != 0:
+        raise RuntimeError(f"sclite failed: {' '.join(cmd)}\n{proc.stdout}\n{proc.stderr}")
+
+
 def build_argparser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Score multitask instruction decode outputs",
@@ -32,6 +117,7 @@ def build_argparser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--dataset", required=True)
     parser.add_argument("--decode_dir", required=True)
+    parser.add_argument("--train_config", default="")
     parser.add_argument("--score_opts", default="")
     return parser
 
@@ -63,6 +149,47 @@ def read_metadata(path: Path) -> dict[str, dict[str, str]]:
             continue
         metadata[str(key)] = {str(k): str(v) for k, v in item.items()}
     return metadata
+
+
+def default_instruction_tasks() -> list[dict[str, object]]:
+    return [
+        {
+            "name": "asr",
+            "answer_field": "text",
+            "scoring": ["wer", "cer"],
+        },
+        {
+            "name": "environment",
+            "answer_field": "environment",
+            "scoring": ["acc"],
+            "labels": ENV_ORDER,
+        },
+        {
+            "name": "gender",
+            "answer_field": "Gender",
+            "scoring": ["acc"],
+            "labels": GENDER_ORDER,
+        },
+    ]
+
+
+def load_instruction_tasks(train_config_path: str) -> list[dict[str, object]]:
+    if not train_config_path:
+        return default_instruction_tasks()
+    config = load_train_config(train_config_path)
+    tasks = [dict(task) for task in getattr(config.dataset, "instruction_tasks", [])]
+    return tasks or default_instruction_tasks()
+
+
+def task_name(task: dict[str, object], index: int) -> str:
+    return str(task.get("name") or f"task_{index}")
+
+
+def task_metrics(task: dict[str, object]) -> list[str]:
+    metrics = task.get("scoring", [])
+    if isinstance(metrics, str):
+        metrics = [metrics]
+    return [str(metric).lower() for metric in metrics]
 
 
 def clean_asr_reference(base_id: str, metadata: dict[str, dict[str, str]], text_refs: dict[str, str]) -> str:
@@ -100,6 +227,100 @@ def gender_reference(base_id: str, metadata: dict[str, dict[str, str]], response
             if metadata[base_id].get(key):
                 return normalize_gender(metadata[base_id][key])
     return normalize_gender(response)
+
+
+def metadata_reference(
+    base_id: str,
+    metadata: dict[str, dict[str, str]],
+    answer_field: str,
+    response: str,
+    text_refs: dict[str, str],
+    field_refs: dict[str, str],
+) -> str:
+    if answer_field == "text":
+        return clean_asr_reference(base_id, metadata, text_refs)
+    if answer_field == "environment":
+        if base_id in field_refs:
+            return normalize_environment(field_refs[base_id])
+        return environment_reference(base_id, metadata, response)
+    if answer_field in {"Gender", "gender"}:
+        if base_id in field_refs:
+            return normalize_gender(field_refs[base_id])
+        return gender_reference(base_id, metadata, response)
+    if base_id in metadata and metadata[base_id].get(answer_field):
+        return metadata[base_id][answer_field]
+    if base_id in field_refs:
+        return field_refs[base_id]
+    return response
+
+
+def normalize_by_labels(text: str, labels: list[str]) -> str:
+    if not labels:
+        return text.strip()
+    exact = {label.lower(): label for label in labels}
+    normalized = text.strip()
+    lower = normalized.lower()
+    if lower in exact:
+        return exact[lower]
+    for label in sorted(labels, key=len, reverse=True):
+        if label.lower() in lower:
+            return label
+    return normalized
+
+
+def build_task_references(
+    dataset_dir: Path,
+    tasks: list[dict[str, object]],
+    sample_ids: list[str],
+) -> tuple[dict[str, dict[str, str]], dict[str, str]]:
+    metadata = read_metadata(dataset_dir / "metadata.json")
+    text_refs = read_text(dataset_dir / "text") if (dataset_dir / "text").exists() else {}
+    field_cache: dict[str, dict[str, str]] = {}
+    refs_by_task = {task_name(task, index): {} for index, task in enumerate(tasks)}
+    prompts: dict[str, str] = {}
+
+    response_path = dataset_dir / "response.jsonl"
+    if response_path.exists():
+        records = list(iter_instruction_records(response_path))
+    else:
+        records = [
+            {
+                "sample_id": sample_id,
+                "base_id": strip_instruction_sample_id(sample_id),
+                "prompt": "",
+                "response": "",
+            }
+            for sample_id in sample_ids
+        ]
+
+    for record in records:
+        sample_id = record["sample_id"]
+        if sample_ids and sample_id not in sample_ids:
+            continue
+        base_id = record["base_id"]
+        index = sample_index(sample_id)
+        if index >= len(tasks):
+            continue
+        task = tasks[index]
+        name = task_name(task, index)
+        prompts[sample_id] = record.get("prompt") or str(task.get("prompt", ""))
+        answer_field = str(task.get("answer_field", "text"))
+        if answer_field not in field_cache:
+            field_path = dataset_dir / answer_field
+            field_cache[answer_field] = read_text(field_path) if field_path.exists() else {}
+        reference = metadata_reference(
+            base_id=base_id,
+            metadata=metadata,
+            answer_field=answer_field,
+            response=record.get("response", ""),
+            text_refs=text_refs,
+            field_refs=field_cache[answer_field],
+        )
+        label_map = task.get("label_map") or {}
+        if isinstance(label_map, dict):
+            reference = str(label_map.get(reference, label_map.get(str(reference), reference)))
+        refs_by_task[name][sample_id] = reference
+    return refs_by_task, prompts
 
 
 def expand_instruction_utt2spk(
@@ -243,37 +464,55 @@ def main() -> None:
     decode_dir = Path(args.decode_dir)
     hyp_text = read_text(decode_dir / "text")
     base_utt2spk = read_utt2spk(dataset_dir / "utt2spk")
-
-    asr_refs, env_refs, gender_refs, prompts = split_references(dataset_dir)
-    all_sample_ids = list(asr_refs) + list(env_refs) + list(gender_refs)
+    tasks = load_instruction_tasks(args.train_config)
+    refs_by_task, prompts = build_task_references(
+        dataset_dir=dataset_dir,
+        tasks=tasks,
+        sample_ids=list(hyp_text),
+    )
+    all_sample_ids = [
+        sample_id
+        for refs in refs_by_task.values()
+        for sample_id in refs
+    ]
     utt2spk = expand_instruction_utt2spk(all_sample_ids, base_utt2spk)
 
-    score_asr(
-        decode_dir=decode_dir,
-        hyp_text=hyp_text,
-        asr_refs=asr_refs,
-        prompts=prompts,
-        utt2spk=utt2spk,
-        score_opts=args.score_opts,
-    )
-    score_accuracy(
-        decode_dir=decode_dir,
-        task_name="environment",
-        hyp_text=hyp_text,
-        refs=env_refs,
-        prompts=prompts,
-        label_order=ENV_ORDER,
-        normalizer=normalize_environment,
-    )
-    score_accuracy(
-        decode_dir=decode_dir,
-        task_name="gender",
-        hyp_text=hyp_text,
-        refs=gender_refs,
-        prompts=prompts,
-        label_order=GENDER_ORDER,
-        normalizer=normalize_gender,
-    )
+    for index, task in enumerate(tasks):
+        name = task_name(task, index)
+        refs = refs_by_task.get(name, {})
+        if not refs:
+            logger.warning("Skip task={} because no references were found", name)
+            continue
+        metrics = task_metrics(task)
+        if "wer" in metrics or "cer" in metrics:
+            asr_metrics = [metric for metric in ("cer", "wer") if metric in metrics]
+            for unit in asr_metrics:
+                score_dir = decode_dir / f"score_{name}_{unit}"
+                ref_path, hyp_path = write_trn(
+                    ref_text=refs,
+                    hyp_text=hyp_text,
+                    utt2spk=utt2spk,
+                    output_dir=score_dir,
+                    unit=unit,
+                )
+                result_path = score_dir / "result.txt"
+                run_sclite(ref_path, hyp_path, result_path, score_opts=args.score_opts)
+                write_instruction_details(score_dir, prompts, refs, hyp_text, utt2spk)
+                logger.info("Write {} {} result in {}", name, unit, result_path)
+        if "acc" in metrics or "accuracy" in metrics:
+            labels = [str(label) for label in task.get("labels", [])]
+            normalizer = lambda text, labels=labels: normalize_by_labels(text, labels)
+            if not labels:
+                labels = sorted({normalizer(value) for value in refs.values()})
+            score_accuracy(
+                decode_dir=decode_dir,
+                task_name=name,
+                hyp_text=hyp_text,
+                refs=refs,
+                prompts=prompts,
+                label_order=labels,
+                normalizer=normalizer,
+            )
 
 
 if __name__ == "__main__":

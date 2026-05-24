@@ -5,11 +5,11 @@ from typing import Callable, Dict, Optional
 import numpy as np
 
 from dataset.preprocessor import CommonPreprocessor
-from task.classify import ClassifyTask
+from task.base import InstructionIterTask
 from train.config import TrainConfig
 
 
-class InstructionAsrTask(ClassifyTask):
+class InstructionTask(InstructionIterTask):
     @classmethod
     def build_iter_options(cls, config, distributed_option, mode: str):
         iter_options = super().build_iter_options(config, distributed_option, mode)
@@ -35,7 +35,10 @@ class InstructionAsrTask(ClassifyTask):
             non_linguistic_symbols=getattr(config, "non_linguistic_symbols", None),
             text_cleaner=getattr(config, "cleaner", None),
             g2p_type=getattr(config, "g2p", None),
-            aux_task_names=["prompt"],
+            aux_task_names=None,
             text_name="answer",
             huggingface_max_length=getattr(config.model.llm_decoder, "max_target_length", None),
         )
+
+
+InstructionAsrTask = InstructionTask

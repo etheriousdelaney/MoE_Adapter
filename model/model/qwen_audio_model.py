@@ -6,10 +6,25 @@ import torch
 from inference.expert_heatmap_utils import expert_usage_from_selected_experts
 from model.adapter.Denseadapter import DenseAdapter
 from model.adapter.MoEadapter import MoEAdapter
+from model.adapter.Qformer import QFormerAdapter
 from model.decoder.qwen_frozen_ntp import FrozenQwenNTPDecoder
 from model.decoder.qwen_ntp import QwenNTPDecoder
 from model.encoder.kimi_audio_encoder import KimiAudioFrontend, build_padding_mask_from_lengths
 from train.config import ModelConfig
+
+
+DECODER_ALIASES = {
+    "ntp": "qwen",
+    "qwen": "qwen",
+    "frozen_ntp": "frozen_qwen",
+    "frozen_qwen": "frozen_qwen",
+}
+
+ADAPTER_ALIASES = {
+    "moe": "moe",
+    "dense": "dense",
+    "qformer": "qformer",
+}
 
 
 class LitQwenAudioModel(L.LightningModule):
@@ -23,9 +38,9 @@ class LitQwenAudioModel(L.LightningModule):
     ):
         super().__init__()
         self.save_hyperparameters(ignore=["config"])
-        self.adapter_type = str(adapter_type or config.adapter_type)
-        self.decoder_type = str(decoder_type or config.decoder_type)
-        freeze_frontend = bool(config.freeze_frontend or self.decoder_type == "frozen_ntp")
+        self.adapter_type = self._normalize_adapter_type(adapter_type or config.adapter_type)
+        self.decoder_type = self._normalize_decoder_type(decoder_type or config.decoder_type)
+        freeze_frontend = bool(config.freeze_frontend or self.decoder_type == "frozen_qwen")
 
         self.frontend = (
             KimiAudioFrontend(
@@ -49,8 +64,23 @@ class LitQwenAudioModel(L.LightningModule):
 
         self.adapter = self._build_adapter(config)
         self.model_dtype = next(self.adapter.parameters()).dtype
-        self.decoder = self._build_decoder(config)
+        self.decoder_input_size = getattr(self.adapter, "output_hidden_size", self.hidden_size)
+        self.decoder = self._build_decoder(config, input_hidden_size=self.decoder_input_size)
         self.tokenizer_repo = token_list
+
+    @staticmethod
+    def _normalize_adapter_type(adapter_type: str) -> str:
+        normalized = str(adapter_type).strip().lower()
+        if normalized not in ADAPTER_ALIASES:
+            raise ValueError(f"Unsupported adapter_type: {adapter_type}")
+        return ADAPTER_ALIASES[normalized]
+
+    @staticmethod
+    def _normalize_decoder_type(decoder_type: str) -> str:
+        normalized = str(decoder_type).strip().lower()
+        if normalized not in DECODER_ALIASES:
+            raise ValueError(f"Unsupported decoder_type: {decoder_type}")
+        return DECODER_ALIASES[normalized]
 
     def _build_adapter(self, config: ModelConfig):
         if self.adapter_type == "moe":
@@ -63,17 +93,22 @@ class LitQwenAudioModel(L.LightningModule):
                 hidden_size=self.hidden_size,
                 ffn_dim=config.adapter.expert_ffn_dim,
             )
+        if self.adapter_type == "qformer":
+            return QFormerAdapter(
+                speech_width=self.hidden_size,
+                **config.qformer.__dict__,
+            )
         raise ValueError(f"Unsupported adapter_type: {self.adapter_type}")
 
-    def _build_decoder(self, config: ModelConfig):
-        if self.decoder_type == "ntp":
+    def _build_decoder(self, config: ModelConfig, input_hidden_size: int):
+        if self.decoder_type == "qwen":
             return QwenNTPDecoder(
-                input_hidden_size=self.hidden_size,
+                input_hidden_size=input_hidden_size,
                 **config.llm_decoder.__dict__,
             )
-        if self.decoder_type == "frozen_ntp":
+        if self.decoder_type == "frozen_qwen":
             return FrozenQwenNTPDecoder(
-                input_hidden_size=self.hidden_size,
+                input_hidden_size=input_hidden_size,
                 **config.llm_decoder.__dict__,
             )
         raise ValueError(f"Unsupported decoder_type: {self.decoder_type}")
@@ -82,13 +117,12 @@ class LitQwenAudioModel(L.LightningModule):
         audio_input = self._unwrap_batch(batch)
         hidden_states, padding_mask = self._encode_and_adapt(audio_input)
 
-        if self.decoder_type == "ntp":
-            labels = audio_input.get("answer", audio_input.get("text"))
-            label_lengths = audio_input.get("answer_lengths", audio_input.get("text_lengths"))
+        if self.decoder_type == "qwen":
+            labels = audio_input.get("answer")
+            label_lengths = audio_input.get("answer_lengths")
             if labels is None or label_lengths is None:
                 raise RuntimeError(
-                    "Qwen audio model with decoder_type=ntp requires answer/answer_lengths "
-                    "or text/text_lengths in the batch"
+                    "Qwen audio model requires answer/answer_lengths in the batch"
                 )
             _, lm_loss = self.decoder(
                 audio_hidden_states=hidden_states,
@@ -97,28 +131,18 @@ class LitQwenAudioModel(L.LightningModule):
                 answer_lengths=label_lengths.to(self.device).long(),
                 **self._audio_context_decoder_kwargs(audio_input),
             )
-        elif self.decoder_type == "frozen_ntp":
-            prompt_ids = audio_input.get("prompt")
-            prompt_lengths = audio_input.get("prompt_lengths")
-            response_ids = audio_input.get("answer", audio_input.get("response"))
-            response_lengths = audio_input.get("answer_lengths", audio_input.get("response_lengths"))
-            if response_ids is None or response_lengths is None:
+        elif self.decoder_type == "frozen_qwen":
+            labels = audio_input.get("answer")
+            label_lengths = audio_input.get("answer_lengths")
+            if labels is None or label_lengths is None:
                 raise RuntimeError(
-                    "Qwen audio model with decoder_type=frozen_ntp requires "
-                    "answer/answer_lengths or response/response_lengths in the batch"
+                    "Frozen Qwen audio model requires answer/answer_lengths in the batch"
                 )
-            prompt_kwargs = {}
-            if prompt_ids is not None and prompt_lengths is not None:
-                prompt_kwargs = {
-                    "prompt_input_ids": prompt_ids.to(self.device).long(),
-                    "prompt_lengths": prompt_lengths.to(self.device).long(),
-                }
             _, lm_loss = self.decoder(
                 audio_hidden_states=hidden_states,
                 audio_attention_mask=padding_mask,
-                answer_input_ids=response_ids.to(self.device).long(),
-                answer_lengths=response_lengths.to(self.device).long(),
-                **prompt_kwargs,
+                answer_input_ids=labels.to(self.device).long(),
+                answer_lengths=label_lengths.to(self.device).long(),
                 **self._audio_context_decoder_kwargs(audio_input),
             )
         else:
@@ -143,28 +167,18 @@ class LitQwenAudioModel(L.LightningModule):
     ) -> tuple[list[list[int]], list[float], torch.Tensor | None]:
         audio_input = self._unwrap_batch(batch)
         hidden_states, padding_mask = self._encode_and_adapt(audio_input)
-        if self.decoder_type == "ntp":
+        if self.decoder_type == "qwen":
             token_ids, scores = self.decoder.greedy_generate(
                 audio_hidden_states=hidden_states,
                 audio_attention_mask=padding_mask,
                 max_new_tokens=max_new_tokens,
                 **self._audio_context_decoder_kwargs(audio_input),
             )
-        elif self.decoder_type == "frozen_ntp":
+        elif self.decoder_type == "frozen_qwen":
             context_kwargs = self._audio_context_decoder_kwargs(audio_input)
-            if context_kwargs:
-                prompt_input_ids = None
-                prompt_lengths = None
-            else:
-                prompt_input_ids, prompt_lengths = self._build_inference_prompts(
-                    batch_size=hidden_states.shape[0],
-                    device=hidden_states.device,
-                )
             token_ids, scores = self.decoder.greedy_generate(
                 audio_hidden_states=hidden_states,
                 audio_attention_mask=padding_mask,
-                prompt_input_ids=prompt_input_ids,
-                prompt_lengths=prompt_lengths,
                 max_new_tokens=max_new_tokens,
                 **context_kwargs,
             )
@@ -212,6 +226,12 @@ class LitQwenAudioModel(L.LightningModule):
                 top_k=self.adapter.top_k,
             )
             return hidden_states, padding_mask
+
+        if self.adapter_type == "qformer":
+            return self.adapter(
+                hidden_states=fused_states,
+                padding_mask=padding_mask,
+            )
 
         hidden_states = self.adapter(
             hidden_states=fused_states,

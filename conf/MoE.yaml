@@ -1,0 +1,58 @@
+model: qwen_audio_model
+model_conf:
+  aux_loss_weight: 0.1
+  model_repo: "moonshotai/Kimi-Audio-7B-Instruct"
+  tokenizer_repo: "THUDM/glm-4-voice-tokenizer"
+  sample_rate: 16000
+  adapter_type: moe
+  decoder_type: qwen
+  freeze_frontend: false
+  adapter_conf:
+    expert_ffn_dim: 1280
+    num_experts: 5
+    top_k: 2
+  llm_decoder_conf:
+    llm_repo: "Qwen/Qwen3-1.7B"
+    projector_hidden_dim: 2048
+    projector_num_layers: 2
+    dropout: 0.1
+    max_target_length: 64
+    prompt_text: ""
+
+optimizer_conf:
+  adam_beta1: 0.9
+  adam_beta2: 0.95
+  lr: 0.00001
+  warmup_steps: 500
+  stable_steps: 0
+  min_lr_ratio: 0.3
+
+token_type: huggingface
+token_list: Qwen/Qwen3-1.7B
+
+patience: 8
+seed: 314562
+epoch: 30
+log_every_n_steps: 500
+task: instruction
+use_tensorboard: true
+best_model_criterion:
+  - ["valid/lm_loss", "min", 3]
+
+dataset_conf:
+  train_data: chime4/tr05_all_noisy
+  train_shape_file:
+    - data/chime4/tr05_all_noisy/shape/instruction_fused_shape
+  valid_data: chime4/dt05_multi_isolated_1ch_track
+  valid_shape_file:
+    - data/chime4/dt05_multi_isolated_1ch_track/shape/instruction_fused_shape
+  batch_type: numel
+  batch_bins: 1200000
+  data_type: [fused, audio_context, answer]
+  instruction_source: task_specs
+  instruction_tasks:
+    - name: asr
+      prompt: "Transcribe the following speech:"
+      answer_field: text
+      scoring: [wer, cer]
+  num_workers: 4

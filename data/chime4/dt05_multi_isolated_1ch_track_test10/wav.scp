@@ -1,0 +1,10 @@
+F01_050C0101_PED_REAL /mnt/disk2/ASR_corpus/CHiME3/CHiME3/data/audio/16kHz/isolated_1ch_track/dt05_ped_real/F01_050C0101_PED.wav
+F01_050C0102_CAF_REAL /mnt/disk2/ASR_corpus/CHiME3/CHiME3/data/audio/16kHz/isolated_1ch_track/dt05_caf_real/F01_050C0102_CAF.wav
+F01_050C0102_STR_REAL /mnt/disk2/ASR_corpus/CHiME3/CHiME3/data/audio/16kHz/isolated_1ch_track/dt05_str_real/F01_050C0102_STR.wav
+F01_050C0103_BUS_REAL /mnt/disk2/ASR_corpus/CHiME3/CHiME3/data/audio/16kHz/isolated_1ch_track/dt05_bus_real/F01_050C0103_BUS.wav
+F01_050C0103_BUS_SIMU /mnt/disk2/ASR_corpus/CHiME3/CHiME3/data/audio/16kHz/isolated_1ch_track/dt05_bus_simu/F01_050C0103_BUS.wav
+F01_050C0103_CAF_SIMU /mnt/disk2/ASR_corpus/CHiME3/CHiME3/data/audio/16kHz/isolated_1ch_track/dt05_caf_simu/F01_050C0103_CAF.wav
+F01_050C0103_PED_SIMU /mnt/disk2/ASR_corpus/CHiME3/CHiME3/data/audio/16kHz/isolated_1ch_track/dt05_ped_simu/F01_050C0103_PED.wav
+F01_050C0103_STR_REAL /mnt/disk2/ASR_corpus/CHiME3/CHiME3/data/audio/16kHz/isolated_1ch_track/dt05_str_real/F01_050C0103_STR.wav
+F01_050C0103_STR_SIMU /mnt/disk2/ASR_corpus/CHiME3/CHiME3/data/audio/16kHz/isolated_1ch_track/dt05_str_simu/F01_050C0103_STR.wav
+F01_050C0104_CAF_REAL /mnt/disk2/ASR_corpus/CHiME3/CHiME3/data/audio/16kHz/isolated_1ch_track/dt05_caf_real/F01_050C0104_CAF.wav

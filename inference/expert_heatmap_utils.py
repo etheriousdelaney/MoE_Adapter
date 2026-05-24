@@ -180,10 +180,7 @@ def render_heatmap(
 
 
 def maybe_append_chime4_label(data_type: list[str], dataset_name: str) -> list[str]:
-    updated = list(data_type)
-    if dataset_name.startswith("chime4/") and "chime4_label" not in updated:
-        updated.append("chime4_label")
-    return updated
+    return list(data_type)
 
 
 def label_id_to_name(label_id: int) -> str:

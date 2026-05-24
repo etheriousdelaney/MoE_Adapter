@@ -252,15 +252,13 @@ if ${scoring}; then
         "${python_bin}" -m inference.instruction_score \
             --dataset "${dataset}" \
             --decode_dir "${dataset_dir}" \
+            --train_config "${train_config}" \
             --score_opts "${score_opts}"
-        log "Write ASR CER result in ${dataset_dir}/score_asr_cer/result.txt"
-        grep -e Avg -m 1 "${dataset_dir}/score_asr_cer/result.txt" || true
-        log "Write ASR WER result in ${dataset_dir}/score_asr_wer/result.txt"
-        grep -e Avg -m 1 "${dataset_dir}/score_asr_wer/result.txt" || true
-        log "Write environment accuracy result in ${dataset_dir}/score_environment_accuracy/result.txt"
-        grep -e accuracy_percent -m 1 "${dataset_dir}/score_environment_accuracy/result.txt" || true
-        log "Write gender accuracy result in ${dataset_dir}/score_gender_accuracy/result.txt"
-        grep -e accuracy_percent -m 1 "${dataset_dir}/score_gender_accuracy/result.txt" || true
+        for result_file in "${dataset_dir}"/score_*/result.txt; do
+            [ -f "${result_file}" ] || continue
+            log "Write score result in ${result_file}"
+            grep -e Avg -e accuracy_percent -m 1 "${result_file}" || true
+        done
     done
 
     "${python_bin}" -m inference.show_asr_result "${decode_root}" > "${decode_root}/RESULTS.md"

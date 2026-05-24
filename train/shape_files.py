@@ -21,24 +21,35 @@ logger = logging.getLogger(__name__)
 
 def ensure_instruction_shape_files(
     config: TrainConfig,
+    nj: int = 1,
+    log_dir: str | Path | None = None,
     force: bool = False,
+    progress_every: int = 500,
 ) -> None:
     dataset_config = config.dataset
     train_path = _ensure_split_instruction_shape(
         split_name="train",
         data_name=dataset_config.train_data,
         configured_paths=dataset_config.train_shape_file,
+        data_type=dataset_config.data_type,
         instruction_source=dataset_config.instruction_source,
         instruction_tasks=dataset_config.instruction_tasks,
+        nj=nj,
+        log_dir=log_dir,
         force=force,
+        progress_every=progress_every,
     )
     valid_path = _ensure_split_instruction_shape(
         split_name="valid",
         data_name=dataset_config.valid_data,
         configured_paths=dataset_config.valid_shape_file,
+        data_type=dataset_config.data_type,
         instruction_source=dataset_config.instruction_source,
         instruction_tasks=dataset_config.instruction_tasks,
+        nj=nj,
+        log_dir=log_dir,
         force=force,
+        progress_every=progress_every,
     )
     dataset_config.train_shape_file = [str(train_path)]
     dataset_config.valid_shape_file = [str(valid_path)]
@@ -88,19 +99,35 @@ def _ensure_split_instruction_shape(
     split_name: str,
     data_name: str,
     configured_paths: list[str],
+    data_type: list[str],
     instruction_source: str,
     instruction_tasks: list[dict],
+    nj: int,
+    log_dir: str | Path | None,
     force: bool,
+    progress_every: int,
 ) -> Path:
     data_dir = Path("data") / data_name
     if not data_dir.exists():
         raise FileNotFoundError(f"{split_name} data directory not found: {data_dir}")
 
-    fused_shape_path = data_dir / "shape" / "fused_shape"
-    if not fused_shape_path.exists():
-        raise FileNotFoundError(f"{split_name} fused_shape not found: {fused_shape_path}")
+    source_shape_path = data_dir / "shape" / "fused_shape"
+    output_shape_name = "instruction_fused_shape"
+    if "fused" not in data_type or not source_shape_path.exists():
+        if "sound" not in data_type:
+            raise FileNotFoundError(f"{split_name} fused_shape not found: {source_shape_path}")
+        source_shape_path = _ensure_split_speech_shape(
+            split_name=split_name,
+            data_name=data_name,
+            configured_paths=[],
+            nj=nj,
+            log_dir=log_dir,
+            force=force,
+            progress_every=progress_every,
+        )
+        output_shape_name = "instruction_speech_shape"
 
-    instruction_shape_path = data_dir / "shape" / "instruction_fused_shape"
+    instruction_shape_path = data_dir / "shape" / output_shape_name
     if not force:
         if _shape_files_ready(configured_paths):
             configured_path = Path(configured_paths[0]).resolve()
@@ -111,7 +138,7 @@ def _ensure_split_instruction_shape(
             logger.info("[%s] reuse existing instruction_shape: %s", split_name, instruction_shape_path)
             return instruction_shape_path.resolve()
 
-    utt2shape = load_num_sequence_text(fused_shape_path, loader_type="csv_int")
+    utt2shape = load_num_sequence_text(source_shape_path, loader_type="csv_int")
     num_written = 0
     with instruction_shape_path.open("w", encoding="utf-8") as dst:
         for base_id, sample_id in _iter_instruction_shape_ids(
@@ -121,7 +148,7 @@ def _ensure_split_instruction_shape(
         ):
             if base_id not in utt2shape:
                 raise KeyError(
-                    f"{split_name} instruction sample id={base_id} not found in fused_shape: {fused_shape_path}"
+                    f"{split_name} instruction sample id={base_id} not found in {source_shape_path}"
                 )
             shape = ",".join(str(value) for value in utt2shape[base_id])
             dst.write(f"{sample_id} {shape}\n")
@@ -131,8 +158,9 @@ def _ensure_split_instruction_shape(
         raise RuntimeError(f"No instruction samples found for {data_dir}")
 
     logger.info(
-        "[%s] wrote instruction_fused_shape: %s (%s samples)",
+        "[%s] wrote %s: %s (%s samples)",
         split_name,
+        output_shape_name,
         instruction_shape_path.resolve(),
         num_written,
     )
@@ -167,6 +195,9 @@ def _load_base_ids_for_task_specs(data_dir: Path) -> list[str]:
     fused_scp_path = data_dir / "fused.scp"
     if fused_scp_path.exists():
         return [line.split(maxsplit=1)[0] for line in _read_manifest_lines(fused_scp_path)]
+    wav_scp_path = data_dir / "wav.scp"
+    if wav_scp_path.exists():
+        return [line.split(maxsplit=1)[0] for line in _read_manifest_lines(wav_scp_path)]
     raise FileNotFoundError(f"Cannot infer task_specs base ids under {data_dir}")
 
 
@@ -333,7 +364,7 @@ def build_parser():
     parser.add_argument("--output_dir", type=str, default="")
     parser.add_argument("--ngpu", type=int, default=1)
     parser.add_argument("--exp_tag", type=str, default="")
-    parser.add_argument("--model", type=str, default="moeclassifier")
+    parser.add_argument("--model", type=str, default="qwen_audio_model")
     parser.add_argument("--model_conf", default=dict())
     parser.add_argument("--optimizer_conf", default=dict())
     parser.add_argument("--dataset_conf", default=dict())
@@ -345,7 +376,7 @@ def build_parser():
     parser.add_argument("--patience", type=int, default=100)
     parser.add_argument("--log_every_n_steps", type=int, default=1)
     parser.add_argument("--strategy", type=str, default="ddp_find_unused_parameters_true")
-    parser.add_argument("--task", type=str, default="classify")
+    parser.add_argument("--task", type=str, default="instruction")
     parser.add_argument("--use_tensorboard", action="store_true", default=False)
     parser.add_argument("--use_wandb", action="store_true", default=False)
     parser.add_argument("--wandb_project", type=str, default="")
@@ -368,8 +399,14 @@ def main():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     args, _ = build_parser().parse_known_args()
     config = TrainConfig.from_namespace(args)
-    if any(name in config.dataset.data_type for name in ("audio_context", "prompt", "response")):
-        ensure_instruction_shape_files(config, force=args.force)
+    if any(name in config.dataset.data_type for name in ("audio_context", "answer")):
+        ensure_instruction_shape_files(
+            config,
+            nj=args.nj,
+            log_dir=args.log_dir or None,
+            force=args.force,
+            progress_every=args.progress_every,
+        )
     elif "sound" in config.dataset.data_type and "fused" not in config.dataset.data_type:
         ensure_speech_shape_files(
             config,

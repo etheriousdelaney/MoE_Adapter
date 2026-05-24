@@ -307,14 +307,6 @@ def _load_instruction_jsonl(
     return AdapterForInstructionTextReader(sample_map)
 
 
-def prompt_loader(path, keys_to_load=None):
-    return _load_instruction_jsonl(path, field_name="prompt", keys_to_load=keys_to_load)
-
-
-def response_loader(path, keys_to_load=None):
-    return _load_instruction_jsonl(path, field_name="response", keys_to_load=keys_to_load)
-
-
 def answer_loader(
     path,
     keys_to_load=None,
@@ -467,31 +459,6 @@ def fused_loader(path, float_dtype=None, keys_to_load=None):
 
 
 DATA_TYPES = {
-    "sound": dict(
-        func=sound_loader,
-        kwargs=["float_dtype", "allow_multi_rates"],
-        help="Audio format types which supported by sndfile wav, flac, etc."
-        "\n\n"
-        "   utterance_id_a a.wav\n"
-        "   utterance_id_b b.wav\n"
-        "   ...",
-    ),
-    "chime4_label": dict(
-        func=chime4_label_loader,
-        kwargs=["keys_to_load"],
-    ),
-    "text": dict(
-        func=text_loader,
-        kwargs=["keys_to_load"],
-    ),
-    "prompt": dict(
-        func=prompt_loader,
-        kwargs=["keys_to_load"],
-    ),
-    "response": dict(
-        func=response_loader,
-        kwargs=["keys_to_load"],
-    ),
     "answer": dict(
         func=answer_loader,
         kwargs=["keys_to_load", "instruction_source", "instruction_tasks"],
@@ -503,6 +470,10 @@ DATA_TYPES = {
     "fused": dict(
         func=fused_loader,
         kwargs=["float_dtype", "keys_to_load"],
+    ),
+    "sound": dict(
+        func=sound_loader,
+        kwargs=["float_dtype", "allow_multi_rates"],
     ),
 }
 
@@ -597,7 +568,7 @@ class Dataset(AbsDataset):
             self.cache = None
 
     def _primary_loader(self):
-        for preferred_name in ("answer", "response", "prompt", "audio_context"):
+        for preferred_name in ("answer", "audio_context"):
             if preferred_name in self.loader_dict:
                 return self.loader_dict[preferred_name]
         return next(iter(self.loader_dict.values()))
@@ -612,12 +583,10 @@ class Dataset(AbsDataset):
 
         Args:
             path:  The file path
-            loader_type:  loader_type. sound, npy, text_int, text_float, etc
+            loader_type:  loader_type. fused, sound, audio_context, answer.
             keys_to_load:  The set of keys to load. If None, load all.
         """
         for key, dic in DATA_TYPES.items():
-            # e.g. loader_type="sound"
-            # -> return DATA_TYPES["sound"]["func"](path)
             if re.match(key, loader_type):
                 kwargs = {}
                 for key2 in dic["kwargs"]:

@@ -161,7 +161,7 @@ class CommonPreprocessor:
             return data
 
         target_names = []
-        for name in (self.text_name, "answer", "response", "text"):
+        for name in (self.text_name, "answer"):
             if name and name not in target_names:
                 target_names.append(name)
 

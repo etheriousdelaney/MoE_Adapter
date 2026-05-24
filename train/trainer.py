@@ -9,8 +9,6 @@ from train.LitModel import LitModel
 from pathlib import Path
 from train.config import (
     AdapterConfig,
-    AsrDecoderConfig,
-    ClassifierConfig,
     DatasetConfig,
     LlmDecoderConfig,
     ModelConfig,
@@ -189,14 +187,12 @@ def main():
             QFormerConfig,
             DatasetConfig,
             AdapterConfig,
-            ClassifierConfig,
-            AsrDecoderConfig,
             LlmDecoderConfig,
         ]
     )
     args, _ = build_parser().parse_known_args()
     config = TrainConfig.from_namespace(args)
-    if any(name in config.dataset.data_type for name in ("prompt", "response")):
+    if any(name in config.dataset.data_type for name in ("audio_context", "answer")):
         ensure_instruction_shape_files(config)
     elif "sound" in config.dataset.data_type and "fused" not in config.dataset.data_type:
         ensure_speech_shape_files(config)

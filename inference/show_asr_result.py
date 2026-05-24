@@ -30,6 +30,10 @@ def find_result_files(exp_dir: Path, score_type: str) -> list[Path]:
     return sorted(exp_dir.glob(pattern))
 
 
+def find_metric_result_files(exp_dir: Path, metric: str) -> list[Path]:
+    return sorted(exp_dir.glob(f"**/score_*_{metric}/result.txt"))
+
+
 def parse_avg_row(result_path: Path) -> list[str] | None:
     for line in result_path.read_text(encoding="utf-8").splitlines():
         if "Sum/Avg" not in line:
@@ -65,6 +69,30 @@ def format_result_table(exp_dir: Path, score_type: str) -> list[str]:
             continue
         dataset = result_path.parent.parent.relative_to(exp_dir).as_posix()
         row = "|".join([dataset] + avg_values)
+        lines.append(f"|{row}|")
+    lines.append("")
+    return lines
+
+
+def format_metric_table(exp_dir: Path, metric: str) -> list[str]:
+    result_paths = find_metric_result_files(exp_dir, metric)
+    if not result_paths:
+        return []
+
+    lines = [
+        f"### {metric.upper()}",
+        "",
+        "|dataset|task|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|",
+        "|---|---|---|---|---|---|---|---|---|---|",
+    ]
+    for result_path in result_paths:
+        avg_values = parse_avg_row(result_path)
+        if avg_values is None:
+            continue
+        dataset = result_path.parent.parent.relative_to(exp_dir).as_posix()
+        score_dir = result_path.parent.name
+        task = score_dir.removeprefix("score_").removesuffix(f"_{metric}")
+        row = "|".join([dataset, task] + avg_values)
         lines.append(f"|{row}|")
     lines.append("")
     return lines
@@ -106,6 +134,35 @@ def format_accuracy_table(exp_dir: Path, task_name: str) -> list[str]:
     return lines
 
 
+def format_all_accuracy_tables(exp_dir: Path) -> list[str]:
+    result_paths = sorted(exp_dir.glob("**/score_*_accuracy/result.txt"))
+    if not result_paths:
+        return []
+
+    lines = [
+        "### Accuracy",
+        "",
+        "|dataset|task|correct|total|accuracy %|",
+        "|---|---|---|---|---|",
+    ]
+    for result_path in result_paths:
+        values = parse_accuracy_result(result_path)
+        dataset = result_path.parent.parent.relative_to(exp_dir).as_posix()
+        score_dir = result_path.parent.name
+        task = score_dir.removeprefix("score_").removesuffix("_accuracy")
+        lines.append(
+            "|{}|{}|{}|{}|{}|".format(
+                dataset,
+                task,
+                values.get("correct", ""),
+                values.get("total", ""),
+                values.get("accuracy_percent", ""),
+            )
+        )
+    lines.append("")
+    return lines
+
+
 def format_heatmap_paths(exp_dir: Path) -> list[str]:
     heatmaps = sorted(exp_dir.glob("**/expert_heatmap_*.png"))
     if not heatmaps:
@@ -135,12 +192,13 @@ def render_results(exp_dir: Path) -> str:
         f"## {exp_dir}",
         "",
     ]
-    has_multitask_asr = bool(find_result_files(exp_dir, "asr_wer") or find_result_files(exp_dir, "asr_cer"))
-    score_types = ("asr_wer", "asr_cer") if has_multitask_asr else ("wer", "cer")
-    for score_type in score_types:
-        lines.extend(format_result_table(exp_dir, score_type))
-    for task_name in ("environment", "gender"):
-        lines.extend(format_accuracy_table(exp_dir, task_name))
+    for metric in ("wer", "cer"):
+        metric_lines = format_metric_table(exp_dir, metric)
+        if metric_lines:
+            lines.extend(metric_lines)
+        else:
+            lines.extend(format_result_table(exp_dir, metric))
+    lines.extend(format_all_accuracy_tables(exp_dir))
     lines.extend(format_heatmap_paths(exp_dir))
     return "\n".join(lines).rstrip() + "\n"
 

@@ -25,6 +25,8 @@ data/**/shape/.parts/
 !data/desta/**
 data/desta/**/__pycache__/
 data/desta/**/*.py[oc]
+data/**/message.jsonl
+data/**/response_full*.jsonl
 
 # Large generated data outputs
 dump/

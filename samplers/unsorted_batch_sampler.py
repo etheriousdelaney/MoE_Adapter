@@ -3,8 +3,8 @@ from typing import Iterator, Optional, Tuple
 
 from typeguard import typechecked
 
-from espnet2.fileio.read_text import read_2columns_text
-from espnet2.samplers.abs_sampler import AbsSampler
+from fileio.read_text import read_2columns_text
+from samplers.abs_sampler import AbsSampler
 
 
 class UnsortedBatchSampler(AbsSampler):

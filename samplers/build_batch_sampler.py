@@ -4,11 +4,11 @@ from typing import List, Optional, Sequence, Tuple, Union
 from typeguard import typechecked
 
 from samplers.abs_sampler import AbsSampler
-# from samplers.folded_batch_sampler import FoldedBatchSampler
-# from samplers.length_batch_sampler import LengthBatchSampler
+from samplers.folded_batch_sampler import FoldedBatchSampler
+from samplers.length_batch_sampler import LengthBatchSampler
 from samplers.num_elements_batch_sampler import NumElementsBatchSampler
-# from samplers.sorted_batch_sampler import SortedBatchSampler
-# from samplers.unsorted_batch_sampler import UnsortedBatchSampler
+from samplers.sorted_batch_sampler import SortedBatchSampler
+from samplers.unsorted_batch_sampler import UnsortedBatchSampler
 
 BATCH_TYPES = dict(
     unsorted="UnsortedBatchSampler has nothing in particular feature and "
@@ -153,68 +153,45 @@ def build_batch_sampler(
     if len(shape_files) == 0:
         raise ValueError("No shape file are given")
 
-    # if type == "unsorted":
-    #     retval = UnsortedBatchSampler(
-    #         batch_size=batch_size, key_file=shape_files[0], drop_last=drop_last
-    #     )
+    if type == "unsorted":
+        retval = UnsortedBatchSampler(
+            batch_size=batch_size,
+            key_file=shape_files[0],
+            drop_last=drop_last,
+            utt2category_file=utt2category_file,
+        )
 
-    # elif type == "sorted":
-    #     retval = SortedBatchSampler(
-    #         batch_size=batch_size,
-    #         shape_file=shape_files[0],
-    #         sort_in_batch=sort_in_batch,
-    #         sort_batch=sort_batch,
-    #         drop_last=drop_last,
-    #     )
+    elif type == "sorted":
+        retval = SortedBatchSampler(
+            batch_size=batch_size,
+            shape_file=shape_files[0],
+            sort_in_batch=sort_in_batch,
+            sort_batch=sort_batch,
+            drop_last=drop_last,
+        )
 
-    # elif type == "folded":
-    #     if len(fold_lengths) != len(shape_files):
-    #         raise ValueError(
-    #             f"The number of fold_lengths must be equal to "
-    #             f"the number of shape_files: "
-    #             f"{len(fold_lengths)} != {len(shape_files)}"
-    #         )
-    #     retval = FoldedBatchSampler(
-    #         batch_size=batch_size,
-    #         shape_files=shape_files,
-    #         fold_lengths=fold_lengths,
-    #         sort_in_batch=sort_in_batch,
-    #         sort_batch=sort_batch,
-    #         drop_last=drop_last,
-    #         min_batch_size=min_batch_size,
-    #         utt2category_file=utt2category_file,
-    #     )
+    elif type == "folded":
+        if len(fold_lengths) > len(shape_files):
+            fold_lengths = fold_lengths[: len(shape_files)]
+        if len(fold_lengths) != len(shape_files):
+            raise ValueError(
+                f"The number of fold_lengths must be equal to "
+                f"the number of shape_files: "
+                f"{len(fold_lengths)} != {len(shape_files)}"
+            )
+        retval = FoldedBatchSampler(
+            batch_size=batch_size,
+            shape_files=shape_files,
+            fold_lengths=fold_lengths,
+            sort_in_batch=sort_in_batch,
+            sort_batch=sort_batch,
+            drop_last=drop_last,
+            min_batch_size=min_batch_size,
+            utt2category_file=utt2category_file,
+        )
 
-    # elif type == "numel":
-    #     retval = NumElementsBatchSampler(
-    #         batch_bins=batch_bins,
-    #         shape_files=shape_files,
-    #         sort_in_batch=sort_in_batch,
-    #         sort_batch=sort_batch,
-    #         drop_last=drop_last,
-    #         padding=padding,
-    #         min_batch_size=min_batch_size,
-    #     )
-
-    # elif type == "length":
-    #     retval = LengthBatchSampler(
-    #         batch_bins=batch_bins,
-    #         shape_files=shape_files,
-    #         sort_in_batch=sort_in_batch,
-    #         sort_batch=sort_batch,
-    #         drop_last=drop_last,
-    #         padding=padding,
-    #         min_batch_size=min_batch_size,
-    #     )
-
-    # else:
-
-    #     raise ValueError(
-    #         f"Not supported: {type}. "
-    #         "Please specify batch_type in unsorted, sorted, folded, numel, "
-    #         "length."
-    #     )
-    retval = NumElementsBatchSampler(
+    elif type == "length":
+        retval = LengthBatchSampler(
             batch_bins=batch_bins,
             shape_files=shape_files,
             sort_in_batch=sort_in_batch,
@@ -223,6 +200,22 @@ def build_batch_sampler(
             padding=padding,
             min_batch_size=min_batch_size,
         )
+
+    elif type == "numel":
+        retval = NumElementsBatchSampler(
+            batch_bins=batch_bins,
+            shape_files=shape_files,
+            sort_in_batch=sort_in_batch,
+            sort_batch=sort_batch,
+            drop_last=drop_last,
+            padding=padding,
+            min_batch_size=min_batch_size,
+        )
+
+    else:
+        raise ValueError(
+            f"Not supported batch_type={type!r}. "
+            "Please specify one of: unsorted, sorted, folded, length, numel."
+        )
     
     return retval
-

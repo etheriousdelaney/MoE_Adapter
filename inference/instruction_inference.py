@@ -22,14 +22,14 @@ from inference.expert_heatmap_utils import (
     render_heatmap,
     save_accumulator,
 )
-from task.instruction_asr import InstructionTask
+from task.instruction import InstructionTask
 from train.config import (
     AdapterConfig,
     DatasetConfig,
     LlmDecoderConfig,
     ModelConfig,
     OptimizerConfig,
-    QFormerConfig,
+    SchedulerConfig,
     TrainConfig,
 )
 from train.model_factory import build_model_from_config
@@ -112,7 +112,7 @@ def load_train_config(config_path: str | Path) -> TrainConfig:
                 TrainConfig,
                 ModelConfig,
                 OptimizerConfig,
-                QFormerConfig,
+                SchedulerConfig,
                 DatasetConfig,
                 AdapterConfig,
                 LlmDecoderConfig,

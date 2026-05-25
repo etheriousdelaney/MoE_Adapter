@@ -49,6 +49,10 @@ while [ $# -gt 0 ]; do
             train_config="$2"
             shift 2
             ;;
+        --log)
+            write_log="$2"
+            shift 2
+            ;;
         --init_model)
             init_model="$2"
             shift 2
@@ -82,30 +86,45 @@ if [ ! -x "${python_bin}" ]; then
 fi
 
 log "$0 $*"
-log "Welcome to the party"
+
+
+log "Open the curtains"
+sleep 1
+log "Lights on"
+sleep 0.8
+log "Don't miss a moment of this experiment"
+sleep 2
+log "Oh, the book is strange"
+sleep 1
+log "Like clockwork orange"
+sleep 1
+log "Keep your eyes buttered till the end ♪ ~~ ♫ ~~"
+
 log "Start training log in ${output_dir}/train.log"
 log "Experiment tag: ${tag}"
 log "Training config: ${train_config}"
+
 if [ -n "${init_model}" ]; then
     log "Init model: ${init_model}"
     trainer_extra_args+=(--init_model "${init_model}")
 fi
 
 mkdir -p "${output_dir}"
-"${python_bin}" utils/rotate_logfiles.py "${output_dir}/train.log"
-"${python_bin}" bin/run.py "${output_dir}"/train.log "${python_bin}" -m train.trainer \
-                                --exp_tag "${tag}" \
-                                --output_dir "${output_dir}" \
-                                --config "${train_config}" \
-                                "${trainer_extra_args[@]}"
+
+if [ "$write_log" = "true" ]; then
+    "${python_bin}" utils/rotate_logfiles.py "${output_dir}/train.log"
+    "${python_bin}" bin/run.py "${output_dir}"/train.log "${python_bin}" -m train.trainer \
+                                    --exp_tag "${tag}" \
+                                    --output_dir "${output_dir}" \
+                                    --config "${train_config}" \
+                                    "${trainer_extra_args[@]}"
+else
+    "${python_bin}" -m train.trainer \
+        --exp_tag "${tag}" \
+        --output_dir "${output_dir}" \
+        --config "${train_config}"
+fi
 
 
-# "${python_bin}" -m train.trainer \
-#     --exp_tag "${tag}" \
-#     --output_dir "${output_dir}" \
-#     --config "${train_config}"
 
 
-# python3 -m train \
-#     --task asr \
-#     --use_preprocessor true \

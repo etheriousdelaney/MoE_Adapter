@@ -1,16 +1,39 @@
 import lightning as L
+import torch
 import yaml
 from pathlib import Path
-from torch.optim import AdamW
-from torch.optim.lr_scheduler import LambdaLR
-from task.instruction_asr import InstructionTask
+from task.instruction import InstructionTask
 from train.config import TrainConfig
 from dataset.distributed_utils import DistributedOption
-from train.model_factory import build_model_from_config, model_choices
+from train.model_factory import build_model_from_config
+
+
+optim_classes = dict(
+    adam=torch.optim.Adam,
+    adamw=torch.optim.AdamW,
+    sgd=torch.optim.SGD,
+    adadelta=torch.optim.Adadelta,
+    adagrad=torch.optim.Adagrad,
+    adamax=torch.optim.Adamax,
+    asgd=torch.optim.ASGD,
+    lbfgs=torch.optim.LBFGS,
+    rmsprop=torch.optim.RMSprop,
+    rprop=torch.optim.Rprop,
+    nadam=torch.optim.NAdam,
+    radam=torch.optim.RAdam,
+)
+
+scheduler_classes = dict(
+    lambdalr=torch.optim.lr_scheduler.LambdaLR,
+    steplr=torch.optim.lr_scheduler.StepLR,
+    multisteplr=torch.optim.lr_scheduler.MultiStepLR,
+    exponentiallr=torch.optim.lr_scheduler.ExponentialLR,
+    cosineannealinglr=torch.optim.lr_scheduler.CosineAnnealingLR,
+    reducelronplateau=torch.optim.lr_scheduler.ReduceLROnPlateau,
+)
 
 task_choices = {
     "instruction": InstructionTask,
-    "instruction_asr": InstructionTask,
 }
 
 class LitModel(L.LightningModule):
@@ -29,6 +52,7 @@ class LitModel(L.LightningModule):
         self.config = config
         self.task_class = task_choices[config.task]
         self.optimizer_config = config.optimizer
+        self.scheduler_config = config.scheduler
         self.model = build_model_from_config(config=config)
 
         if self.global_rank == 0:
@@ -68,6 +92,7 @@ class LitModel(L.LightningModule):
                     sync_dist=(mode != "train"),
                     batch_size=len(batch[0]) if isinstance(batch, tuple) else None,
                 )
+            self._log_accumulation_state(batch, batch_idx, mode)
             return outputs
 
         self.log(
@@ -80,7 +105,42 @@ class LitModel(L.LightningModule):
             sync_dist=(mode != "train"),
             batch_size=len(batch[0]) if isinstance(batch, tuple) else None,
         )
+        self._log_accumulation_state(batch, batch_idx, mode)
         return {"loss": outputs}
+
+    def _log_accumulation_state(self, batch, batch_idx: int, mode: str) -> None:
+        if mode != "train":
+            return
+        accum_grad = max(1, int(self.config.accum_grad))
+        accum_step = batch_idx % accum_grad + 1
+        batch_size = len(batch[0]) if isinstance(batch, tuple) else None
+        self.log(
+            "train/accum_step",
+            float(accum_step),
+            on_step=True,
+            on_epoch=False,
+            prog_bar=True,
+            logger=True,
+            batch_size=batch_size,
+        )
+        self.log(
+            "train/accum_grad",
+            float(accum_grad),
+            on_step=True,
+            on_epoch=False,
+            prog_bar=False,
+            logger=True,
+            batch_size=batch_size,
+        )
+        self.log(
+            "train/optimizer_step",
+            float(self.global_step),
+            on_step=True,
+            on_epoch=False,
+            prog_bar=False,
+            logger=True,
+            batch_size=batch_size,
+        )
     
     def training_step(self, batch, batch_idx):
         return self._step(batch, batch_idx, mode="train")
@@ -92,13 +152,54 @@ class LitModel(L.LightningModule):
         trainable_parameters = [param for param in self.model.parameters() if param.requires_grad]
         if len(trainable_parameters) == 0:
             raise RuntimeError("No trainable parameters found for optimizer setup")
-        optimizer = AdamW(
+        optimizer_name = str(self.optimizer_config.type).lower()
+        optim_class = optim_classes.get(optimizer_name)
+        if optim_class is None:
+            raise ValueError(f"Unsupported optimizer: {self.optimizer_config.type}")
+        optimizer = optim_class(
             trainable_parameters,
-            lr=self.optimizer_config.lr,
-            betas=(self.optimizer_config.adam_beta1, self.optimizer_config.adam_beta2),
-            foreach=False
+            **self.optimizer_config.to_kwargs(optimizer_name),
         )
 
+        scheduler_name = str(self.scheduler_config.type).lower()
+        if scheduler_name == "none":
+            return optimizer
+
+        scheduler = self._build_scheduler(optimizer, scheduler_name)
+        interval = self.scheduler_config.interval
+        if scheduler_name == "reducelronplateau" and interval == "step":
+            interval = "epoch"
+        scheduler_entry = {
+            "scheduler": scheduler,
+            "interval": interval,
+            "frequency": int(self.scheduler_config.frequency),
+        }
+        if scheduler_name == "reducelronplateau":
+            scheduler_entry["monitor"] = self.scheduler_config.monitor
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": scheduler_entry,
+        }
+
+    def _build_scheduler(self, optimizer, scheduler_name: str):
+        if scheduler_name == "warmup_linear":
+            return torch.optim.lr_scheduler.LambdaLR(
+                optimizer,
+                lr_lambda=self._warmup_linear_lambda(),
+            )
+        if scheduler_name == "lambdalr":
+            return torch.optim.lr_scheduler.LambdaLR(
+                optimizer,
+                lr_lambda=self._warmup_linear_lambda(),
+            )
+        if scheduler_name not in scheduler_classes:
+            raise ValueError(f"Unsupported scheduler: {self.scheduler_config.type}")
+        kwargs = self.scheduler_config.to_kwargs()
+        if scheduler_name == "cosineannealinglr":
+            kwargs.setdefault("T_max", max(1, int(self.trainer.estimated_stepping_batches)))
+        return scheduler_classes[scheduler_name](optimizer, **kwargs)
+
+    def _warmup_linear_lambda(self):
         total_steps = max(1, int(self.trainer.estimated_stepping_batches))
         warmup_steps = max(0, int(self.optimizer_config.warmup_steps))
         stable_steps = max(0, int(self.optimizer_config.stable_steps))
@@ -115,16 +216,7 @@ class LitModel(L.LightningModule):
             decay_steps = max(1, total_steps - decay_start)
             decay_progress = min(1.0, max(0.0, (current_step - decay_start) / decay_steps))
             return max(min_lr_ratio, 1.0 - decay_progress * (1.0 - min_lr_ratio))
-
-        scheduler = LambdaLR(optimizer, lr_lambda=lr_lambda)
-        return {
-            "optimizer": optimizer,
-            "lr_scheduler": {
-                "scheduler": scheduler,
-                "interval": "step",
-                "frequency": 1,
-            },
-        }
+        return lr_lambda
 
     def train_dataloader(self):
         train_iter_factory = self.task_class.build_iter_factory(

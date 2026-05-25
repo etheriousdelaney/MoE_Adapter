@@ -39,6 +39,3 @@ class InstructionTask(InstructionIterTask):
             text_name="answer",
             huggingface_max_length=getattr(config.model.llm_decoder, "max_target_length", None),
         )
-
-
-InstructionAsrTask = InstructionTask

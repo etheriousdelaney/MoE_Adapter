@@ -12,20 +12,61 @@ def _check_unknown_keys(data: dict[str, Any], allowed: set[str], context: str) -
         raise ValueError(f"Unknown keys in {context}: {unknown_keys}")
 
 
+def _with_type(data: dict[str, Any] | None, type_name: str) -> dict[str, Any]:
+    payload = dict(data or {})
+    payload.setdefault("type", type_name)
+    return payload
+
+
+def _asdict_flat_extra(obj) -> dict[str, Any]:
+    payload = asdict(obj)
+    extra = payload.pop("extra", {}) or {}
+    payload.update(extra)
+    return payload
+
+
 @dataclass
 class OptimizerConfig:
+    type: str = "adamw"
     adam_beta1: float = 0.9
     adam_beta2: float = 0.95
     lr: float = 1e-5
+    weight_decay: float = 0.0
+    foreach: bool | None = False
     warmup_steps: int = 20
     stable_steps: int = 0
     min_lr_ratio: float = 0.1
+    extra: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any] | None) -> "OptimizerConfig":
         payload = dict(data or {})
-        _check_unknown_keys(payload, set(cls.__dataclass_fields__), "optimizer_conf")
-        return cls(**payload)
+        known = {}
+        for key in set(cls.__dataclass_fields__) - {"extra"}:
+            if key in payload:
+                known[key] = payload.pop(key)
+        extra = dict(known.pop("extra", {}))
+        extra.update(payload)
+        return cls(**known, extra=extra)
+
+    def to_kwargs(self, optimizer_name: str) -> dict[str, Any]:
+        optimizer_name = optimizer_name.lower()
+        kwargs = dict(self.extra)
+        kwargs.setdefault("lr", self.lr)
+        if optimizer_name not in {"rprop", "lbfgs"}:
+            kwargs.setdefault("weight_decay", self.weight_decay)
+        if optimizer_name in {"adam", "adamw", "adamax", "nadam", "radam"}:
+            kwargs.setdefault("betas", (self.adam_beta1, self.adam_beta2))
+        if self.foreach is not None and optimizer_name in {
+            "adam",
+            "adamw",
+            "adamax",
+            "nadam",
+            "radam",
+            "sgd",
+        }:
+            kwargs.setdefault("foreach", self.foreach)
+        return kwargs
 
 
 @dataclass
@@ -33,16 +74,6 @@ class AdapterConfig:
     expert_ffn_dim: int = 1280
     num_experts: int = 8
     top_k: int = 2
-
-    @classmethod
-    def from_dict(cls, data: dict[str, Any] | None) -> "AdapterConfig":
-        payload = dict(data or {})
-        _check_unknown_keys(payload, set(cls.__dataclass_fields__), "model_conf.adapter_conf")
-        return cls(**payload)
-
-
-@dataclass
-class QFormerConfig:
     qformer_model_name: str = "bert-base-uncased"
     num_query_token: int = 32
     num_hidden_layers: int = 2
@@ -51,9 +82,9 @@ class QFormerConfig:
     attention_probs_dropout_prob: float = 0.1
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any] | None) -> "QFormerConfig":
+    def from_dict(cls, data: dict[str, Any] | None) -> "AdapterConfig":
         payload = dict(data or {})
-        _check_unknown_keys(payload, set(cls.__dataclass_fields__), "model_conf.qformer_conf")
+        _check_unknown_keys(payload, set(cls.__dataclass_fields__), "model_conf.adapter_conf")
         return cls(**payload)
 
 
@@ -64,7 +95,7 @@ class LlmDecoderConfig:
     projector_num_layers: int = 2
     dropout: float = 0.1
     max_target_length: int = 256
-    prompt_text: str = "Transcribe the following speech:"
+    prompt_text: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any] | None) -> "LlmDecoderConfig":
@@ -83,14 +114,12 @@ class ModelConfig:
     decoder_type: str = "qwen"
     freeze_frontend: bool = False
     adapter: AdapterConfig = field(default_factory=AdapterConfig)
-    qformer: QFormerConfig = field(default_factory=QFormerConfig)
     llm_decoder: LlmDecoderConfig = field(default_factory=LlmDecoderConfig)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any] | None) -> "ModelConfig":
         payload = dict(data or {})
         adapter_conf = payload.pop("adapter_conf", None)
-        qformer_conf = payload.pop("qformer_conf", None)
         llm_decoder_conf = payload.pop("llm_decoder_conf", None)
         _check_unknown_keys(
             payload,
@@ -108,9 +137,31 @@ class ModelConfig:
         return cls(
             **payload,
             adapter=AdapterConfig.from_dict(adapter_conf),
-            qformer=QFormerConfig.from_dict(qformer_conf),
             llm_decoder=LlmDecoderConfig.from_dict(llm_decoder_conf),
         )
+
+
+@dataclass
+class SchedulerConfig:
+    type: str = "warmup_linear"
+    interval: str = "step"
+    frequency: int = 1
+    monitor: str = "valid/loss"
+    extra: dict[str, Any] = field(default_factory=dict)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any] | None) -> "SchedulerConfig":
+        payload = dict(data or {})
+        known = {}
+        for key in set(cls.__dataclass_fields__) - {"extra"}:
+            if key in payload:
+                known[key] = payload.pop(key)
+        extra = dict(known.pop("extra", {}))
+        extra.update(payload)
+        return cls(**known, extra=extra)
+
+    def to_kwargs(self) -> dict[str, Any]:
+        return dict(self.extra)
 
 
 @dataclass
@@ -158,12 +209,18 @@ class TrainConfig:
     non_linguistic_symbols: str | None = None
     model: ModelConfig = field(default_factory=ModelConfig)
     optimizer: OptimizerConfig = field(default_factory=OptimizerConfig)
+    scheduler: SchedulerConfig = field(default_factory=SchedulerConfig)
     dataset: DatasetConfig = field(default_factory=DatasetConfig)
     seed: int = 314562
     epoch: int = 10
     patience: int = 100
     log_every_n_steps: int = 1
+    precision: str = "32-true"
+    accum_grad: int = 1
+    grad_clip: float = 5.0
+    grad_clip_algorithm: str = "norm"
     strategy: str = "ddp_find_unused_parameters_true"
+    strategy_conf: dict[str, Any] = field(default_factory=dict)
     task: str = "instruction"
     min_batch_size: int = 1
     use_tensorboard: bool = False
@@ -188,13 +245,33 @@ class TrainConfig:
             token_list=getattr(args, "token_list", ""),
             non_linguistic_symbols=getattr(args, "non_linguistic_symbols", None),
             model=ModelConfig.from_dict(getattr(args, "model_conf", None)),
-            optimizer=OptimizerConfig.from_dict(getattr(args, "optimizer_conf", None)),
+            optimizer=OptimizerConfig.from_dict(
+                _with_type(
+                    getattr(args, "optimizer_conf", None),
+                    getattr(args, "optimizer", defaults.optimizer.type),
+                )
+            ),
+            scheduler=SchedulerConfig.from_dict(
+                _with_type(
+                    getattr(args, "scheduler_conf", None),
+                    getattr(args, "scheduler", defaults.scheduler.type),
+                )
+            ),
             dataset=DatasetConfig.from_dict(getattr(args, "dataset_conf", None)),
             seed=getattr(args, "seed", defaults.seed),
             epoch=getattr(args, "epoch", defaults.epoch),
             patience=getattr(args, "patience", defaults.patience),
             log_every_n_steps=getattr(args, "log_every_n_steps", defaults.log_every_n_steps),
+            precision=getattr(args, "precision", defaults.precision),
+            accum_grad=getattr(args, "accum_grad", defaults.accum_grad),
+            grad_clip=getattr(args, "grad_clip", defaults.grad_clip),
+            grad_clip_algorithm=getattr(
+                args,
+                "grad_clip_algorithm",
+                defaults.grad_clip_algorithm,
+            ),
             strategy=getattr(args, "strategy", defaults.strategy),
+            strategy_conf=dict(getattr(args, "strategy_conf", None) or {}),
             task=getattr(args, "task", defaults.task),
             min_batch_size=getattr(args, "min_batch_size", defaults.min_batch_size),
             use_tensorboard=getattr(args, "use_tensorboard", defaults.use_tensorboard),
@@ -212,12 +289,14 @@ class TrainConfig:
     def to_yaml_dict(self) -> dict[str, Any]:
         model_dict = asdict(self.model)
         model_dict["adapter_conf"] = model_dict.pop("adapter")
-        model_dict["qformer_conf"] = model_dict.pop("qformer")
         model_dict["llm_decoder_conf"] = model_dict.pop("llm_decoder")
         return {
             "model": self.model_name,
             "model_conf": model_dict,
-            "optimizer_conf": asdict(self.optimizer),
+            "optimizer": self.optimizer.type,
+            "optimizer_conf": _asdict_flat_extra(self.optimizer),
+            "scheduler": self.scheduler.type,
+            "scheduler_conf": _asdict_flat_extra(self.scheduler),
             "dataset_conf": asdict(self.dataset),
             "token_type": self.token_type,
             "token_list": self.token_list,
@@ -226,7 +305,12 @@ class TrainConfig:
             "epoch": self.epoch,
             "patience": self.patience,
             "log_every_n_steps": self.log_every_n_steps,
+            "precision": self.precision,
+            "accum_grad": self.accum_grad,
+            "grad_clip": self.grad_clip,
+            "grad_clip_algorithm": self.grad_clip_algorithm,
             "strategy": self.strategy,
+            "strategy_conf": self.strategy_conf,
             "task": self.task,
             "ngpu": self.ngpu,
             "exp_tag": self.exp_tag,

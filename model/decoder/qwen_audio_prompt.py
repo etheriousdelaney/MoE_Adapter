@@ -3,7 +3,7 @@ from __future__ import annotations
 import torch
 
 
-class QwenAudioNTPPromptMixin:
+class QwenAudioPromptMixin:
     def _init_fixed_prompt_ids(self, prompt_text: str) -> None:
         prompt_ids = self.tokenizer(
             prompt_text,

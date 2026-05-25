@@ -128,7 +128,8 @@ def _ensure_split_instruction_shape(
         output_shape_name = "instruction_speech_shape"
 
     instruction_shape_path = data_dir / "shape" / output_shape_name
-    if not force:
+    can_reuse_shape = instruction_source != "task_specs"
+    if not force and can_reuse_shape:
         if _shape_files_ready(configured_paths):
             configured_path = Path(configured_paths[0]).resolve()
             if configured_path.exists() and configured_path == instruction_shape_path.resolve():
@@ -360,34 +361,9 @@ def build_parser():
     parser = config_argparse.ArgumentParser(
         description="Generate speech_shape files from dataset_conf train_data/valid_data",
         formatter_class=ArgumentDefaultsRawTextHelpFormatter,
+        ignore_unknown_config_keys=True,
     )
-    parser.add_argument("--output_dir", type=str, default="")
-    parser.add_argument("--ngpu", type=int, default=1)
-    parser.add_argument("--exp_tag", type=str, default="")
-    parser.add_argument("--model", type=str, default="qwen_audio_model")
-    parser.add_argument("--model_conf", default=dict())
-    parser.add_argument("--optimizer_conf", default=dict())
     parser.add_argument("--dataset_conf", default=dict())
-    parser.add_argument("--token_type", type=str, default=None)
-    parser.add_argument("--token_list", type=str, default="")
-    parser.add_argument("--non_linguistic_symbols", type=str, default=None)
-    parser.add_argument("--seed", type=int, default=314562)
-    parser.add_argument("--epoch", type=int, default=10)
-    parser.add_argument("--patience", type=int, default=100)
-    parser.add_argument("--log_every_n_steps", type=int, default=1)
-    parser.add_argument("--strategy", type=str, default="ddp_find_unused_parameters_true")
-    parser.add_argument("--task", type=str, default="instruction")
-    parser.add_argument("--use_tensorboard", action="store_true", default=False)
-    parser.add_argument("--use_wandb", action="store_true", default=False)
-    parser.add_argument("--wandb_project", type=str, default="")
-    parser.add_argument("--wandb_name", type=str, default="")
-    parser.add_argument(
-        "--best_model_criterion",
-        action="append",
-        nargs=3,
-        metavar=("MONITOR", "MODE", "NBEST"),
-        default=None,
-    )
     parser.add_argument("--nj", type=int, default=1)
     parser.add_argument("--log_dir", type=str, default="")
     parser.add_argument("--force", action="store_true")

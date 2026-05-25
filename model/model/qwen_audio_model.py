@@ -4,157 +4,51 @@ import lightning as L
 import torch
 
 from inference.expert_heatmap_utils import expert_usage_from_selected_experts
-from model.adapter.Denseadapter import DenseAdapter
-from model.adapter.MoEadapter import MoEAdapter
-from model.adapter.Qformer import QFormerAdapter
-from model.decoder.qwen_frozen_ntp import FrozenQwenNTPDecoder
-from model.decoder.qwen_ntp import QwenNTPDecoder
-from model.encoder.kimi_audio_encoder import KimiAudioFrontend, build_padding_mask_from_lengths
-from train.config import ModelConfig
-
-
-DECODER_ALIASES = {
-    "ntp": "qwen",
-    "qwen": "qwen",
-    "frozen_ntp": "frozen_qwen",
-    "frozen_qwen": "frozen_qwen",
-}
-
-ADAPTER_ALIASES = {
-    "moe": "moe",
-    "dense": "dense",
-    "qformer": "qformer",
-}
+from model.encoder.kimi_audio_encoder import build_padding_mask_from_lengths
 
 
 class LitQwenAudioModel(L.LightningModule):
     def __init__(
         self,
-        config: ModelConfig,
+        frontend,
+        adapter,
+        decoder,
         token_list: str,
-        use_frontend: bool = True,
-        adapter_type: str | None = None,
-        decoder_type: str | None = None,
+        aux_loss_weight: float = 0.0,
     ):
         super().__init__()
-        self.save_hyperparameters(ignore=["config"])
-        self.adapter_type = self._normalize_adapter_type(adapter_type or config.adapter_type)
-        self.decoder_type = self._normalize_decoder_type(decoder_type or config.decoder_type)
-        freeze_frontend = bool(config.freeze_frontend or self.decoder_type == "frozen_qwen")
-
-        self.frontend = (
-            KimiAudioFrontend(
-                model_repo=config.model_repo,
-                tokenizer_repo=config.tokenizer_repo,
-                sample_rate=config.sample_rate,
-                freeze_frontend=freeze_frontend,
-            )
-            if use_frontend
-            else None
-        )
-        self.hidden_size = self.frontend.hidden_size if self.frontend is not None else 3584
-        self.aux_loss_weight = config.aux_loss_weight
-        self.supports_expert_heatmap = self.adapter_type == "moe"
+        self.save_hyperparameters(ignore=["frontend", "adapter", "decoder"])
+        self.frontend = frontend
+        self.adapter = adapter
+        self.decoder = decoder
+        self.aux_loss_weight = float(aux_loss_weight)
+        self.supports_expert_heatmap = hasattr(adapter, "top_k") and hasattr(adapter, "experts")
         self.supports_generation_inference = True
-        self.inference_prompt_text = (
-            config.llm_decoder.prompt_text.strip()
-            if config.llm_decoder.prompt_text.strip()
-            else "Transcribe the following speech:"
-        )
-
-        self.adapter = self._build_adapter(config)
         self.model_dtype = next(self.adapter.parameters()).dtype
-        self.decoder_input_size = getattr(self.adapter, "output_hidden_size", self.hidden_size)
-        self.decoder = self._build_decoder(config, input_hidden_size=self.decoder_input_size)
         self.tokenizer_repo = token_list
-
-    @staticmethod
-    def _normalize_adapter_type(adapter_type: str) -> str:
-        normalized = str(adapter_type).strip().lower()
-        if normalized not in ADAPTER_ALIASES:
-            raise ValueError(f"Unsupported adapter_type: {adapter_type}")
-        return ADAPTER_ALIASES[normalized]
-
-    @staticmethod
-    def _normalize_decoder_type(decoder_type: str) -> str:
-        normalized = str(decoder_type).strip().lower()
-        if normalized not in DECODER_ALIASES:
-            raise ValueError(f"Unsupported decoder_type: {decoder_type}")
-        return DECODER_ALIASES[normalized]
-
-    def _build_adapter(self, config: ModelConfig):
-        if self.adapter_type == "moe":
-            return MoEAdapter(
-                hidden_size=self.hidden_size,
-                **config.adapter.__dict__,
-            )
-        if self.adapter_type == "dense":
-            return DenseAdapter(
-                hidden_size=self.hidden_size,
-                ffn_dim=config.adapter.expert_ffn_dim,
-            )
-        if self.adapter_type == "qformer":
-            return QFormerAdapter(
-                speech_width=self.hidden_size,
-                **config.qformer.__dict__,
-            )
-        raise ValueError(f"Unsupported adapter_type: {self.adapter_type}")
-
-    def _build_decoder(self, config: ModelConfig, input_hidden_size: int):
-        if self.decoder_type == "qwen":
-            return QwenNTPDecoder(
-                input_hidden_size=input_hidden_size,
-                **config.llm_decoder.__dict__,
-            )
-        if self.decoder_type == "frozen_qwen":
-            return FrozenQwenNTPDecoder(
-                input_hidden_size=input_hidden_size,
-                **config.llm_decoder.__dict__,
-            )
-        raise ValueError(f"Unsupported decoder_type: {self.decoder_type}")
 
     def forward(self, batch) -> dict[str, torch.Tensor]:
         audio_input = self._unwrap_batch(batch)
         hidden_states, padding_mask = self._encode_and_adapt(audio_input)
-
-        if self.decoder_type == "qwen":
-            labels = audio_input.get("answer")
-            label_lengths = audio_input.get("answer_lengths")
-            if labels is None or label_lengths is None:
-                raise RuntimeError(
-                    "Qwen audio model requires answer/answer_lengths in the batch"
-                )
-            _, lm_loss = self.decoder(
-                audio_hidden_states=hidden_states,
-                audio_attention_mask=padding_mask,
-                answer_input_ids=labels.to(self.device).long(),
-                answer_lengths=label_lengths.to(self.device).long(),
-                **self._audio_context_decoder_kwargs(audio_input),
-            )
-        elif self.decoder_type == "frozen_qwen":
-            labels = audio_input.get("answer")
-            label_lengths = audio_input.get("answer_lengths")
-            if labels is None or label_lengths is None:
-                raise RuntimeError(
-                    "Frozen Qwen audio model requires answer/answer_lengths in the batch"
-                )
-            _, lm_loss = self.decoder(
-                audio_hidden_states=hidden_states,
-                audio_attention_mask=padding_mask,
-                answer_input_ids=labels.to(self.device).long(),
-                answer_lengths=label_lengths.to(self.device).long(),
-                **self._audio_context_decoder_kwargs(audio_input),
-            )
-        else:
-            raise RuntimeError(f"Unsupported decoder_type during forward: {self.decoder_type}")
+        labels = audio_input.get("answer")
+        label_lengths = audio_input.get("answer_lengths")
+        if labels is None or label_lengths is None:
+            raise RuntimeError("Qwen audio model requires answer/answer_lengths in the batch")
+        _, lm_loss = self.decoder(
+            audio_hidden_states=hidden_states,
+            audio_attention_mask=padding_mask,
+            answer_input_ids=labels.to(self.device).long(),
+            answer_lengths=label_lengths.to(self.device).long(),
+            **self._audio_context_decoder_kwargs(audio_input),
+        )
 
         aux_loss = getattr(self, "_last_aux_loss", torch.zeros((), device=self.device))
-        total_loss = lm_loss + (self.aux_loss_weight * aux_loss if self.adapter_type == "moe" else 0.0)
+        total_loss = lm_loss + (self.aux_loss_weight * aux_loss if self.supports_expert_heatmap else 0.0)
         outputs = {
             "loss": total_loss,
             "lm_loss": lm_loss,
         }
-        if self.adapter_type == "moe":
+        if self.supports_expert_heatmap:
             outputs["aux_loss"] = aux_loss
             outputs["expert_usage"] = self._last_expert_usage
         return outputs
@@ -167,23 +61,12 @@ class LitQwenAudioModel(L.LightningModule):
     ) -> tuple[list[list[int]], list[float], torch.Tensor | None]:
         audio_input = self._unwrap_batch(batch)
         hidden_states, padding_mask = self._encode_and_adapt(audio_input)
-        if self.decoder_type == "qwen":
-            token_ids, scores = self.decoder.greedy_generate(
-                audio_hidden_states=hidden_states,
-                audio_attention_mask=padding_mask,
-                max_new_tokens=max_new_tokens,
-                **self._audio_context_decoder_kwargs(audio_input),
-            )
-        elif self.decoder_type == "frozen_qwen":
-            context_kwargs = self._audio_context_decoder_kwargs(audio_input)
-            token_ids, scores = self.decoder.greedy_generate(
-                audio_hidden_states=hidden_states,
-                audio_attention_mask=padding_mask,
-                max_new_tokens=max_new_tokens,
-                **context_kwargs,
-            )
-        else:
-            raise RuntimeError(f"Unsupported decoder_type during inference: {self.decoder_type}")
+        token_ids, scores = self.decoder.greedy_generate(
+            audio_hidden_states=hidden_states,
+            audio_attention_mask=padding_mask,
+            max_new_tokens=max_new_tokens,
+            **self._audio_context_decoder_kwargs(audio_input),
+        )
         expert_usage = getattr(self, "_last_expert_usage", None)
         return token_ids, scores, expert_usage
 
@@ -214,11 +97,12 @@ class LitQwenAudioModel(L.LightningModule):
         audio_input: dict[str, torch.Tensor],
     ) -> tuple[torch.Tensor, torch.Tensor]:
         fused_states, padding_mask = self._encode_inputs(audio_input)
-        if self.adapter_type == "moe":
-            hidden_states, aux_loss, selected_experts = self.adapter(
-                hidden_states=fused_states,
-                padding_mask=padding_mask,
-            )
+        adapter_output = self.adapter(
+            hidden_states=fused_states,
+            padding_mask=padding_mask,
+        )
+        if isinstance(adapter_output, tuple) and len(adapter_output) == 3:
+            hidden_states, aux_loss, selected_experts = adapter_output
             self._last_aux_loss = aux_loss
             self._last_expert_usage = expert_usage_from_selected_experts(
                 selected_experts=selected_experts,
@@ -227,17 +111,9 @@ class LitQwenAudioModel(L.LightningModule):
             )
             return hidden_states, padding_mask
 
-        if self.adapter_type == "qformer":
-            return self.adapter(
-                hidden_states=fused_states,
-                padding_mask=padding_mask,
-            )
-
-        hidden_states = self.adapter(
-            hidden_states=fused_states,
-            padding_mask=padding_mask,
-        )
-        return hidden_states, padding_mask
+        if isinstance(adapter_output, tuple) and len(adapter_output) == 2:
+            return adapter_output
+        return adapter_output, padding_mask
 
     def _encode_inputs(
         self,
@@ -280,7 +156,10 @@ class LitQwenAudioModel(L.LightningModule):
             "audio_suffix_lengths",
         )
         if not all(name in audio_input for name in required_names):
-            return {}
+            raise RuntimeError(
+                "Qwen audio model requires audio_prefix/audio_suffix fields. "
+                "Use data_type with audio_context so DeSTA-style prompt context is available."
+            )
         return {
             "audio_prefix_input_ids": audio_input["audio_prefix"].to(self.device).long(),
             "audio_prefix_lengths": audio_input["audio_prefix_lengths"].to(self.device).long(),
@@ -319,31 +198,6 @@ class LitQwenAudioModel(L.LightningModule):
                 "Qwen audio model inference backend-only load failed. "
                 f"missing_keys={missing_keys}, unexpected_keys={unexpected_keys}"
             ) from original_error
-
-    def _build_inference_prompts(
-        self,
-        batch_size: int,
-        device: torch.device,
-    ) -> tuple[torch.Tensor, torch.Tensor]:
-        prompt_ids = self.decoder.tokenizer(
-            self.inference_prompt_text,
-            add_special_tokens=False,
-            return_attention_mask=False,
-        )["input_ids"]
-        if len(prompt_ids) == 0:
-            prompt = torch.zeros(batch_size, 0, dtype=torch.long, device=device)
-            lengths = torch.zeros(batch_size, dtype=torch.long, device=device)
-            return prompt, lengths
-
-        prompt_tensor = torch.tensor(prompt_ids, dtype=torch.long, device=device).unsqueeze(0)
-        prompt_tensor = prompt_tensor.expand(batch_size, -1).contiguous()
-        prompt_lengths = torch.full(
-            (batch_size,),
-            fill_value=len(prompt_ids),
-            dtype=torch.long,
-            device=device,
-        )
-        return prompt_tensor, prompt_lengths
 
     @staticmethod
     def _unwrap_batch(batch) -> dict[str, torch.Tensor]:

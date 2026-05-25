@@ -11,7 +11,7 @@ from torch import nn
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers.utils import logging as transformers_logging
 
-from model.decoder.qwen_ntp_utils import QwenAudioNTPPromptMixin
+from model.decoder.qwen_audio_prompt import QwenAudioPromptMixin
 
 
 @dataclass
@@ -21,7 +21,7 @@ class QwenTextGenerationBundle:
     device: torch.device
 
 
-class QwenNTPDecoder(QwenAudioNTPPromptMixin, nn.Module):
+class QwenDecoder(QwenAudioPromptMixin, nn.Module):
     def __init__(
         self,
         input_hidden_size: int,
@@ -30,7 +30,7 @@ class QwenNTPDecoder(QwenAudioNTPPromptMixin, nn.Module):
         projector_num_layers: int = 2,
         dropout: float = 0.1,
         max_target_length: int = 256,
-        prompt_text: str = "Transcribe the following speech:",
+        prompt_text: str = "",
     ):
         super().__init__()
         os.environ.setdefault("HF_HUB_DISABLE_PROGRESS_BARS", "1")
@@ -97,7 +97,7 @@ class QwenNTPDecoder(QwenAudioNTPPromptMixin, nn.Module):
         target_input_ids = answer_input_ids if answer_input_ids is not None else text_input_ids
         target_lengths = answer_lengths if answer_lengths is not None else text_lengths
         if target_input_ids is None or target_lengths is None:
-            raise RuntimeError("QwenNTPDecoder requires text or answer target ids and lengths")
+            raise RuntimeError("QwenDecoder requires text or answer target ids and lengths")
 
         inputs_embeds, attention_mask, labels = self._build_training_inputs(
             audio_hidden_states=audio_hidden_states,

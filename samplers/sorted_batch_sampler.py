@@ -3,8 +3,8 @@ from typing import Iterator, Tuple
 
 from typeguard import typechecked
 
-from espnet2.fileio.read_text import load_num_sequence_text
-from espnet2.samplers.abs_sampler import AbsSampler
+from fileio.read_text import load_num_sequence_text
+from samplers.abs_sampler import AbsSampler
 
 
 class SortedBatchSampler(AbsSampler):

@@ -1,10 +1,13 @@
 import argparse
+import importlib
 from datetime import datetime
 from loguru import logger
 import lightning as L
 import torch
 from lightning.pytorch.callbacks import Callback, LearningRateMonitor, ModelCheckpoint, TQDMProgressBar, EarlyStopping
 from lightning.pytorch.loggers import TensorBoardLogger, WandbLogger
+from lightning.pytorch.strategies import DDPStrategy, FSDPStrategy
+from torch.distributed.algorithms.ddp_comm_hooks import default_hooks
 from train.LitModel import LitModel
 from pathlib import Path
 from train.config import (
@@ -13,7 +16,7 @@ from train.config import (
     LlmDecoderConfig,
     ModelConfig,
     OptimizerConfig,
-    QFormerConfig,
+    SchedulerConfig,
     TrainConfig,
 )
 from train.lightning_callbacks import AverageCheckpointsCallback, ExpertHeatmapCallback
@@ -92,7 +95,21 @@ def build_parser():
     )
     model_choices.add_arguments(parser)
     parser.add_argument(
+        "--optimizer",
+        type=str,
+        default="adamw",
+    )
+    parser.add_argument(
         "--optimizer_conf",
+        default=dict(),
+    )
+    parser.add_argument(
+        "--scheduler",
+        type=str,
+        default="warmup_linear",
+    )
+    parser.add_argument(
+        "--scheduler_conf",
         default=dict(),
     )
     parser.add_argument(
@@ -120,13 +137,42 @@ def build_parser():
         default=1,
     )
     parser.add_argument(
+        "--precision",
+        type=str,
+        default="32-true",
+        help="Lightning precision, e.g. 32-true, bf16-mixed, 16-mixed.",
+    )
+    parser.add_argument(
+        "--accum_grad",
+        type=int,
+        default=1,
+        help="The number of gradient accumulation steps.",
+    )
+    parser.add_argument(
+        "--grad_clip",
+        type=float,
+        default=5.0,
+        help="Gradient clipping value passed to Lightning Trainer.",
+    )
+    parser.add_argument(
+        "--grad_clip_algorithm",
+        type=str,
+        default="norm",
+        choices=("norm", "value"),
+        help="Gradient clipping algorithm passed to Lightning Trainer.",
+    )
+    parser.add_argument(
         "--strategy",
         type=str,
-        default="ddp_find_unused_parameters_true",
+        default="ddp",
         help=(
             "Lightning distributed strategy, e.g. "
-            "ddp_find_unused_parameters_true, ddp, fsdp, deepspeed_stage_2, deepspeed_stage_3."
+            "ddp, fsdp, deepspeed_stage_2, deepspeed_stage_3."
         ),
+    )
+    parser.add_argument(
+        "--strategy_conf",
+        default=dict(),
     )
     parser.add_argument(
         "--task",
@@ -178,13 +224,51 @@ def build_parser():
     return parser
 
 
+def build_strategy(strategy: str, strategy_conf: dict):
+    strategy_name = str(strategy)
+    conf = dict(strategy_conf or {})
+    if strategy_name == "ddp":
+        ddp_comm_hook = conf.pop("ddp_comm_hook", None)
+        if ddp_comm_hook is not None:
+            ddp_comm_hook = getattr(default_hooks, str(ddp_comm_hook))
+        return DDPStrategy(
+            ddp_comm_hook=ddp_comm_hook,
+            **conf,
+        )
+
+    if strategy_name == "fsdp":
+        auto_wrap_policy = _resolve_policy_set(conf.pop("auto_wrap_policy", None))
+        activation_checkpointing_policy = _resolve_policy_set(
+            conf.pop("activation_checkpointing_policy", None)
+        )
+        return FSDPStrategy(
+            auto_wrap_policy=auto_wrap_policy,
+            activation_checkpointing_policy=activation_checkpointing_policy,
+            **conf,
+        )
+
+    return strategy
+
+
+def _resolve_policy_set(policy_names):
+    if policy_names is None or len(policy_names) == 0:
+        return None
+    return {
+        getattr(
+            importlib.import_module(".".join(str(policy).split(".")[:-1])),
+            str(policy).split(".")[-1],
+        )
+        for policy in policy_names
+    }
+
+
 def main():
     torch.serialization.add_safe_globals(
         [
             TrainConfig,
             ModelConfig,
             OptimizerConfig,
-            QFormerConfig,
+            SchedulerConfig,
             DatasetConfig,
             AdapterConfig,
             LlmDecoderConfig,
@@ -199,6 +283,17 @@ def main():
     checkpoint_dir = config.checkpoint_dir()
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
     logger.info(config)
+    logger.info("=" * 80)
+    logger.info(
+        "Gradient accumulation: accum_grad={} micro-batches per optimizer step. "
+        "Lightning global_step counts optimizer steps, not micro-batches.",
+        config.accum_grad,
+    )
+    logger.info(
+        "Gradient clipping: grad_clip={} grad_clip_algorithm={}",
+        config.grad_clip,
+        config.grad_clip_algorithm,
+    )
     logger.info("=" * 80)
     L.seed_everything(config.seed, workers=True)
     torch.set_float32_matmul_precision("high")
@@ -278,10 +373,14 @@ def main():
     trainer = L.Trainer(
         reload_dataloaders_every_n_epochs=1,
         use_distributed_sampler=False,
-        strategy=config.strategy,
+        strategy=build_strategy(config.strategy, config.strategy_conf),
         accelerator="auto",
         devices="auto",
         max_epochs=config.epoch,
+        precision=config.precision,
+        accumulate_grad_batches=config.accum_grad,
+        gradient_clip_val=config.grad_clip,
+        gradient_clip_algorithm=config.grad_clip_algorithm,
         log_every_n_steps=config.log_every_n_steps,
         callbacks=[
             last_ckpt_callback,

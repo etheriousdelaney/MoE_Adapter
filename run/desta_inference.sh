@@ -9,7 +9,7 @@ export PYTHONPATH="${repo_root}${PYTHONPATH:+:${PYTHONPATH}}"
 data_dir="${repo_root}/data/chime4/et05_real_isolated_1ch_track"
 prompt="${repo_root}/dataset/desta/prompt"
 system_prompt=""
-decoder="${repo_root}/model/decoder/qwen_ntp.py"
+decoder="${repo_root}/model/decoder/qwen.py"
 model="Qwen/Qwen3-1.7B"
 python_bin="${PYTHON:-${repo_root}/.venv/bin/python}"
 

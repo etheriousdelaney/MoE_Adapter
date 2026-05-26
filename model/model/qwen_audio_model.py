@@ -4,7 +4,7 @@ import lightning as L
 import torch
 
 from inference.expert_heatmap_utils import expert_usage_from_selected_experts
-from model.encoder.kimi_audio_encoder import build_padding_mask_from_lengths
+from model.encoder.utils import build_padding_mask_from_lengths
 
 
 class LitQwenAudioModel(L.LightningModule):

@@ -5,19 +5,10 @@ from model.adapter.MoEadapter import MoEAdapter
 from model.adapter.Qformer import QFormerAdapter
 from model.decoder.frozen_qwen import FrozenQwenDecoder
 from model.decoder.qwen import QwenDecoder
-from model.encoder.kimi_audio_encoder import KimiAudioFrontend
 from model.model.qwen_audio_model import LitQwenAudioModel
 from train.class_choice import ClassChoices
 from train.config import TrainConfig
 
-
-frontend_choices = ClassChoices(
-    name="frontend",
-    classes=dict(
-        kimi_audio=KimiAudioFrontend,
-    ),
-    default="kimi_audio",
-)
 
 adapter_choices = ClassChoices(
     name="adapter",
@@ -78,13 +69,9 @@ def build_model_from_config(
 def build_frontend(config: TrainConfig, use_frontend: bool):
     if not use_frontend:
         return None
-    frontend_class = frontend_choices.get_class("kimi_audio")
-    freeze_frontend = bool(config.model.freeze_frontend or config.model.decoder_type == "frozen_qwen")
-    return frontend_class(
-        model_repo=config.model.model_repo,
-        tokenizer_repo=config.model.tokenizer_repo,
-        sample_rate=config.model.sample_rate,
-        freeze_frontend=freeze_frontend,
+    raise RuntimeError(
+        "nano fused-only branch does not support sound/online frontend training. "
+        "Use precomputed fused features with dataset_conf.data_type including 'fused'."
     )
 
 

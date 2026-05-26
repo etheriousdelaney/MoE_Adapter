@@ -10,6 +10,8 @@ output_dir="${OUTPUT_DIR:-exp/${tag}}"
 train_config="${TRAIN_CONFIG:-conf/asr.yaml}"
 python_bin="${PYTHON:-./.venv/bin/python}"
 init_model="${INIT_MODEL:-}"
+job_runner="${JOB_RUNNER:-bin/run.py}"
+write_log="${WRITE_LOG:-true}"
 trainer_extra_args=()
 if [ ! -x "${python_bin}" ]; then
     python_bin=python3
@@ -29,6 +31,7 @@ Options:
   --config PATH          Training config YAML. Default: \${TRAIN_CONFIG:-conf/asr.yaml}
   --init_model PATH      Initialize model weights from a .ckpt or .pth without resuming optimizer/callback state.
   --python PATH          Python interpreter to use. Default: \${PYTHON:-./.venv/bin/python}
+  --job_runner PATH      Job runner script. Default: \${JOB_RUNNER:-bin/run.py}
   -h, --help             Show this help message.
 
 Any unknown arguments after -- are forwarded to train.trainer.
@@ -59,6 +62,10 @@ while [ $# -gt 0 ]; do
             ;;
         --python)
             python_bin="$2"
+            shift 2
+            ;;
+        --job_runner)
+            job_runner="$2"
             shift 2
             ;;
         --)
@@ -113,7 +120,7 @@ mkdir -p "${output_dir}"
 
 if [ "$write_log" = "true" ]; then
     "${python_bin}" utils/rotate_logfiles.py "${output_dir}/train.log"
-    "${python_bin}" bin/run.py "${output_dir}"/train.log "${python_bin}" -m train.trainer \
+    "${python_bin}" "${job_runner}" "${output_dir}"/train.log "${python_bin}" -m train.trainer \
                                     --exp_tag "${tag}" \
                                     --output_dir "${output_dir}" \
                                     --config "${train_config}" \
@@ -124,7 +131,6 @@ else
         --output_dir "${output_dir}" \
         --config "${train_config}"
 fi
-
 
 
 

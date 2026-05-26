@@ -39,9 +39,9 @@ token_list: Qwen/Qwen3-1.7B
 ngpu: 1
 patience: 10
 seed: 314562
-epoch: 5
+epoch: 30
 log_every_n_steps: 500
-precision: bf16-mixed
+precision: 32-true
 accum_grad: 64
 grad_clip: 5.0
 grad_clip_algorithm: norm
@@ -62,7 +62,7 @@ dataset_conf:
   valid_shape_file:
     - data/chime4/dt05_multi_isolated_1ch_track/shape/instruction_fused_shape
   batch_type: numel
-  batch_bins: 800000
+  batch_bins: 4000000
   sort_in_batch: descending
   sort_batch: descending
   shuffle_within_batch: false

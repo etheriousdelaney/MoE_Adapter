@@ -6,7 +6,7 @@ set -o pipefail
 export PATH=/mnt/disk2/m11315045/espnet/tools/sctk/bin:$PATH
 export CUDA_VISIBLE_DEVICES=0
 
-tag="asr_qwen_moe_multitask_0526"
+tag="nano_qwen_moe_multitask_0526"
 train_config="conf/MoE_all_task.yaml"
 
 decode_config="conf/decode_asr_qwen_greedy.yaml"

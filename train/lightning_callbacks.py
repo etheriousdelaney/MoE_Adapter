@@ -1,22 +1,18 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
+import re
 
 import torch
 from lightning.pytorch.callbacks import Callback
 from lightning.pytorch.utilities.rank_zero import rank_zero_only
 
+from dataset.instruction_utils import strip_instruction_sample_id
 from inference.expert_heatmap_utils import (
-    INSTRUCTION_LABEL_ORDER,
-    LABEL_ORDER,
-    PROMPT_ORDER,
     accumulate_expert_usage,
-    classify_instruction_label,
-    classify_prompt_text,
     create_accumulator,
     finalize_heatmap_matrix,
-    instruction_label_texts_to_ids,
-    prompt_texts_to_ids,
     render_heatmap,
 )
 
@@ -70,26 +66,60 @@ class ExpertHeatmapCallback(Callback):
     def __init__(
         self,
         output_dir: str | Path,
+        train_config=None,
         highlight_top_k: int = 2,
     ):
         self.output_dir = Path(output_dir)
+        self.train_config = train_config
         self.highlight_top_k = highlight_top_k
         self._states: dict[str, dict[str, tuple[torch.Tensor, torch.Tensor]] | None] = {
             "train": None,
             "valid": None,
         }
+        self._metadata: dict[str, dict[str, dict[str, str]]] = {"train": {}, "valid": {}}
+        self.task_row_order = self._task_row_order(train_config)
+
+    @staticmethod
+    def _task_row_order(train_config) -> list[str]:
+        dataset_config = getattr(train_config, "dataset", None)
+        tasks = list(getattr(dataset_config, "instruction_tasks", None) or [])
+        names = [str(task.get("name") or f"task_{idx}") for idx, task in enumerate(tasks)]
+        return names or ["asr", "environment", "gender"]
 
     def _reset(self, split: str, pl_module) -> None:
         num_experts = int(pl_module.model.adapter.num_experts)
         self._states[split] = {
-            "label": create_accumulator(num_experts, device=pl_module.device, row_order=LABEL_ORDER),
-            "prompt": create_accumulator(num_experts, device=pl_module.device, row_order=PROMPT_ORDER),
-            "instruction_label": create_accumulator(
+            "task": create_accumulator(num_experts, device=pl_module.device, row_order=self.task_row_order),
+            "environment": create_accumulator(
                 num_experts,
                 device=pl_module.device,
-                row_order=INSTRUCTION_LABEL_ORDER,
+                row_order=["BUS", "CAFE", "PEDESTRIAN", "STREET"],
             ),
+            "gender": create_accumulator(num_experts, device=pl_module.device, row_order=["female", "male"]),
         }
+        self._metadata[split] = self._read_split_metadata(split, pl_module)
+
+    def _read_split_metadata(self, split: str, pl_module) -> dict[str, dict[str, str]]:
+        dataset_config = getattr(getattr(pl_module, "config", None), "dataset", None)
+        if dataset_config is None:
+            return {}
+        data_name = dataset_config.train_data if split == "train" else dataset_config.valid_data
+        metadata_path = Path("data") / data_name / "metadata.json"
+        if not metadata_path.exists():
+            return {}
+        payload = json.loads(metadata_path.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            items = payload.items()
+        elif isinstance(payload, list):
+            items = ((item.get("id"), item) for item in payload if isinstance(item, dict))
+        else:
+            return {}
+        metadata: dict[str, dict[str, str]] = {}
+        for key, item in items:
+            if key is None or not isinstance(item, dict):
+                continue
+            metadata[str(key)] = {str(k): str(v) for k, v in item.items()}
+        return metadata
 
     def on_train_epoch_start(self, trainer, pl_module) -> None:
         if not getattr(pl_module.model, "supports_expert_heatmap", False):
@@ -121,61 +151,66 @@ class ExpertHeatmapCallback(Callback):
             return
         if not isinstance(batch, (tuple, list)) or len(batch) < 2:
             return
-        batch_data = batch[1]
-        labels = batch_data.get("chime4_label")
-        if labels is not None:
-            sums, counts = self._states[split]["label"]
-            accumulate_expert_usage(
-                sums=sums,
-                counts=counts,
-                expert_usage=expert_usage,
-                label_ids=labels,
-                row_order=LABEL_ORDER,
+        uttids = [str(uttid) for uttid in batch[0]]
+        task_names = [self._task_name_from_sample_id(uttid) for uttid in uttids]
+        self._accumulate_named_usage(
+            split=split,
+            name="task",
+            expert_usage=expert_usage,
+            label_names=task_names,
+        )
+
+        env_pairs = [
+            (idx, self._environment_from_sample_id(uttid, split))
+            for idx, (uttid, task_name) in enumerate(zip(uttids, task_names))
+            if task_name == "environment"
+        ]
+        env_pairs = [(idx, name) for idx, name in env_pairs if name in {"BUS", "CAFE", "PEDESTRIAN", "STREET"}]
+        if env_pairs:
+            self._accumulate_named_usage(
+                split=split,
+                name="environment",
+                expert_usage=expert_usage[[idx for idx, _ in env_pairs]],
+                label_names=[name for _, name in env_pairs],
             )
 
-        prompt_ids = batch_data.get("prompt")
-        prompt_lengths = batch_data.get("prompt_lengths")
-        response_ids = batch_data.get("response")
-        response_lengths = batch_data.get("response_lengths")
-        if (
-            prompt_ids is None
-            or prompt_lengths is None
-            or response_ids is None
-            or response_lengths is None
-        ):
+        gender_pairs = [
+            (idx, self._gender_from_sample_id(uttid, split))
+            for idx, (uttid, task_name) in enumerate(zip(uttids, task_names))
+            if task_name == "gender"
+        ]
+        gender_pairs = [(idx, name) for idx, name in gender_pairs if name in {"female", "male"}]
+        if gender_pairs:
+            self._accumulate_named_usage(
+                split=split,
+                name="gender",
+                expert_usage=expert_usage[[idx for idx, _ in gender_pairs]],
+                label_names=[name for _, name in gender_pairs],
+            )
+
+    def _accumulate_named_usage(
+        self,
+        split: str,
+        name: str,
+        expert_usage: torch.Tensor,
+        label_names: list[str],
+    ) -> None:
+        if not label_names or self._states[split] is None:
             return
-
-        prompt_texts = self._decode_batch_texts(
-            tokenizer=pl_module.model.decoder.tokenizer,
-            token_ids=prompt_ids,
-            lengths=prompt_lengths,
+        sums, counts = self._states[split][name]
+        row_order = self._row_order(name)
+        name_to_idx = {label_name: idx for idx, label_name in enumerate(row_order)}
+        label_ids = torch.tensor(
+            [name_to_idx[label_name] for label_name in label_names],
+            dtype=torch.long,
+            device=expert_usage.device,
         )
-        response_texts = self._decode_batch_texts(
-            tokenizer=pl_module.model.decoder.tokenizer,
-            token_ids=response_ids,
-            lengths=response_lengths,
-        )
-
-        prompt_category_ids = prompt_texts_to_ids(prompt_texts).to(expert_usage.device)
-        prompt_sums, prompt_counts = self._states[split]["prompt"]
         accumulate_expert_usage(
-            sums=prompt_sums,
-            counts=prompt_counts,
+            sums=sums,
+            counts=counts,
             expert_usage=expert_usage,
-            label_ids=prompt_category_ids,
-            row_order=PROMPT_ORDER,
-        )
-
-        instruction_label_ids = instruction_label_texts_to_ids(prompt_texts, response_texts).to(
-            expert_usage.device
-        )
-        instruction_sums, instruction_counts = self._states[split]["instruction_label"]
-        accumulate_expert_usage(
-            sums=instruction_sums,
-            counts=instruction_counts,
-            expert_usage=expert_usage,
-            label_ids=instruction_label_ids,
-            row_order=INSTRUCTION_LABEL_ORDER,
+            label_ids=label_ids,
+            row_order=row_order,
         )
 
     def on_train_epoch_end(self, trainer, pl_module) -> None:
@@ -219,9 +254,9 @@ class ExpertHeatmapCallback(Callback):
         adapter_top_k = getattr(pl_module.model.adapter, "top_k", self.highlight_top_k)
         highlight_top_k = max(1, int(adapter_top_k))
         for suffix, row_order in (
-            ("label", LABEL_ORDER),
-            ("prompt", PROMPT_ORDER),
-            ("instruction_label", INSTRUCTION_LABEL_ORDER),
+            ("task", self.task_row_order),
+            ("environment", ["BUS", "CAFE", "PEDESTRIAN", "STREET"]),
+            ("gender", ["female", "male"]),
         ):
             sums, counts = state[suffix]
             sums, counts = self._reduce_state(sums, counts)
@@ -237,12 +272,60 @@ class ExpertHeatmapCallback(Callback):
                 highlight_top_k=highlight_top_k,
             )
 
+    def _row_order(self, name: str) -> list[str]:
+        if name == "task":
+            return self.task_row_order
+        if name == "environment":
+            return ["BUS", "CAFE", "PEDESTRIAN", "STREET"]
+        if name == "gender":
+            return ["female", "male"]
+        raise KeyError(name)
+
+    def _task_name_from_sample_id(self, sample_id: str) -> str:
+        match = re.search(r"__sample__(\d+)$", sample_id)
+        sample_index = int(match.group(1)) if match else 0
+        if 0 <= sample_index < len(self.task_row_order):
+            return self.task_row_order[sample_index]
+        return self.task_row_order[0] if self.task_row_order else "task_0"
+
+    def _environment_from_sample_id(self, sample_id: str, split: str) -> str:
+        base_id = strip_instruction_sample_id(sample_id)
+        metadata = self._metadata.get(split, {})
+        if base_id in metadata and metadata[base_id].get("environment"):
+            return self._normalize_environment(metadata[base_id]["environment"])
+        return self._normalize_environment(base_id)
+
+    def _gender_from_sample_id(self, sample_id: str, split: str) -> str:
+        base_id = strip_instruction_sample_id(sample_id)
+        metadata = self._metadata.get(split, {})
+        if base_id in metadata:
+            for key in ("Gender", "gender"):
+                if metadata[base_id].get(key):
+                    return self._normalize_gender(metadata[base_id][key])
+        return ""
+
     @staticmethod
-    def _decode_batch_texts(tokenizer, token_ids: torch.Tensor, lengths: torch.Tensor) -> list[str]:
-        decoded: list[str] = []
-        special_ids = set(getattr(tokenizer, "all_special_ids", []) or [])
-        for row, length in zip(token_ids, lengths):
-            seq = [int(token_id) for token_id in row[: int(length.item())].tolist()]
-            seq = [token_id for token_id in seq if token_id not in special_ids]
-            decoded.append(tokenizer.decode(seq, skip_special_tokens=True).strip())
-        return decoded
+    def _normalize_environment(text: str) -> str:
+        normalized = text.strip().upper()
+        aliases = {
+            "BUS": "BUS",
+            "CAFE": "CAFE",
+            "CAF": "CAFE",
+            "PEDESTRIAN": "PEDESTRIAN",
+            "PED": "PEDESTRIAN",
+            "STREET": "STREET",
+            "STR": "STREET",
+        }
+        for key, value in aliases.items():
+            if normalized == key or key in normalized:
+                return value
+        return normalized
+
+    @staticmethod
+    def _normalize_gender(text: str) -> str:
+        normalized = text.strip().lower()
+        if "female" in normalized:
+            return "female"
+        if "male" in normalized:
+            return "male"
+        return normalized

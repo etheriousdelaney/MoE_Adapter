@@ -1,0 +1,127 @@
+model: qwen_audio_model
+model_conf:
+    aux_loss_weight: 0.1
+    model_repo: moonshotai/Kimi-Audio-7B-Instruct
+    tokenizer_repo: THUDM/glm-4-voice-tokenizer
+    sample_rate: 16000
+    adapter_type: moe
+    decoder_type: qwen
+    freeze_frontend: false
+    adapter_conf:
+        expert_ffn_dim: 1280
+        num_experts: 8
+        top_k: 4
+        qformer_model_name: bert-base-uncased
+        num_query_token: 32
+        num_hidden_layers: 2
+        cross_attention_freq: 1
+        hidden_dropout_prob: 0.1
+        attention_probs_dropout_prob: 0.1
+    llm_decoder_conf:
+        llm_repo: Qwen/Qwen3-1.7B
+        projector_hidden_dim: 2048
+        projector_num_layers: 2
+        dropout: 0.1
+        max_target_length: 128
+        prompt_text: ''
+optimizer: adamw
+optimizer_conf:
+    type: adamw
+    adam_beta1: 0.9
+    adam_beta2: 0.95
+    lr: 0.0004
+    weight_decay: 0.1
+    foreach: false
+    warmup_steps: 20
+    stable_steps: 0
+    min_lr_ratio: 0.1
+scheduler: cosineannealinglr
+scheduler_conf:
+    type: cosineannealinglr
+    interval: step
+    frequency: 1
+    monitor: valid/loss
+    eta_min: 4.0e-05
+dataset_conf:
+    train_data: chime4/tr05_all_noisy
+    train_shape_file:
+    - /mnt/disk2/m11315045/MoE_Adapter/data/chime4/tr05_all_noisy/shape/instruction_fused_shape
+    valid_data: chime4/dt05_multi_isolated_1ch_track
+    valid_shape_file:
+    - /mnt/disk2/m11315045/MoE_Adapter/data/chime4/dt05_multi_isolated_1ch_track/shape/instruction_fused_shape
+    batch_bins: 800000
+    batch_size: 20
+    batch_type: numel
+    max_cache_size: 0.0
+    max_cache_fd: 32
+    num_iters_per_epoch: null
+    allow_multi_rates: false
+    iterator_type: sequence
+    fold_lengths:
+    - 80000
+    - 150
+    sort_in_batch: descending
+    sort_batch: descending
+    drop_last_iter: false
+    train_dtype: float32
+    shuffle_within_batch: false
+    num_workers: 4
+    data_type:
+    - fused
+    - audio_context
+    - answer
+    train_message_file: ''
+    valid_message_file: ''
+    instruction_source: task_specs
+    instruction_tasks:
+    -   name: asr
+        prompt: 'Transcribe the following speech:'
+        answer_field: text
+        scoring:
+        - wer
+        - cer
+    -   name: environment
+        prompt: 'Classify the environment of this audio:'
+        answer_field: environment
+        scoring:
+        - acc
+        labels:
+        - BUS
+        - CAFE
+        - PEDESTRIAN
+        - STREET
+    -   name: gender
+        prompt: 'Classify the speaker''s gender, male or female:'
+        answer_field: Gender
+        scoring:
+        - acc
+        labels:
+        - female
+        - male
+token_type: huggingface
+token_list: Qwen/Qwen3-1.7B
+non_linguistic_symbols: null
+seed: 314562
+epoch: 5
+patience: 10
+log_every_n_steps: 500
+precision: bf16-mixed
+accum_grad: 64
+grad_clip: 5.0
+grad_clip_algorithm: norm
+strategy: ddp
+strategy_conf:
+    find_unused_parameters: false
+    gradient_as_bucket_view: true
+task: instruction
+ngpu: 1
+exp_tag: asr_qwen_moe_multitask_0526
+output_dir: exp/asr_qwen_moe_multitask_0526
+use_tensorboard: true
+use_wandb: false
+wandb_project: ''
+wandb_name: ''
+best_model_criterion:
+-   - valid/lm_loss
+    - min
+    - 3

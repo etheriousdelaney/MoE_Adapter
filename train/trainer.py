@@ -345,6 +345,7 @@ def main():
     if getattr(lit_model.model, "supports_expert_heatmap", False):
         heatmap_callback = ExpertHeatmapCallback(
             output_dir=Path(config.output_dir) / "image",
+            train_config=config,
         )
 
     loggers = []

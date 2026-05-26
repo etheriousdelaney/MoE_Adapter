@@ -162,8 +162,7 @@ class ExpertHeatmapCallback(Callback):
 
         env_pairs = [
             (idx, self._environment_from_sample_id(uttid, split))
-            for idx, (uttid, task_name) in enumerate(zip(uttids, task_names))
-            if task_name == "environment"
+            for idx, uttid in enumerate(uttids)
         ]
         env_pairs = [(idx, name) for idx, name in env_pairs if name in {"BUS", "CAFE", "PEDESTRIAN", "STREET"}]
         if env_pairs:
@@ -176,8 +175,7 @@ class ExpertHeatmapCallback(Callback):
 
         gender_pairs = [
             (idx, self._gender_from_sample_id(uttid, split))
-            for idx, (uttid, task_name) in enumerate(zip(uttids, task_names))
-            if task_name == "gender"
+            for idx, uttid in enumerate(uttids)
         ]
         gender_pairs = [(idx, name) for idx, name in gender_pairs if name in {"female", "male"}]
         if gender_pairs:

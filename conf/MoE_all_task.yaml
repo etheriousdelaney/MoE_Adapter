@@ -21,11 +21,11 @@ model_conf:
 
 optimizer: adamw
 optimizer_conf:
-  lr: 0.0004
+  lr: 1.0e-5
   adam_beta1: 0.9
   adam_beta2: 0.95
-  weight_decay: 0.1
-
+  weight_decay: 0.01
+                    
 scheduler: cosineannealinglr
 scheduler_conf:
   interval: step
@@ -37,9 +37,9 @@ token_type: huggingface
 token_list: Qwen/Qwen3-1.7B
 
 ngpu: 1
-patience: 10
+patience: 1
 seed: 314562
-epoch: 30
+epoch: 5
 log_every_n_steps: 500
 precision: 32-true
 accum_grad: 64
@@ -65,7 +65,7 @@ dataset_conf:
   batch_bins: 4000000
   sort_in_batch: descending
   sort_batch: descending
-  shuffle_within_batch: false
+  shuffle_within_batch: true
   data_type: [fused, audio_context, answer]
   instruction_source: task_specs
   instruction_tasks:

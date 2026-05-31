@@ -86,12 +86,12 @@ class MoEAdapter(nn.Module):
         masked_router_logits = router_logits.masked_fill(selected_experts == 0, float("-inf"))
         routing_probs = F.softmax(masked_router_logits, dim=-1, dtype=torch.float32)
 
-        expert_outputs = torch.stack(
-            [expert(hidden_states) for expert in self.experts],
-            dim=2,
+        adapted_outputs = self._dispatch_to_experts(
+            hidden_states=hidden_states,
+            topk_idx=topk_idx,
+            routing_probs=routing_probs,
+            padding_mask=padding_mask,
         )
-
-        adapted_outputs = torch.sum(expert_outputs * routing_probs.unsqueeze(-1), dim=2)
         adapted_outputs = self.aggregation(adapted_outputs)
 
         if padding_mask is not None:
@@ -100,3 +100,39 @@ class MoEAdapter(nn.Module):
         aux_loss = self._load_balancing_loss(routing_probs, expert_load, padding_mask)
         
         return adapted_outputs, aux_loss, selected_experts
+
+    def _dispatch_to_experts(
+        self,
+        hidden_states: torch.Tensor,
+        topk_idx: torch.Tensor,
+        routing_probs: torch.Tensor,
+        padding_mask: torch.Tensor | None,
+    ) -> torch.Tensor:
+        batch_size, seq_len, hidden_size = hidden_states.shape
+        hidden_flat = hidden_states.reshape(batch_size * seq_len, hidden_size)
+        topk_flat = topk_idx.reshape(batch_size * seq_len, self.top_k)
+        routing_flat = routing_probs.reshape(batch_size * seq_len, self.num_experts)
+        output_flat = hidden_flat.new_zeros(hidden_flat.shape)
+
+        if padding_mask is None:
+            valid_tokens = torch.ones(
+                hidden_flat.size(0),
+                dtype=torch.bool,
+                device=hidden_flat.device,
+            )
+        else:
+            valid_tokens = padding_mask.reshape(-1).bool()
+
+        for expert_idx, expert in enumerate(self.experts):
+            token_indices = (topk_flat == expert_idx).any(dim=-1) & valid_tokens
+            if not token_indices.any():
+                continue
+            expert_output = expert(hidden_flat[token_indices])
+            expert_weight = routing_flat[token_indices, expert_idx].to(expert_output.dtype)
+            output_flat.index_add_(
+                0,
+                token_indices.nonzero(as_tuple=False).squeeze(-1),
+                expert_output * expert_weight.unsqueeze(-1),
+            )
+
+        return output_flat.reshape(batch_size, seq_len, hidden_size)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from model.adapter.Denseadapter import DenseAdapter
 from model.adapter.MoEadapter import MoEAdapter
+from model.adapter.MoE_erc_loss import MoEERCLossAdapter
 from model.adapter.Qformer import QFormerAdapter
 from model.decoder.frozen_qwen import FrozenQwenDecoder
 from model.decoder.qwen import QwenDecoder
@@ -14,6 +15,7 @@ adapter_choices = ClassChoices(
     name="adapter",
     classes=dict(
         moe=MoEAdapter,
+        moe_erc_loss=MoEERCLossAdapter,
         dense=DenseAdapter,
         qformer=QFormerAdapter,
     ),
@@ -85,6 +87,19 @@ def build_adapter(config: TrainConfig, input_hidden_size: int):
             expert_ffn_dim=adapter_conf.expert_ffn_dim,
             num_experts=adapter_conf.num_experts,
             top_k=adapter_conf.top_k,
+        )
+    if adapter_type == "moe_erc_loss":
+        return adapter_class(
+            hidden_size=input_hidden_size,
+            expert_ffn_dim=adapter_conf.expert_ffn_dim,
+            num_experts=adapter_conf.num_experts,
+            top_k=adapter_conf.top_k,
+            load_balancing_loss_weight=adapter_conf.load_balancing_loss_weight,
+            erc_loss_weight=adapter_conf.erc_loss_weight,
+            erc_alpha=adapter_conf.erc_alpha,
+            erc_noisy_router=adapter_conf.erc_noisy_router,
+            erc_feature=adapter_conf.erc_feature,
+            erc_eps_min=adapter_conf.erc_eps_min,
         )
     if adapter_type == "dense":
         return adapter_class(

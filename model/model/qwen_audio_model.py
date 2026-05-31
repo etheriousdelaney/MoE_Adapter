@@ -51,6 +51,12 @@ class LitQwenAudioModel(L.LightningModule):
         if self.supports_expert_heatmap:
             outputs["aux_loss"] = aux_loss
             outputs["expert_usage"] = self._last_expert_usage
+            lb_loss = getattr(self, "_last_lb_loss", None)
+            erc_loss = getattr(self, "_last_erc_loss", None)
+            if lb_loss is not None:
+                outputs["lb_loss"] = lb_loss
+            if erc_loss is not None:
+                outputs["erc_loss"] = erc_loss
         return outputs
 
     @torch.inference_mode()
@@ -104,6 +110,8 @@ class LitQwenAudioModel(L.LightningModule):
         if isinstance(adapter_output, tuple) and len(adapter_output) == 3:
             hidden_states, aux_loss, selected_experts = adapter_output
             self._last_aux_loss = aux_loss
+            self._last_lb_loss = getattr(self.adapter, "last_lb_loss", None)
+            self._last_erc_loss = getattr(self.adapter, "last_erc_loss", None)
             self._last_expert_usage = expert_usage_from_selected_experts(
                 selected_experts=selected_experts,
                 padding_mask=padding_mask,

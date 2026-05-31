@@ -74,6 +74,12 @@ class AdapterConfig:
     expert_ffn_dim: int = 1280
     num_experts: int = 8
     top_k: int = 2
+    load_balancing_loss_weight: float = 1.0
+    erc_loss_weight: float = 1.0
+    erc_alpha: float = 1.0
+    erc_noisy_router: bool = True
+    erc_feature: str = "w1"
+    erc_eps_min: float = 1.0e-6
     qformer_model_name: str = "bert-base-uncased"
     num_query_token: int = 32
     num_hidden_layers: int = 2
